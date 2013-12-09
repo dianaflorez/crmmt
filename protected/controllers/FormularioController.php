@@ -108,9 +108,10 @@ class FormularioController extends Controller
 		));
 	}
 
-	public function actionEncuesta($id)
+	public function actionEncuesta($id, $id_usur)
 	{
 		$model = $this->loadModel($id);
+		$error = null;
 		// if($model){
 		// 	var_dump('Total preguntas '.count($model->preguntas));
 		// 	foreach ($model->preguntas as $pregunta) {
@@ -122,6 +123,107 @@ class FormularioController extends Controller
 		// 		}
 		// 	}
 		// }
+
+		$usuario = General::model()->findByPk($id_usur);
+		if(!$usuario)
+			throw new CHttpException(404, "Opps el usuario no existe.");
+
+		if(isset($_POST['Pregunta']))
+		{
+			// Validar número de respuestas que llegan por POST debe ser
+			// igual al número de preguntas que tiene la encuesta.
+			$preguntas = $model->preguntas;
+			
+			if(count($preguntas) === count($_POST['Pregunta']))
+			{
+				$transaccion = $model->dbConnection->beginTransaction();
+				try
+				{
+					foreach ($preguntas as $pregunta) 
+					{
+						$opcion_post = $_POST['Pregunta'][$pregunta->id_pre];
+						
+						if(isset($opcion_post))
+						{
+							if($pregunta->id_tpr === null)
+							{
+								if($pregunta->id_tp === 1) // Pregunta de respuesta única.
+								{
+									foreach ($pregunta->opciones as $llave => $opcion)
+									{
+										if(''.$opcion->id_op === $opcion_post)
+										{
+											$respuesta          = new Respuesta;
+											$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+											$respuesta->id_op   = $opcion->id_op;
+											$respuesta->id_usur = $usuario->id;
+											$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+											
+											if(!$respuesta->save())
+											{
+												throw new Exception('No se pudo guardar la respuesta.');
+											}
+										}
+									}
+								}
+								elseif($pregunta->id_tp === 2) // Pregunta de respuesta multiple.
+								{
+									$opciones = $pregunta->opciones;
+								
+									foreach ($opcion_post as $op_p) 
+									{
+										foreach ($opciones as $opcion) 
+										{	
+											if(''.$opcion->id_op === $op_p)
+											{
+												$respuesta          = new Respuesta;
+												$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+												$respuesta->id_op   = $opcion->id_op;
+												$respuesta->id_usur = $usuario->id;
+												$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+												
+												if(!$respuesta->save())
+												{
+													throw new Exception('No se pudo guardar la respuesta.');
+												}
+											}
+											
+										}
+									}
+								}
+								
+							}
+							elseif($pregunta->id_tp === 3) // Pregunta de repuesta abierta.
+							{
+								$respuesta          = new Respuesta;
+								$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+								$respuesta->txtres  = $opcion_post;
+								$respuesta->id_usur = $usuario->id;
+								$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+								
+								if(!$respuesta->save())
+								{
+									throw new Exception('No se pudo guardar la respuesta.');
+								}
+							}
+										
+						}
+						
+					}
+					$transaccion->commit();
+				}
+				catch(Exception $e)
+				{
+					$transaccion->rollback();
+					$error = $e->getMessage();
+				}
+			}
+			else
+			{
+				throw new Exception('No existe respuesta para una de las preguntas.');
+			}
+			
+		}
 
 		$this->render('encuesta', array(
 			'model'  => $model,

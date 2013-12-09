@@ -1,33 +1,32 @@
 <?php
 
 /**
- * This is the model class for table "crmpregunta".
+ * This is the model class for table "crmrespuesta".
  *
- * The followings are the available columns in table 'crmpregunta':
- * @property integer $id_pre
- * @property string $txtpre
- * @property string $despre
- * @property integer $id_tp
- * @property integer $id_tpr
+ * The followings are the available columns in table 'crmrespuesta':
+ * @property integer $id_res
+ * @property string $id_usur
+ * @property integer $id_fp
+ * @property integer $id_op
+ * @property string $txtres
  * @property string $feccre
  * @property string $fecmod
  * @property string $id_usu
  *
  * The followings are the available model relations:
  * @property General $idUsu
- * @property Crmtipopre $idTp
- * @property Crmtipopreres $idTpr
- * @property Crmforpre[] $crmforpres
- * @property Crmopcionpre[] $crmopcionpres
+ * @property General $idUsur
+ * @property Crmforpre $idFp
+ * @property Crmopcionpre $idOp
  */
-class Pregunta extends CActiveRecord
+class Respuesta extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'crmpregunta';
+		return 'crmrespuesta';
 	}
 
 	/**
@@ -38,27 +37,13 @@ class Pregunta extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('txtpre, id_tp, id_usu', 'required', 'message' => 'No puede ser vacio.'),
-			array('id_tp, id_tpr', 'numerical', 'integerOnly'=>true),
-			array('txtpre', 'length', 'max'=>70),
-			array('despre, feccre, fecmod', 'safe'),
+			array('id_usur, id_fp, id_usu', 'required'),
+			array('id_fp, id_op', 'numerical', 'integerOnly'=>true),
+			array('txtres, feccre, fecmod', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_pre, txtpre, despre, id_tp, id_tpr, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_res, id_usur, id_fp, id_op, txtres, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
 		);
-	}
-
-	/**
-	 * Asigna la fecha de creación o actualización automáticamente antes de grabar el modelo.
-	 **/
-
-	public function beforeSave() {
-	    if ($this->isNewRecord)
-	        $this->feccre = new CDbExpression('CURRENT_TIMESTAMP');
-	    else
-	        $this->fecmod = new CDbExpression('CURRENT_TIMESTAMP');
-	 
-	    return parent::beforeSave();
 	}
 
 	/**
@@ -70,10 +55,9 @@ class Pregunta extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
-			'idTp' => array(self::BELONGS_TO, 'Crmtipopre', 'id_tp'),
-			'idTpr' => array(self::BELONGS_TO, 'Crmtipopreres', 'id_tpr'),
-			'formularioPregunta' => array(self::HAS_ONE, 'FormularioPregunta', 'id_pre'),
-			'opciones' => array(self::HAS_MANY, 'OpcionPregunta', 'id_pre'),
+			'idUsur' => array(self::BELONGS_TO, 'General', 'id_usur'),
+			'idFp' => array(self::BELONGS_TO, 'Crmforpre', 'id_fp'),
+			'idOp' => array(self::BELONGS_TO, 'Crmopcionpre', 'id_op'),
 		);
 	}
 
@@ -83,11 +67,11 @@ class Pregunta extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_pre' => 'Id Pre',
-			'txtpre' => 'Pregunta',
-			'despre' => 'Despre',
-			'id_tp' => 'Id Tp',
-			'id_tpr' => 'Id Tpr',
+			'id_res' => 'Id Res',
+			'id_usur' => 'Id Usur',
+			'id_fp' => 'Id Fp',
+			'id_op' => 'Id Op',
+			'txtres' => 'Txtres',
 			'feccre' => 'Feccre',
 			'fecmod' => 'Fecmod',
 			'id_usu' => 'Id Usu',
@@ -112,11 +96,11 @@ class Pregunta extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_pre',$this->id_pre);
-		$criteria->compare('txtpre',$this->txtpre,true);
-		$criteria->compare('despre',$this->despre,true);
-		$criteria->compare('id_tp',$this->id_tp);
-		$criteria->compare('id_tpr',$this->id_tpr);
+		$criteria->compare('id_res',$this->id_res);
+		$criteria->compare('id_usur',$this->id_usur,true);
+		$criteria->compare('id_fp',$this->id_fp);
+		$criteria->compare('id_op',$this->id_op);
+		$criteria->compare('txtres',$this->txtres,true);
 		$criteria->compare('feccre',$this->feccre,true);
 		$criteria->compare('fecmod',$this->fecmod,true);
 		$criteria->compare('id_usu',$this->id_usu,true);
@@ -130,7 +114,7 @@ class Pregunta extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Pregunta the static model class
+	 * @return Respuesta the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

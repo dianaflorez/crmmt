@@ -26,9 +26,9 @@
 						  <label>
 						    <?php
 						   		if($pregunta->id_tp === 1)
-						   			echo CHtml::radioButton('Pregunta['.$pregunta->id_pre.']', $porDefecto, array('value'=>$opcion->id_op, 'disabled'=>$activa ? '' : 'disabled'));
+						   			echo CHtml::radioButton('pregunta_'.$pregunta->id_pre, $porDefecto, array('disabled'=>$activa ? '' : 'disabled'));
 						   		elseif($pregunta->id_tp === 2)
-						   			echo CHtml::checkBox('Pregunta['.$pregunta->id_pre.'][]', $porDefecto, array('value'=>$opcion->id_op, 'disabled'=>$activa ? '' : 'disabled'));
+						   			echo CHtml::checkBox('pregunta_'.$pregunta->id_pre, $porDefecto, array('disabled'=>$activa ? '' : 'disabled'));
 						   		$porDefecto = false;
 						   		echo $opcion->txtop; ?>
 						  </label>
@@ -36,11 +36,11 @@
 				<?php 
 					endforeach; 
 				elseif($pregunta->id_tpr === 1):
-					echo CHtml::textField('Pregunta['.$pregunta->id_pre.']', null, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta", 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::textField('pregunta_'.$pregunta->id_pre, null, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta", 'disabled'=>$activa ? '' : 'disabled'));
 				elseif($pregunta->id_tpr === 2):
-					echo CHtml::numberField('Pregunta['.$pregunta->id_pre.']', null, array('class'=>"form-control numero", 'min'=>0, 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Número", 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::numberField('pregunta_'.$pregunta->id_pre, null, array('class'=>"form-control numero", 'min'=>0, 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Número", 'disabled'=>$activa ? '' : 'disabled'));
 				elseif($pregunta->id_tpr === 3):
-					echo CHtml::dateField('Pregunta['.$pregunta->id_pre.']', date('Y-m-d'), array('class'=>"form-control fecha", 'name'=> 'pregunta_'.$pregunta->id_pre, 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::dateField('pregunta_'.$pregunta->id_pre, date('Y-m-d'), array('class'=>"form-control fecha", 'name'=> 'pregunta_'.$pregunta->id_pre, 'disabled'=>$activa ? '' : 'disabled'));
 				endif; ?>
 			</div>
 		</div>
