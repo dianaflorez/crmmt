@@ -49,6 +49,7 @@
 		<?php } ?>
 	</div>
 
+	<?php if($model->isNewRecord): ?>
 	<div class="form-group">
 		<?php echo CHtml::label('Respuesta', 'pregunta_tipo'); ?>
 		<div class="form-group">
@@ -65,6 +66,7 @@
 			</div>
 		</div>
 	</div>
+	<?php endif; ?>
 
 	<div id="tipo_abierta_opciones" class="form-group" style="display: none;">
 		<?php echo CHtml::label('Respuesta abierta tipo', 'pregunta_tipo'); ?>
@@ -121,11 +123,15 @@
 
 <script id="opcion_template" type="text/template">
 	<div class="col-xs-1 col-sm-1 col-md-1">
-		<button type="button" class="close eliminar_opcion" aria-hidden="true">&times;</button>
+		<button type="button" class="close eliminar_opcion <% if(!cerrar) print('hidden'); %>" aria-hidden="true">&times;</button>
 	</div>
 	<div class="col-xs-10 col-sm-11 col-md-11">
 		<div class="form-group">
-			<input class="form-control" maxlength="70" placeholder="Opción" name="Opcion[]" type="text">
+			<input class="form-control" maxlength="70" placeholder="Opción" name="<% if(id_op) print('Opcion[Existentes]['+id_op+']'); else print('Opcion[Nuevas][]'); %>" type="text" value="<%= texto %>">
 		</div>
 	</div>
 </script>
+<script type="text/javascript">
+	var opcionesExistentes = <?php echo  CJSON::encode($model->opciones).';'; ?> 
+</script>
+

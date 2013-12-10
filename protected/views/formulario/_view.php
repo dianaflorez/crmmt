@@ -29,7 +29,7 @@
 	<?php echo CHtml::encode($data->id_usu); ?>
 	<br />
 
-	<b><?php echo CHtml::link('Agregar pregunta', Yii::app()->createUrl('pregunta/create/', array('idfor'=>$data->id_for)));  ?>:</b>
+	<b><?php echo CHtml::link('Agregar pregunta', Yii::app()->createUrl('pregunta/create/', array('idfor'=>$data->id_for)));  ?></b>
 	<br />
 
 </div>

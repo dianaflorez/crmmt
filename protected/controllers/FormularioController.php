@@ -104,10 +104,16 @@ class FormularioController extends Controller
 		}
 
 		$this->render('update',array(
-			'model'=>$model,
+			'model'  => $model,
+			//'activa' => false
 		));
 	}
 
+
+	/**
+	 * Genera la encuesta para ser diligenciada por el usuario.
+	 * 
+	*/
 	public function actionEncuesta($id, $id_usur)
 	{
 		$model = $this->loadModel($id);
@@ -210,11 +216,11 @@ class FormularioController extends Controller
 						}
 						
 					}
-					$transaccion->commit();
+					$transaccion->commit(); // Si todo salio bien, procedemos a almacenar.
 				}
 				catch(Exception $e)
 				{
-					$transaccion->rollback();
+					$transaccion->rollback(); // Si alguna de las transacciones falla deshacemos todo.
 					$error = $e->getMessage();
 				}
 			}
@@ -231,12 +237,17 @@ class FormularioController extends Controller
 		));	
 	}
 
+
+	/**
+	 * Genera una vista previa no editable de la encuesta.
+	 * 
+	*/
 	public function actionRevisarEncuesta($id)
 	{
 		$model = $this->loadModel($id);
 		
 
-		$this->render('encuesta', array(
+		$this->render('revisar', array(
 			'model'  => $model,
 			'activa' => false
 		));	

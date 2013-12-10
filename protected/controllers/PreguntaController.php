@@ -91,7 +91,7 @@ class PreguntaController extends Controller
 		if(isset($_POST['Pregunta']))
 		{
 			$model->attributes  = $_POST['Pregunta'];
-			$p_opciones         = $_POST['Opcion'];
+			$p_opciones         = $_POST['Opcion']['Nuevas'];
 			$p_tipo_pregunta     = $_POST['Tipo'];
 			$p_opciones_abierta = $_POST['Opciones_abierta'];
 			//var_dump($_POST['Tipo']);
@@ -139,7 +139,7 @@ class PreguntaController extends Controller
 										}
 									}
 								}
-								$transaccion->commit();
+								//$transaccion->commit();
 								$this->redirect(array('view','id' => $model->id_pre));
 							}
 							else
@@ -169,6 +169,21 @@ class PreguntaController extends Controller
 		));
 	}
 
+	// public function actionOpciones($id)
+	// {
+	// 	//if(isset($_POST['Consulta']))
+	// 	//{
+	// 		$model    = Pregunta::model()->findByPk($id);
+	// 		$opciones = array();
+	// 		if($model)
+	// 			$opciones = $model->opciones;
+	// 		//var_dump($opciones);
+	// 		echo CJSON::encode($opciones);
+	// 		Yii::app()->end();
+
+	// 	//}		
+	// }
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -184,8 +199,10 @@ class PreguntaController extends Controller
 		if(isset($_POST['Pregunta']))
 		{
 			$model->attributes=$_POST['Pregunta'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_pre));
+			var_dump($_POST['Opcion']['Existentes']);
+			var_dump($_POST['Opcion']['Nuevas']);
+			//if($model->save())
+				//$this->redirect(array('view','id'=>$model->id_pre));
 		}
 
 		$this->render('update',array(

@@ -1,10 +1,10 @@
 /* 
 ==========================================================================================================
 *
-*	Aplicación BackboneJS para la generar dinamicamente opcions y sus respectivas opciones de respuesta.
+*	Aplicación BackboneJS para la generar dinamicamente las opciones de respuesta de un pregunta.
 *
 *	Creada              : 04 de diciembre de 2013.
-*	Última modificación : 05 de diciembre de 2013.
+*	Última modificación : 10 de diciembre de 2013.
 ==========================================================================================================
 */
 
@@ -32,8 +32,15 @@ var app = app ||
 	app.Modules.Models.Opcion = Backbone.Model.extend({
 		defaults: {
 			texto: '',
-			tipo: 'unica'
+			tipo: 'unica',
+			cerrar: true,
+			id_op: ',
 		},
+
+		toggle: function() {
+			this.set({cerrar : !this.get('cerrar')});
+		}
+
 
 	});
 
@@ -43,7 +50,16 @@ var app = app ||
 	 **/
 	 app.Modules.Collections.Opciones = Backbone.Collection.extend({
 		model: app.Modules.Models.Opcion,
+		
+		initialize: function() {
+			app.vent.on('intento:opcionView', this.verificarMinimo, this);
+		},
 
+		verificarMinimo: function(opcionView) {
+			if(this.length>=3){
+				opcionView.trigger('eliminar');
+			}
+		}
 	});
 
 
@@ -56,16 +72,28 @@ var app = app ||
 		template: _.template($('#opcion_template').html()),
 
 		events: {
-			'click .close': 'eliminarOpcion',
+			'click .close': 'intentoEliminar',
 			'click .abierta': 'quitarOpciones'
 		},
 
-		eliminarOpcion: function(){
-			this.model.destroy();
-			this.remove();
+		initialize: function() {
+			this.listenTo(this, 'eliminar', this.eliminarOpcion);
+			this.listenTo(this.model, 'change', this.render)
 		},
 
-		render: function (){
+		intentoEliminar: function() {
+			app.vent.trigger('intento:opcionView', this);
+		},
+
+		eliminarOpcion: function() {
+			var that = this;
+			this.$el.fadeOut(500, function(){
+				that.model.destroy();
+				that.remove();
+			});
+		},
+ 
+		render: function () {
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		},
@@ -82,15 +110,42 @@ var app = app ||
 		initialize: function() {
 			this.listenTo(this.collection, 'add', this.nuevaOpcion);
 			this.listenTo(this.collection, 'reset', this.agregarTodas);
+			this.listenTo(this.collection, 'destroy', this.verificarIconoCerrar);
+			this.listenTo(this.collection, 'add', this.verificarIconoCerrar);
 			this.listenTo(this.collection, 'all', this.render);
 			this.agregarTodas();
+		},
+
+		// Oculta o muestra el icono de cerrar de cada opción.
+		verificarIconoCerrar: function(){
+			console.log('aaa');
+			console.log(this.collection.length);
+			//debugger;
+			if(this.collection.length <= 2){
+				this.collection.forEach(function(opcion){
+					if(opcion.get('cerrar') === true)
+						opcion.toggle();
+				});
+			
+			}else{
+				//this.collection <= 2){
+				this.collection.forEach(function(opcion){
+					if(opcion.get('cerrar') === false)
+						opcion.toggle();
+					//this.i++;
+				});
+			}
+			
 		},
 
 		nuevaOpcion: function(opcion) {
 			var opcionView = new app.Modules.Views.OpcionView({
 				model: opcion
 			});
-			this.$el.append(opcionView.render().el);
+			var nuevo=opcionView.render().el;
+			$(nuevo).hide();
+			this.$el.append(nuevo);
+			$(nuevo).fadeIn('fast');
 		},
 
 		agregarTodas: function() {
@@ -138,13 +193,24 @@ var app = app ||
 		}
 	});	
 
-
+	app.vent = _.extend({}, Backbone.Events);
 
 	/**
-	 * 	Generación de una instancia inicial de la colección de opciones. Para que minimo tenga una opción
-	 * 	presente.
+	 * 	Generación de una instancia inicial de la colección de opciones. Para que minimo tenga dos opciones si es una pregunta nueva o muestre
+	 * 	las opciones existentes si se está editando una pregunta..
 	 **/ 
-	app.Collections.Opciones = new app.Modules.Collections.Opciones([new app.Modules.Models.Opcion()]);
+	app.Collections.Opciones = new app.Modules.Collections.Opciones();
+	if(opcionesExistentes.length === 0)
+	{
+		app.Collections.Opciones.add(new app.Modules.Models.Opcion({ cerrar: false }));
+		app.Collections.Opciones.add(new app.Modules.Models.Opcion({ cerrar: false }));
+	}
+	else
+	{
+		opcionesExistentes.forEach(function(opcion) {
+		    app.Collections.Opciones.add(new app.Modules.Models.Opcion({ id_op: opcion.id_op, texto: opcion.txtop}));
+		});
+	}
 
 	/**
 	 * 	Instancia de la aplicación. Se inyecta la colección inicial. 	

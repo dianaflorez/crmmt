@@ -1,8 +1,3 @@
-<div>
-	<h2><?php echo $model->titulo; ?></h2>
-	<p><?php echo $model->contenido; ?></p>
-</div>
-
 <div class="form col-md-6">
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'encuesta-form',
@@ -13,9 +8,31 @@
 		// See class documentation of CActiveForm for details on this.
 		'enableAjaxValidation'=>false,
 	)); ?>
+
+	<div class="form-group <?php if($form->error($model,'titulo') != ''){ echo 'has-error'; } ?>">
+		<?php echo $form->labelEx($model,'titulo'); ?>
+		<?php echo $form->textField($model,'titulo', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Título')); ?>
+		<?php if($form->error($model,'titulo')!='') { ?>
+				<p class="text-danger">					
+					<?php echo $model->getError('titulo'); ?>			
+				</p>
+		<?php } ?>
+	</div>
+	<div class="form-group">
+		<?php echo $form->labelEx($model,'contenido'); ?>
+			<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de su encuesta')); ?>
+		<?php echo $form->error($model,'contenido'); ?>
+	</div>
+
 	<?php foreach ($model->preguntas as $pregunta): ?>
 		<div class="well well-sm">
-			<h3><?php echo $pregunta->txtpre; ?></h3>
+			<div class="form-group">
+			<?php 
+					echo $form->labelEx($pregunta,'txtpre');
+					//echo $pregunta->txtpre; 
+					echo CHtml::textField('Pregunta['.$pregunta->id_pre.']', $pregunta->txtpre, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta"));
+			?>
+			</div>
 			<div class="form-group">
 				<?php 
 				if($pregunta->id_tpr === null): 
@@ -26,21 +43,21 @@
 						  <label>
 						    <?php
 						   		if($pregunta->id_tp === 1)
-						   			echo CHtml::radioButton('pregunta_'.$pregunta->id_pre, $porDefecto, array('disabled'=>$activa ? '' : 'disabled'));
+						   			echo CHtml::radioButton('', $porDefecto, array('value'=>$opcion->id_op, 'disabled'=>$activa ? '' : 'disabled'));
 						   		elseif($pregunta->id_tp === 2)
-						   			echo CHtml::checkBox('pregunta_'.$pregunta->id_pre, $porDefecto, array('disabled'=>$activa ? '' : 'disabled'));
+						   			echo CHtml::checkBox('', $porDefecto, array('value'=>$opcion->id_op, 'disabled'=>$activa ? '' : 'disabled'));
 						   		$porDefecto = false;
-						   		echo $opcion->txtop; ?>
+						   		echo CHtml::textField('Opcion['.$opcion->id_op.']', $opcion->txtop, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta"));//$opcion->txtop; ?>
 						  </label>
 						</div>
 				<?php 
 					endforeach; 
 				elseif($pregunta->id_tpr === 1):
-					echo CHtml::textField('pregunta_'.$pregunta->id_pre, null, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta", 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::textField('', null, array('class'=>"form-control texto", 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Respuesta", 'disabled'=>$activa ? '' : 'disabled'));
 				elseif($pregunta->id_tpr === 2):
-					echo CHtml::numberField('pregunta_'.$pregunta->id_pre, null, array('class'=>"form-control numero", 'min'=>0, 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Número", 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::numberField('', null, array('class'=>"form-control numero", 'min'=>0, 'name'=> 'pregunta_'.$pregunta->id_pre, 'placeholder'=>"Número", 'disabled'=>$activa ? '' : 'disabled'));
 				elseif($pregunta->id_tpr === 3):
-					echo CHtml::dateField('pregunta_'.$pregunta->id_pre, date('Y-m-d'), array('class'=>"form-control fecha", 'name'=> 'pregunta_'.$pregunta->id_pre, 'disabled'=>$activa ? '' : 'disabled'));
+					echo CHtml::dateField('', date('Y-m-d'), array('class'=>"form-control fecha", 'name'=> 'pregunta_'.$pregunta->id_pre, 'disabled'=>$activa ? '' : 'disabled'));
 				endif; ?>
 			</div>
 		</div>
@@ -53,4 +70,14 @@
 	</div>
 	<?php $this->endWidget(); ?>
 </div>
+
+<script type="text/javascript">
+	
+	$(document).on('ready', inicio);
+
+	function inicio(){
+		$('#Formulario_contenido').jqte();
+	}
+
+</script>
 		

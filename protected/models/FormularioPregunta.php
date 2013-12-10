@@ -40,10 +40,10 @@ class FormularioPregunta extends CActiveRecord
 		return array(
 			array('id_pre, id_for, id_usu', 'required'),
 			array('id_pre, id_for', 'numerical', 'integerOnly'=>true),
-			array('estado, fecini, fecfin, feccre, fecmod', 'safe'),
+			array('feccre, fecmod', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_fp, id_pre, id_for, estado, fecini, fecfin, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_fp, id_pre, id_for, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -84,9 +84,9 @@ class FormularioPregunta extends CActiveRecord
 			'id_fp' => 'Id Fp',
 			'id_pre' => 'Id Pre',
 			'id_for' => 'Id For',
-			'estado' => 'Estado',
-			'fecini' => 'Fecini',
-			'fecfin' => 'Fecfin',
+			// 'estado' => 'Estado',
+			// 'fecini' => 'Fecini',
+			// 'fecfin' => 'Fecfin',
 			'feccre' => 'Feccre',
 			'fecmod' => 'Fecmod',
 			'id_usu' => 'Id Usu',
@@ -114,9 +114,9 @@ class FormularioPregunta extends CActiveRecord
 		$criteria->compare('id_fp',$this->id_fp);
 		$criteria->compare('id_pre',$this->id_pre);
 		$criteria->compare('id_for',$this->id_for);
-		$criteria->compare('estado',$this->estado);
-		$criteria->compare('fecini',$this->fecini,true);
-		$criteria->compare('fecfin',$this->fecfin,true);
+		// $criteria->compare('estado',$this->estado);
+		// $criteria->compare('fecini',$this->fecini,true);
+		// $criteria->compare('fecfin',$this->fecfin,true);
 		$criteria->compare('feccre',$this->feccre,true);
 		$criteria->compare('fecmod',$this->fecmod,true);
 		$criteria->compare('id_usu',$this->id_usu,true);

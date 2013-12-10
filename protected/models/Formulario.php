@@ -10,6 +10,9 @@
  * @property string $feccre
  * @property string $fecmod
  * @property string $id_usu
+ * @property boolean $estado
+ * @property string $fecini
+ * @property string $fecfin
  *
  * The followings are the available model relations:
  * @property General $idUsu
@@ -35,10 +38,10 @@ class Formulario extends CActiveRecord
 		return array(
 			array('titulo, id_usu', 'required', 'message' => 'No puede ser vacio.'),
 			array('titulo', 'length', 'max'=>64),
-			array('contenido, feccre, fecmod', 'safe'),
+			array('contenido, feccre, fecmod, estado, fecini, fecfin', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_for, titulo, contenido, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_for, titulo, contenido, feccre, fecmod, id_usu, estado, fecini, fecfin', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -81,6 +84,9 @@ class Formulario extends CActiveRecord
 			'feccre'    => 'Feccre',
 			'fecmod'    => 'Fecmod',
 			'id_usu'    => 'Id Usu',
+			'estado'    => 'Estado',
+			'fecini'    => 'Fecini',
+			'fecfin'    => 'Fecfin',
 		);
 	}
 
@@ -108,6 +114,9 @@ class Formulario extends CActiveRecord
 		$criteria->compare('feccre',$this->feccre,true);
 		$criteria->compare('fecmod',$this->fecmod,true);
 		$criteria->compare('id_usu',$this->id_usu,true);
+		$criteria->compare('estado',$this->estado);
+		$criteria->compare('fecini',$this->fecini,true);
+		$criteria->compare('fecfin',$this->fecfin,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
