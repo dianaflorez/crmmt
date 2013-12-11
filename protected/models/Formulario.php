@@ -68,7 +68,8 @@ class Formulario extends CActiveRecord
 		return array(
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'crmforpres' => array(self::HAS_MANY, 'Crmforpre', 'id_for'),
-			'preguntas' => array(self::MANY_MANY, 'Pregunta', 'crmforpre(id_pre,id_for)')
+			'preguntas' => array(self::MANY_MANY, 'Pregunta', 'crmforpre(id_pre,id_for)'),
+			//'formulariosPregunta' => array(self::HAS_MANY, 'FormularioPregunta', 'id_for')
 		);
 	}
 

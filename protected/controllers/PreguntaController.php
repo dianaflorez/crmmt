@@ -92,11 +92,10 @@ class PreguntaController extends Controller
 		{
 			$model->attributes  = $_POST['Pregunta'];
 			$p_opciones         = $_POST['Opcion']['Nuevas'];
-			$p_tipo_pregunta     = $_POST['Tipo'];
+			$p_tipo_pregunta    = $_POST['Tipo'];
 			$p_opciones_abierta = $_POST['Opciones_abierta'];
-			//var_dump($_POST['Tipo']);
 			
-			$tipos_pregunta    = TipoPregunta::model()->findAll();
+			$tipos_pregunta     = TipoPregunta::model()->findAll();
 
 			foreach($tipos_pregunta as $tipo_pregunta)
 			{
@@ -111,8 +110,8 @@ class PreguntaController extends Controller
 					{
 						if($p_tipo_pregunta === 'abierta'){
 							$tipo_pregunta_respuesta = TipoPreguntaRespuesta::model()->find('nombre = :nombre', array(':nombre'=>$p_opciones_abierta));
-							$model->id_tpr = $tipo_pregunta_respuesta->id_tpr;
-							// TODO Validar que existan retornados.
+							$model->id_tpr           = $tipo_pregunta_respuesta->id_tpr;
+							// TODO: Validar que existan retornados.
 						}
 
 						if($model->save())
@@ -126,20 +125,20 @@ class PreguntaController extends Controller
 							{
 								if($p_tipo_pregunta != 'abierta'){
 								
-									foreach($p_opciones as $tipo_opcion => $texto_opcion)
+									foreach($p_opciones  as $texto_opcion)
 									{
 										$opcion_pregunta         = new OpcionPregunta;
-										$opcion_pregunta->id_pre = $formulario_pregunta->id_pre;
+										$opcion_pregunta->id_pre = $model->id_pre;
 										$opcion_pregunta->txtop  = $texto_opcion;
 										$opcion_pregunta->id_usu = Yii::app()->user->getState('usuid');
 
 										if(!$opcion_pregunta->save())
 										{
-											throw new Exception('No se pudo asignar la pregunta a la encuesta.');
+											throw new Exception('No se pudo asignar la opción a la pregunta.');
 										}
 									}
 								}
-								//$transaccion->commit();
+								$transaccion->commit();
 								$this->redirect(array('view','id' => $model->id_pre));
 							}
 							else
@@ -164,7 +163,7 @@ class PreguntaController extends Controller
 		}
 
 		$this->render('create',array(
-			'model'=>$model,
+			'model' => $model,
 			'error' => $error
 		));
 	}
@@ -191,23 +190,94 @@ class PreguntaController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
-		$error = null;
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Pregunta']))
+		$model  = $this->loadModel($id);
+		$error  = null;
+		
+		$id_fp  = $model->formularioPregunta->id_fp;
+		$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
+		
+		if($conteo > 0)
 		{
-			$model->attributes=$_POST['Pregunta'];
-			var_dump($_POST['Opcion']['Existentes']);
-			var_dump($_POST['Opcion']['Nuevas']);
-			//if($model->save())
-				//$this->redirect(array('view','id'=>$model->id_pre));
+			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
+		}
+
+		$transaccion = $model->dbConnection->beginTransaction();
+		
+		try
+		{
+			if(isset($_POST['Pregunta']))
+			{
+				$model->attributes = $_POST['Pregunta'];
+								
+				$opciones = $model->opciones;
+					
+				if(isset($_POST['Opcion']['Existentes']))
+				{
+					$p_opciones = $_POST['Opcion']['Existentes'];
+
+					foreach ($opciones as $opcion) 
+					{
+						if(array_key_exists($opcion->id_op, $p_opciones))
+						{
+							$opcion->txtop = $p_opciones[$opcion->id_op];
+							
+							if(!$opcion->save())
+							{
+								throw new Exception('No se pudo actualizar la opción.');
+							}
+						}
+						else
+						{
+							$opcion->delete();
+						}
+					}
+				}
+				else
+				{	
+					foreach ($opciones as $opcion) 
+					{
+						$opcion->delete();
+					}
+				}
+
+				if(isset($_POST['Opcion']['Nuevas']))
+				{
+					$p_opciones_nuevas = $_POST['Opcion']['Nuevas'];
+
+					foreach($p_opciones_nuevas as $texto_opcion)
+					{
+						$opcion_pregunta         = new OpcionPregunta;
+						$opcion_pregunta->id_pre = $model->id_pre;
+						$opcion_pregunta->txtop  = $texto_opcion;
+						$opcion_pregunta->id_usu = Yii::app()->user->getState('usuid');
+
+						if(!$opcion_pregunta->save())
+						{
+							throw new Exception('No se pudo asignar la opción a la pregunta.');
+						}
+					}
+				}
+				
+				if($model->save())
+				{
+					$transaccion->commit();
+					$this->redirect(array('view','id'=>$model->id_pre));
+				}
+				else
+				{
+					throw new Exception('No se pudo actualizar la pregunta');
+				}
+			}
+		}
+		catch(Exception $e)
+		{
+			$transaccion->rollback();
+			$error = $e->getMessage();
 		}
 
 		$this->render('update',array(
-			'model'=>$model,
-			'error'=>$error
+			'model' => $model,
+			'error' => $error
 		));
 	}
 

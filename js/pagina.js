@@ -34,7 +34,7 @@ var app = app ||
 			texto: '',
 			tipo: 'unica',
 			cerrar: true,
-			id_op: ',
+			id_op: '',
 		},
 
 		toggle: function() {
@@ -73,7 +73,8 @@ var app = app ||
 
 		events: {
 			'click .close': 'intentoEliminar',
-			'click .abierta': 'quitarOpciones'
+			'click .abierta': 'quitarOpciones',
+			'focusout :input': 'guardarValorDigitado'
 		},
 
 		initialize: function() {
@@ -97,6 +98,12 @@ var app = app ||
 			this.$el.html(this.template(this.model.toJSON()));
 			return this;
 		},
+
+		guardarValorDigitado: function(e){
+			console.log('perdio foco');
+			console.log($(e.target).val());
+			this.model.set('texto', $(e.target).val());
+		}
 
 	});
 
