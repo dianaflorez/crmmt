@@ -132,6 +132,6 @@
 	</div>
 </script>
 <script type="text/javascript">
-	var opcionesExistentes = <?php echo  CJSON::encode($model->opciones).';'; ?> 
+	var opcionesExistentes = <?php echo  CJSON::encode($opciones).';'; ?> 
 </script>
 

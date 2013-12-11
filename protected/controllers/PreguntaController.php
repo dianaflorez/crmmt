@@ -85,6 +85,7 @@ class PreguntaController extends Controller
 	{
 		$model = new Pregunta;
 		$error = null;
+		$opciones = array();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
@@ -96,6 +97,12 @@ class PreguntaController extends Controller
 			$p_opciones_abierta = $_POST['Opciones_abierta'];
 			
 			$tipos_pregunta     = TipoPregunta::model()->findAll();
+			
+			// Guardar las opciones nuevas antes de que ocurra algún error mientras se graba para que el usuario no pierda las opciones ingresadas.			
+			foreach ($p_opciones as $texto) {
+				array_push($opciones, array('id_op'=>'', 'txtop'=> $texto));
+			}
+			//$opciones = $p_opciones;
 
 			foreach($tipos_pregunta as $tipo_pregunta)
 			{
@@ -123,8 +130,8 @@ class PreguntaController extends Controller
 							
 							if($formulario_pregunta->save())
 							{
-								if($p_tipo_pregunta != 'abierta'){
-								
+								if($p_tipo_pregunta != 'abierta')
+								{
 									foreach($p_opciones  as $texto_opcion)
 									{
 										$opcion_pregunta         = new OpcionPregunta;
@@ -156,6 +163,7 @@ class PreguntaController extends Controller
 					{
 						$transaccion->rollback();
 						$error = $e->getMessage();
+						$model->setIsNewRecord(true);
 					}
 
 				}
@@ -164,7 +172,8 @@ class PreguntaController extends Controller
 
 		$this->render('create',array(
 			'model' => $model,
-			'error' => $error
+			'error' => $error,
+			'opciones' => $opciones
 		));
 	}
 
@@ -192,6 +201,7 @@ class PreguntaController extends Controller
 	{
 		$model  = $this->loadModel($id);
 		$error  = null;
+		$opciones = $model->opciones; // Guarda las opciones de la pregunta, si hay errores de post mantiene guardadas las opciones nuevas entre cada petición POST.
 		
 		$id_fp  = $model->formularioPregunta->id_fp;
 		$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
@@ -209,13 +219,38 @@ class PreguntaController extends Controller
 			{
 				$model->attributes = $_POST['Pregunta'];
 								
-				$opciones = $model->opciones;
-					
+				//$opciones = $model->opciones;
+
+				if(isset($_POST['Opcion']['Nuevas']))
+				{
+					$p_opciones_nuevas = $_POST['Opcion']['Nuevas'];
+
+					// Guardar las opciones nuevas antes de que ocurra algún error mientras se graba para que el usuario no pierda las opciones ingresadas.
+					foreach ($p_opciones_nuevas as $texto_opcion) 
+					{
+						array_push($opciones, array('id_op'=>'', 'txtop'=> $texto_opcion));
+					}
+
+					foreach($p_opciones_nuevas as $texto_opcion)
+					{
+						$opcion_pregunta         = new OpcionPregunta;
+						$opcion_pregunta->id_pre = $model->id_pre;
+						$opcion_pregunta->txtop  = $texto_opcion;
+						$opcion_pregunta->id_usu = Yii::app()->user->getState('usuid');
+						
+						if(!$opcion_pregunta->save())
+						{
+							throw new Exception('No se pudo asignar la opción a la pregunta.');
+						}
+					}
+				}
+
+
 				if(isset($_POST['Opcion']['Existentes']))
 				{
 					$p_opciones = $_POST['Opcion']['Existentes'];
 
-					foreach ($opciones as $opcion) 
+					foreach ($model->opciones as $opcion) 
 					{
 						if(array_key_exists($opcion->id_op, $p_opciones))
 						{
@@ -240,24 +275,7 @@ class PreguntaController extends Controller
 					}
 				}
 
-				if(isset($_POST['Opcion']['Nuevas']))
-				{
-					$p_opciones_nuevas = $_POST['Opcion']['Nuevas'];
 
-					foreach($p_opciones_nuevas as $texto_opcion)
-					{
-						$opcion_pregunta         = new OpcionPregunta;
-						$opcion_pregunta->id_pre = $model->id_pre;
-						$opcion_pregunta->txtop  = $texto_opcion;
-						$opcion_pregunta->id_usu = Yii::app()->user->getState('usuid');
-
-						if(!$opcion_pregunta->save())
-						{
-							throw new Exception('No se pudo asignar la opción a la pregunta.');
-						}
-					}
-				}
-				
 				if($model->save())
 				{
 					$transaccion->commit();
@@ -267,6 +285,8 @@ class PreguntaController extends Controller
 				{
 					throw new Exception('No se pudo actualizar la pregunta');
 				}
+
+
 			}
 		}
 		catch(Exception $e)
@@ -277,7 +297,8 @@ class PreguntaController extends Controller
 
 		$this->render('update',array(
 			'model' => $model,
-			'error' => $error
+			'error' => $error,
+			'opciones' =>$opciones
 		));
 	}
 
