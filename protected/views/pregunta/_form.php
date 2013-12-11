@@ -27,26 +27,26 @@
 		<!--  Mostrar los errores que se han generado.
 		 El primer segmento muestra errores de validación. El segundo bloquer muestra errores generados en el envio
 		 de la campaña o excepción en el servidor. -->
-		<?php if($model->hasErrors()) {	?>
+		<?php if($model->hasErrors()):	?>
 			<p class="text-danger">
 				Hay campos mal diligenciados. Por favor revise.
 			</p>
-		<?php } ?>
-		<?php if($error != null) {	?>
+		<?php endif; ?>
+		<?php if($error != null):	?>
 			<p class="text-danger">
 				<?php echo $error; ?>
 			</p>		
-		<?php } ?>
+		<?php endif; ?>
 	</div>
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'txtpre'); ?>
 		<?php echo $form->textField($model,'txtpre', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Pregunta')); ?>
-		<?php if($form->error($model,'txtpre')!='') { ?>
+		<?php if($form->error($model,'txtpre')!=''): ?>
 				<p class="text-danger">					
 					<?php echo $model->getError('txtpre'); ?>			
 				</p>
-		<?php } ?>
+		<?php endif; ?>
 	</div>
 
 	<?php if($model->isNewRecord): ?>
