@@ -57,20 +57,38 @@
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav">
             <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">Aboutú</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
+             <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Clientes <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
+                <li><a href="#">Datos Personales</a></li>              
+                <li><a href="#">Datos Consumo</a></li>
                 <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
+                <li><a href="#">Reportes Clientes</a></li>
               </ul>
             </li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Campanias <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Nueva Campania</a></li>              
+                <li><a href="#">Lista Campanias</a></li>
+                <li><a href="#">Enviar Email Campania</a></li>
+              </ul>
+            </li>
+            <li><a href="#contact">Publico Objetivo</a></li>
+            <li class="dropdown">
+              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
+              <ul class="dropdown-menu">
+                <li><a href="#">Nueva Encuesta</a></li>
+                <li><a href="#">Enviar Email Encuesta</a></li>
+            	  <li class="divider"></li>
+                <li><a href="#">Reportes Encuestas</a></li>
+              </ul>
+            </li>
+            <li><a href="#contact">Promociones</a></li>
+            <li><a href="#contact">Soporte</a></li>
+            <li><a href="#contact">Tareas</a></li>
+            <li><a href="#contact">Usuarios CRM</a></li>
+           
           </ul>
         </div><!--/.nav-collapse -->
       </div>
