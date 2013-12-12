@@ -20,7 +20,7 @@
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'nombre'); ?>
-		<?php echo $form->textField($model,'nombre', array('class'=>'form-control', 'maxlength'=>128, 'placeholder'=>'Pregunta')); ?>
+		<?php echo $form->textField($model,'nombre', array('class'=>'form-control', 'maxlength'=>128, 'placeholder'=>'Nombre')); ?>
 		<?php if($form->error($model,'nombre')!=''): ?>
 				<p class="text-danger">					
 					<?php echo $model->getError('nombre'); ?>			
@@ -39,6 +39,6 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?>
+		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary')); ?>
 	</div>
 <?php $this->endWidget(); ?>

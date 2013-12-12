@@ -1,6 +1,6 @@
 <?php
 
-class PublicoObjetivoController extends Controller
+class UsuarioPublicoObjetivoController extends Controller
 {
 	/**
 	 * @var string the default layout for the views. Defaults to '//layouts/column2', meaning
@@ -32,7 +32,7 @@ class PublicoObjetivoController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'usuarios'),
+				'actions'=>array('create','update'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -62,25 +62,20 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new PublicoObjetivo;
+		$model=new UsuarioPublicoObjetivo;
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['PublicoObjetivo']))
+		if(isset($_POST['UsuarioPublicoObjetivo']))
 		{
-			$model->attributes=$_POST['PublicoObjetivo'];
-			$model->id_usu     = Yii::app()->user->getState('usuid');
+			$model->attributes=$_POST['UsuarioPublicoObjetivo'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_po));
+				$this->redirect(array('view','id'=>$model->id_upo));
 		}
 
-		$publicos = PublicoObjetivo::model()->findAll();
-
-		//var_dump(PublicoObjetivo::model()->getAttributes());
 		$this->render('create',array(
 			'model'=>$model,
-			'publicos'=>$publicos
 		));
 	}
 
@@ -96,25 +91,15 @@ class PublicoObjetivoController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(isset($_POST['PublicoObjetivo']))
+		if(isset($_POST['UsuarioPublicoObjetivo']))
 		{
-			$model->attributes=$_POST['PublicoObjetivo'];
+			$model->attributes=$_POST['UsuarioPublicoObjetivo'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_po));
+				$this->redirect(array('view','id'=>$model->id_upo));
 		}
 
 		$this->render('update',array(
 			'model'=>$model,
-		));
-	}
-
-
-	public function actionUsuarios($id)
-	{
-		$model = $this->loadModel($id);
-
-		$this->render('usuarios', array(
-			'model' => $model
 		));
 	}
 
@@ -137,7 +122,7 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('PublicoObjetivo');
+		$dataProvider=new CActiveDataProvider('UsuarioPublicoObjetivo');
 		$this->render('index',array(
 			'dataProvider'=>$dataProvider,
 		));
@@ -148,10 +133,10 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionAdmin()
 	{
-		$model=new PublicoObjetivo('search');
+		$model=new UsuarioPublicoObjetivo('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['PublicoObjetivo']))
-			$model->attributes=$_GET['PublicoObjetivo'];
+		if(isset($_GET['UsuarioPublicoObjetivo']))
+			$model->attributes=$_GET['UsuarioPublicoObjetivo'];
 
 		$this->render('admin',array(
 			'model'=>$model,
@@ -162,12 +147,12 @@ class PublicoObjetivoController extends Controller
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
 	 * @param integer $id the ID of the model to be loaded
-	 * @return PublicoObjetivo the loaded model
+	 * @return UsuarioPublicoObjetivo the loaded model
 	 * @throws CHttpException
 	 */
 	public function loadModel($id)
 	{
-		$model=PublicoObjetivo::model()->findByPk($id);
+		$model=UsuarioPublicoObjetivo::model()->findByPk($id);
 		if($model===null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
@@ -175,11 +160,11 @@ class PublicoObjetivoController extends Controller
 
 	/**
 	 * Performs the AJAX validation.
-	 * @param PublicoObjetivo $model the model to be validated
+	 * @param UsuarioPublicoObjetivo $model the model to be validated
 	 */
 	protected function performAjaxValidation($model)
 	{
-		if(isset($_POST['ajax']) && $_POST['ajax']==='publico-objetivo-form')
+		if(isset($_POST['ajax']) && $_POST['ajax']==='usuario-publico-objetivo-form')
 		{
 			echo CActiveForm::validate($model);
 			Yii::app()->end();

@@ -15,8 +15,15 @@
  * @property integer $id_clase_tercero
  *
  * The followings are the available model relations:
- * @property Usuarioweb $usuarioweb
+ * @property Emails[] $emails
+ * @property InformacionPersonal[] $informacionPersonals
  * @property Crmcampana[] $crmcampanas
+ * @property Crmcampanausu[] $crmcampanausus
+ * @property Direcciones[] $direcciones
+ * @property Usuarioweb $usuarioweb
+ * @property Crmusuariopo[] $crmusuariopos
+ * @property Crmusuariopo[] $crmusuariopos1
+ * @property Crmpreferencia[] $crmpreferencias
  * @property Crmtipopreres[] $crmtipopreres
  * @property Crmtipopre[] $crmtipopres
  * @property Crmpregunta[] $crmpreguntas
@@ -65,8 +72,16 @@ class General extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'usuarioweb' => array(self::HAS_ONE, 'Usuarioweb', 'id_usuario'),
+			'emails' => array(self::HAS_MANY, 'Emails', 'id'),
+			'informacionPersonal' => array(self::HAS_ONE, 'InformacionPersonal', 'id'),
+			//'informacionPersonal' => array(self::HAS_ONE, 'InformacionPersonal', 'id'),
 			'crmcampanas' => array(self::HAS_MANY, 'Crmcampana', 'id_usu'),
+			'crmcampanausus' => array(self::HAS_MANY, 'Crmcampanausu', 'id_usuc'),
+			'direcciones' => array(self::HAS_MANY, 'Direcciones', 'id'),
+			'usuarioweb' => array(self::HAS_ONE, 'Usuarioweb', 'id_usuario'),
+			'crmusuariopos' => array(self::HAS_MANY, 'Crmusuariopo', 'id_usupo'),
+			'crmusuariopos1' => array(self::HAS_MANY, 'Crmusuariopo', 'id_usu'),
+			'crmpreferencias' => array(self::HAS_MANY, 'Crmpreferencia', 'id_usup'),
 			'crmtipopreres' => array(self::HAS_MANY, 'Crmtipopreres', 'id_usu'),
 			'crmtipopres' => array(self::HAS_MANY, 'Crmtipopre', 'id_usu'),
 			'crmpreguntas' => array(self::HAS_MANY, 'Crmpregunta', 'id_usu'),

@@ -64,6 +64,7 @@ class PublicoObjetivo extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'crmusuariopos' => array(self::HAS_MANY, 'Crmusuariopo', 'id_po'),
+			'usuarios' => array(self::HAS_MANY, 'UsuarioPublicoObjetivo', 'id_po'),
 		);
 	}
 

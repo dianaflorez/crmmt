@@ -14,11 +14,13 @@ $this->menu=array(
 ?>
 
 <h1>Create PublicoObjetivo</h1>
-<div class="container">
-	<div class="row">
-	<?php $this->renderPartial('_form', array('model'=>$model)); ?> 
-	</div>
-	<div class="row">
-	<?php $this->renderPartial('_pub_obj', array('publicos'=>$publicos)); ?>
-	</div>
-</div>
+
+	
+		<div class="container">
+		<?php $this->renderPartial('_form', array('model'=>$model)); ?> 
+		</div>
+	
+
+		<div class="container">
+		<?php $this->renderPartial('_pub_obj', array('publicos'=>$publicos)); ?>
+		</div>

@@ -1,30 +1,31 @@
 <?php
 
 /**
- * This is the model class for table "crmusuariopo".
+ * This is the model class for table "direcciones".
  *
- * The followings are the available columns in table 'crmusuariopo':
- * @property integer $id_upo
- * @property integer $id_po
- * @property string $id_usupo
- * @property boolean $estado
- * @property string $feccre
- * @property string $fecmod
- * @property string $id_usu
+ * The followings are the available columns in table 'direcciones':
+ * @property integer $id_direccion
+ * @property string $id
+ * @property string $id_pais
+ * @property string $id_dep
+ * @property string $municipio
+ * @property string $descripcion
+ * @property string $direccion
  *
  * The followings are the available model relations:
- * @property Crmpublicobjetivo $idPo
- * @property General $idUsupo
- * @property General $idUsu
+ * @property General $id0
+ * @property Municipios $idPais
+ * @property Municipios $idDep
+ * @property Municipios $municipio0
  */
-class UsuarioPublicoObjetivo extends CActiveRecord
+class Direcciones extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'crmusuariopo';
+		return 'direcciones';
 	}
 
 	/**
@@ -35,12 +36,12 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id_usupo, id_usu', 'required'),
-			array('id_po', 'numerical', 'integerOnly'=>true),
-			array('estado, feccre, fecmod', 'safe'),
+			array('id, id_pais, id_dep, municipio, direccion', 'required'),
+			array('id_pais, id_dep, municipio', 'length', 'max'=>3),
+			array('descripcion, direccion', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_upo, id_po, id_usupo, estado, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_direccion, id, id_pais, id_dep, municipio, descripcion, direccion', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,9 +53,10 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idPo' => array(self::BELONGS_TO, 'Crmpublicobjetivo', 'id_po'),
-			'general' => array(self::BELONGS_TO, 'General', 'id_usupo'),
-			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu')
+			'id0' => array(self::BELONGS_TO, 'General', 'id'),
+			'pais' => array(self::BELONGS_TO, 'Pais', 'id_pais'),
+			'departamento' => array(self::BELONGS_TO, 'Departamento', 'id_dep'),
+			'municipio' => array(self::BELONGS_TO, 'Municipios', 'municipio'),
 		);
 	}
 
@@ -64,13 +66,13 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_upo' => 'Id Upo',
-			'id_po' => 'Id Po',
-			'id_usupo' => 'Id Usupo',
-			'estado' => 'Estado',
-			'feccre' => 'Feccre',
-			'fecmod' => 'Fecmod',
-			'id_usu' => 'Id Usu',
+			'id_direccion' => 'Id Direccion',
+			'id' => 'ID',
+			'id_pais' => 'Id Pais',
+			'id_dep' => 'Id Dep',
+			'municipio' => 'Municipio',
+			'descripcion' => 'Descripcion',
+			'direccion' => 'Direccion',
 		);
 	}
 
@@ -92,13 +94,13 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_upo',$this->id_upo);
-		$criteria->compare('id_po',$this->id_po);
-		$criteria->compare('id_usupo',$this->id_usupo,true);
-		$criteria->compare('estado',$this->estado);
-		$criteria->compare('feccre',$this->feccre,true);
-		$criteria->compare('fecmod',$this->fecmod,true);
-		$criteria->compare('id_usu',$this->id_usu,true);
+		$criteria->compare('id_direccion',$this->id_direccion);
+		$criteria->compare('id',$this->id,true);
+		$criteria->compare('id_pais',$this->id_pais,true);
+		$criteria->compare('id_dep',$this->id_dep,true);
+		$criteria->compare('municipio',$this->municipio,true);
+		$criteria->compare('descripcion',$this->descripcion,true);
+		$criteria->compare('direccion',$this->direccion,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -109,7 +111,7 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UsuarioPublicoObjetivo the static model class
+	 * @return Direcciones the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

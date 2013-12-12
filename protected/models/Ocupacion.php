@@ -1,30 +1,23 @@
 <?php
 
 /**
- * This is the model class for table "crmusuariopo".
+ * This is the model class for table "crmocupacion".
  *
- * The followings are the available columns in table 'crmusuariopo':
- * @property integer $id_upo
- * @property integer $id_po
- * @property string $id_usupo
- * @property boolean $estado
- * @property string $feccre
- * @property string $fecmod
- * @property string $id_usu
+ * The followings are the available columns in table 'crmocupacion':
+ * @property integer $id_ocu
+ * @property string $nombre
  *
  * The followings are the available model relations:
- * @property Crmpublicobjetivo $idPo
- * @property General $idUsupo
- * @property General $idUsu
+ * @property InformacionPersonal[] $informacionPersonals
  */
-class UsuarioPublicoObjetivo extends CActiveRecord
+class Ocupacion extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'crmusuariopo';
+		return 'crmocupacion';
 	}
 
 	/**
@@ -35,12 +28,11 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id_usupo, id_usu', 'required'),
-			array('id_po', 'numerical', 'integerOnly'=>true),
-			array('estado, feccre, fecmod', 'safe'),
+			array('nombre', 'required'),
+			array('nombre', 'length', 'max'=>50),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_upo, id_po, id_usupo, estado, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_ocu, nombre', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -52,9 +44,7 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idPo' => array(self::BELONGS_TO, 'Crmpublicobjetivo', 'id_po'),
-			'general' => array(self::BELONGS_TO, 'General', 'id_usupo'),
-			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu')
+			'informacionPersonals' => array(self::HAS_MANY, 'InformacionPersonal', 'id_ocupacion'),
 		);
 	}
 
@@ -64,13 +54,8 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_upo' => 'Id Upo',
-			'id_po' => 'Id Po',
-			'id_usupo' => 'Id Usupo',
-			'estado' => 'Estado',
-			'feccre' => 'Feccre',
-			'fecmod' => 'Fecmod',
-			'id_usu' => 'Id Usu',
+			'id_ocu' => 'Id Ocu',
+			'nombre' => 'Nombre',
 		);
 	}
 
@@ -92,13 +77,8 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_upo',$this->id_upo);
-		$criteria->compare('id_po',$this->id_po);
-		$criteria->compare('id_usupo',$this->id_usupo,true);
-		$criteria->compare('estado',$this->estado);
-		$criteria->compare('feccre',$this->feccre,true);
-		$criteria->compare('fecmod',$this->fecmod,true);
-		$criteria->compare('id_usu',$this->id_usu,true);
+		$criteria->compare('id_ocu',$this->id_ocu);
+		$criteria->compare('nombre',$this->nombre,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -109,7 +89,7 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return UsuarioPublicoObjetivo the static model class
+	 * @return Ocupacion the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{
