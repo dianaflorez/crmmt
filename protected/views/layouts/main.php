@@ -42,8 +42,36 @@
 </head>
 
 <body>
-	
-	<div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+	<?php if (Yii::app()->user->checkAccess("SuperAdmin")) {  ?>
+       
+        <?php	if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>	
+        <?php	}else{ ?>
+            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a>	
+        <?php	} ?>
+
+<!--Menu Admin -->    
+    <?php }elseif (Yii::app()->user->checkAccess("Admin")) {  ?>
+
+       
+        <?php	if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>	
+        <?php	}else{ ?>
+            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a>	
+        <?php	} ?>
+
+    <?php }elseif (Yii::app()->user->checkAccess("usuario")) {  ?>
+    
+       
+        <?php	if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>	
+        <?php	}else{ ?>
+            <a style="text-decoration:underline" href="index.php?r=site/logout">Logout </a>	
+        <?php	} ?>
+        
+    <?php }else { ?>
+    
+       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -76,9 +104,10 @@
             </li>
             <li><a href="#contact">Publico Objetivo</a></li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
+              <a href="formulario" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Nueva Encuesta</a></li>
+              <li><a href="formulario/create">Nueva Encuesta</a></li>
+                <li><a href="formulario/admin">Lista Encuesta</a></li>
                 <li><a href="#">Enviar Email Encuesta</a></li>
             	  <li class="divider"></li>
                 <li><a href="#">Reportes Encuestas</a></li>
@@ -93,25 +122,20 @@
         </div><!--/.nav-collapse -->
       </div>
     </div>
-
+        
+    
+    <?php	} ?>   
+    
+    <div style=" width:370px; border: 0px solid #000; float: right;">
+		<?php	if(Yii::app()->user->name=="Guest") { ?>
+            <a style="text-decoration:underline" href="index.php?r=site/login">Login</a>
+        <?php	}else{ ?>
+            <a style="text-decoration:underline" href="index.php?r=site/login">Logout <?php echo Yii::app()->user->name;  ?></a>
+        <?php	} ?>
+	</div>
 
 <div class="container" id="page">
 
-	<div id="header">
-		<div id="logo"><?php echo CHtml::encode(Yii::app()->name); ?></div>
-	</div><!-- header -->
-
-	<div class="row mainmenu">
-		<?php $this->widget('zii.widgets.CMenu',array(
-			'items'=>array(
-				array('label'=>'Home', 'url'=>array('/site/index')),
-				array('label'=>'About', 'url'=>array('/site/page', 'view'=>'about')),
-				array('label'=>'Contact', 'url'=>array('/site/contact')),
-				array('label'=>'Login', 'url'=>array('/site/login'), 'visible'=>Yii::app()->user->isGuest),
-				array('label'=>'Logout ('.Yii::app()->user->name.')', 'url'=>array('/site/logout'), 'visible'=>!Yii::app()->user->isGuest)
-			),
-		)); ?>
-	</div><!-- mainmenu -->
 	<?php if(isset($this->breadcrumbs)):?>
 		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
 			'links'=>$this->breadcrumbs,
