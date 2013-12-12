@@ -95,10 +95,10 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Campanias <b class="caret"></b></a>
+              <a href="campana" class="dropdown-toggle" data-toggle="dropdown">Campanias <b class="caret"></b></a>
               <ul class="dropdown-menu">
-                <li><a href="#">Nueva Campania</a></li>              
-                <li><a href="#">Lista Campanias</a></li>
+                <li><a href="campana/create">Nueva Campania</a></li>              
+                <li><a href="campana/admin">Lista Campanias</a></li>
                 <li><a href="#">Enviar Email Campania</a></li>
               </ul>
             </li>
