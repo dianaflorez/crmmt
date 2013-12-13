@@ -70,8 +70,8 @@ return array(
 		'db'=>array(
 			'connectionString' => 'pgsql:host=localhost;port=5432;dbname=mt',
 			'emulatePrepare' => true,
-			'username' => 'postgres',
-			'password' => 'control',
+			'username' => 'prueba',
+			'password' => '123456',
 			'charset' => 'utf8',
 		),
 		'authManager'=>array(

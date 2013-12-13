@@ -8,10 +8,13 @@
 <script>
 //$('#hola').tooltip();
 </script>
-<a href="#" class="btn btn-primary active" role="button">
-	<span class="glyphicon glyphicon-plus-sign"></span> Usuarios
-</a>
-
+	<div class="page-header">
+	  <h2>Público ojetivo (<?php echo $model->nombre; ?>) <small>Usuarios inscritos</small></h2>
+	</div>
+	<div class="page-header">
+	  <h2>Usuarios inscritos <small>Público ojetivo (<?php echo $model->nombre; ?>)</small></h2>
+	</div>
+	<?php echo CHtml::link('<span class="glyphicon glyphicon-plus-sign"></span> Usuarios', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po)), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
 <div class="table-responsive">
 	<table id='hola' class="table table-bordered table-striped">
 		<thead>

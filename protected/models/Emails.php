@@ -1,31 +1,25 @@
 <?php
 
 /**
- * This is the model class for table "direcciones".
+ * This is the model class for table "emails".
  *
- * The followings are the available columns in table 'direcciones':
- * @property integer $id_direccion
+ * The followings are the available columns in table 'emails':
+ * @property integer $id_email
  * @property string $id
- * @property string $id_pais
- * @property string $id_dep
- * @property string $municipio
  * @property string $descripcion
  * @property string $direccion
  *
  * The followings are the available model relations:
  * @property General $id0
- * @property Municipios $idPais
- * @property Municipios $idDep
- * @property Municipios $municipio0
  */
-class Direcciones extends CActiveRecord
+class Emails extends CActiveRecord
 {
 	/**
 	 * @return string the associated database table name
 	 */
 	public function tableName()
 	{
-		return 'direcciones';
+		return 'emails';
 	}
 
 	/**
@@ -36,12 +30,12 @@ class Direcciones extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id, id_pais, id_dep, municipio, direccion', 'required'),
-			array('id_pais, id_dep, municipio', 'length', 'max'=>3),
-			array('descripcion, direccion', 'length', 'max'=>50),
+			array('id, direccion', 'required'),
+			array('descripcion', 'length', 'max'=>50),
+			array('direccion', 'length', 'max'=>70),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_direccion, id, id_pais, id_dep, municipio, descripcion, direccion', 'safe', 'on'=>'search'),
+			array('id_email, id, descripcion, direccion', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,9 +48,6 @@ class Direcciones extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'id0' => array(self::BELONGS_TO, 'General', 'id'),
-			'pais' => array(self::BELONGS_TO, 'Pais', 'id_pais'),
-			'departamento' => array(self::BELONGS_TO, 'Departamento', 'id_dep'),
-			'municipio' => array(self::BELONGS_TO, 'Municipios', 'municipio'),
 		);
 	}
 
@@ -66,11 +57,8 @@ class Direcciones extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_direccion' => 'Id Direccion',
+			'id_email' => 'Id Email',
 			'id' => 'ID',
-			'id_pais' => 'Id Pais',
-			'id_dep' => 'Id Dep',
-			'municipio' => 'Municipio',
 			'descripcion' => 'Descripcion',
 			'direccion' => 'Direccion',
 		);
@@ -94,15 +82,10 @@ class Direcciones extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_direccion',$this->id_direccion);
+		$criteria->compare('id_email',$this->id_email);
 		$criteria->compare('id',$this->id,true);
-		$criteria->compare('id_pais',$this->id_pais,true);
-		$criteria->compare('id_dep',$this->id_dep,true);
-		$criteria->compare('municipio',$this->municipio,true);
 		$criteria->compare('descripcion',$this->descripcion,true);
 		$criteria->compare('direccion',$this->direccion,true);
-
-		$criteria->order = 'id_direccion DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -113,7 +96,7 @@ class Direcciones extends CActiveRecord
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.
-	 * @return Direcciones the static model class
+	 * @return Emails the static model class
 	 */
 	public static function model($className=__CLASS__)
 	{

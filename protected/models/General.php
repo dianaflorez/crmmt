@@ -100,7 +100,7 @@ class General extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'id_char' => 'Id Char',
+			'id_char' => 'Identificación',
 			'dv' => 'Dv',
 			'nombre1' => 'Nombre1',
 			'nombre2' => 'Nombre2',
@@ -138,6 +138,7 @@ class General extends CActiveRecord
 		$criteria->compare('apellido2',$this->apellido2,true);
 		$criteria->compare('razon_social',$this->razon_social,true);
 		$criteria->compare('id_clase_tercero',$this->id_clase_tercero);
+
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

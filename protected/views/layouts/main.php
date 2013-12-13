@@ -141,10 +141,10 @@
 			'links'=>$this->breadcrumbs,
 		)); ?><!-- breadcrumbs -->
 	<?php endif?>
-	<div class="row">
+	<div class="container">
 	<?php echo $content; ?>
 	</div>
-	<footer id="footer">
+	<footer class="container">
 		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
 		All Rights Reserved.<br/>
 		<?php echo Yii::powered(); ?>

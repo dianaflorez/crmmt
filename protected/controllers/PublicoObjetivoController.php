@@ -32,7 +32,7 @@ class PublicoObjetivoController extends Controller
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'usuarios'),
+				'actions'=>array('create','update', 'usuarios', 'agregarUsuarios'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -118,6 +118,77 @@ class PublicoObjetivoController extends Controller
 		));
 	}
 
+
+	public function actionagregarUsuarios($id)
+	{
+		$model = $this->loadModel($id);
+
+		//$general = new General;
+
+		$usuariosPorPagina = 20;
+		$pagina            = (isset($_GET['page']) ? $_GET['page'] : 1);
+		//$pagina          = (int) $pagina;
+		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
+
+		$criterio         = new CDbcriteria();
+		$criterio->limit  = $usuariosPorPagina;
+		$criterio->offset = $pagina;
+		$criterio->order  = 'apellido1';
+
+		
+
+		if(isset($_POST['Usuario']))
+		{
+			
+			//$identificacion = (isset($_POST['Usuario']['identificacion'])) ? $_POST['Usuario']['identificacion'] : '';
+			//$criterio->addSearchCondition('id_char', $identificacion, true, 'OR');
+			
+			//$criterio->addCondition("id_char = '".$identificacion."'");
+			// $criterio->params = array(':identificacion'=>$identificacion);
+
+			//$criterio->condition = "id_char1 =:id_char";
+			//$criterio->params = array(':id_char' => $identificacion);
+
+			// $criterio->addCondition('id_char = :identificacion');
+			// $criterio->params = array(':identificacion'=>$identificacion);
+
+			$nombresCadena = (isset($_POST['Usuario']['nombre'])) ? $_POST['Usuario']['nombre'] : '';
+			$nombres = explode(' ', $nombresCadena);
+			foreach ($nombres as $nombre) {
+					$criterio->addSearchCondition('nombre1', $nombre, true, 'OR', 'ILIKE');
+					$criterio->addSearchCondition('nombre2', $nombre, true, 'OR', 'ILIKE');
+					//$criterio->addSearchCondition('apellido1', $nombre, true, 'OR', 'ILIKE');
+					//$criterio->addSearchCondition('apellido2', $nombre, true, 'OR', 'ILIKE');
+			}
+
+			$apellidosCadena = (isset($_POST['Usuario']['apellido'])) ? $_POST['Usuario']['apellido'] : '';
+			$apellidos = explode(' ', $apellidosCadena);
+			foreach ($apellidos as $apellido) {
+					$criterio->addSearchCondition('apellido1', $apellido, true, 'OR', 'ILIKE');
+					$criterio->addSearchCondition('apellido2', $apellido, true, 'OR', 'ILIKE');
+			}
+
+		}
+
+
+		//$usu = General::model()->find($criterio);
+		$usuariosGeneral = General::model()->findAll($criterio);
+		$total           = General::model()->count($criterio);
+		//var_dump($usu);
+
+		$paginas = new CPagination($total);
+		$paginas->setPageSize($usuariosPorPagina);
+		$paginas->applyLimit($criterio);
+
+		$this->render('agregarUsuarios', array(
+			'model'           => $model,
+			'usuariosGeneral' => $usuariosGeneral,
+			'pages'           => $paginas,
+			'total' => $total,
+			//'nombres' => $nombresCadena,
+			//'apellidos' => $apellidosCadena
+		));
+	}
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
