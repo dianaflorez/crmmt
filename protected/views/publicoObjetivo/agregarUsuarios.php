@@ -5,6 +5,33 @@
 /* @var $form CActiveForm */
 	//$noMostrar = array('id_po', 'feccre', 'fecmod', 'id_usu');
 	$noExiste = 'No registra';
+	$meses    = array(
+		'1'  => 'Enero',
+		'2'  => 'Febrero',
+		'3'  => 'Marzo',
+		'4'  => 'Abril',
+		'5'  => 'Mayo',
+		'6'  => 'Junio',
+		'7'  => 'Julio',
+		'8'  => 'Agosto',
+		'9'  => 'Septiembre',
+		'10' => 'Octubre',
+		'11' => 'Noviembre',
+		'12' => 'Diciembre'
+	);
+	$anhos = array();
+	$year = date("Y") - 100; 
+	//var_dump($year);
+	for ($i = 0; $i <= 100; $i++) 
+	{
+		//echo "<option>$year</option>"; 
+		//array_push($anhos, ''.$year);
+		$anhos[$year] = $year;
+		$year++;
+	}
+	//$anhos = array();
+	//var_dump($anhos)
+;	//for($i=0; $i < 1000)
 ?>
 <script>
 //$('#hola').tooltip();
@@ -52,7 +79,85 @@
 	</div>
 
 	<div class="form-group">
-		<?php echo Chtml::submitButton('Filtrar', array('class'=>'btn btn-primary')); //$form->textField(General::model(),'nombre', array('class'=>'form-control', 'placeholder'=>'Nombre')); ?>
+		<div class="radio">
+			<label>
+			<?php echo CHtml::radioButton('Usuario[genero]', true, array('value'=>1)); ?>
+			Masculino
+		  </label>
+		</div>
+		<div class="radio">
+			<label>
+			<?php echo CHtml::radioButton('Usuario[genero]', false, array('value'=>0)); ?>
+			Femenino
+		  </label>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php echo CHtml::label('Fecha nacimiento', ''); ?>
+				<div class="form-group">
+				<?php echo CHtml::label('Mes', 'mes_nacimiento'); ?>
+				<?php echo CHtml::dropDownList('mes_nacimiento', '1', $meses, array( )); ?>
+				<?php echo CHtml::label('Año', 'anho_nacimiento'); ?>
+				<?php echo CHtml::dropDownList('anho_nacimiento', 2013, $anhos, array( )); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-12">
+			<div class="form-group">
+				<?php echo CHtml::label('Edad', ''); ?>
+				<div class="form-group">
+				<?php echo CHtml::label('Desde', 'fecha_inicio'); ?>
+				<?php echo CHtml::dateField('Pregunta[]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio')); ?>
+				<?php echo CHtml::label('Hasta', 'fecha_fin'); ?>
+				<?php echo CHtml::dateField('Pregunta[]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin')); ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php echo CHtml::label('Ocupación', 'ocupacion'); ?>
+				<?php echo CHtml::dropDownList('ocupacion', '1', array(), array( )); ?>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php echo CHtml::label('Estado civil', 'estado_civil'); ?>
+				<?php echo CHtml::dropDownList('estado_civil', '1', array(), array( )); ?>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<?php echo CHtml::label('Lugar donde vive', ''); ?>
+			<div class="form-group">
+				<?php echo CHtml::label('Pais', 'estado_civil'); ?>
+				<?php echo CHtml::dropDownList('estado_civil', '1', array(), array( )); ?>
+				
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+			<?php echo Chtml::submitButton('Filtrar', array('class'=>'btn btn-primary')); //$form->textField(General::model(),'nombre', array('class'=>'form-control', 'placeholder'=>'Nombre')); ?>
+			</div>
+		</div>
 	</div>
 	
 <div class="pull-right">Resultados <?php echo $total; ?></div>	
