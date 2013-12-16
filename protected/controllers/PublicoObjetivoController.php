@@ -28,7 +28,7 @@ class PublicoObjetivoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('index','view', 'agregarUsuarios'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -119,7 +119,7 @@ class PublicoObjetivoController extends Controller
 	}
 
 
-	public function actionagregarUsuarios($id)
+	public function actionAgregarUsuarios($id)
 	{
 		$model = $this->loadModel($id);
 
@@ -168,14 +168,25 @@ class PublicoObjetivoController extends Controller
 					$criterio->addSearchCondition('apellido2', $apellido, true, 'OR', 'ILIKE');
 			}
 
+			if(isset($_POST['Usuario']['genero'])){
+			$generoCadena = (isset($_POST['Usuario']['genero'])) ? $_POST['Usuario']['genero'] : '';
+			$genero = $generoCadena ==='1' ? true : false;
+			$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+			//foreach ($apellidos as $apellido) {
+					$criterio->addCondition('genero =:genero');
+					$criterio->params = array(':genero' => $genero);
+					//$criterio->addSearchCondition('apellido2', $apellido, true, 'OR', 'ILIKE');
+			//}
+}
+
 		}
 
 
 		//$usu = General::model()->find($criterio);
 		$usuariosGeneral = General::model()->findAll($criterio);
 		$total           = General::model()->count($criterio);
-		//var_dump($usu);
-
+		var_dump($total);
+		var_dump(count($usuariosGeneral));
 		$paginas = new CPagination($total);
 		$paginas->setPageSize($usuariosPorPagina);
 		$paginas->applyLimit($criterio);
