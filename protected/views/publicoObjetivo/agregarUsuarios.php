@@ -19,6 +19,12 @@
 		'11' => 'Noviembre',
 		'12' => 'Diciembre'
 	);
+
+	$genero = array();
+	//array_push($genero['id'], 
+	$genero[1] = 'Masculino';
+	$genero[0] = 'Femenino';
+
 	$anhos = array();
 	$year = date("Y") - 100; 
 	//var_dump($year);
@@ -63,8 +69,8 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Nombres', 'usuario_nombres'); ?>
-				<?php echo Chtml::textField('Usuario[nombre]', null, array('class'=>'form-control', 'placeholder'=>'Nombre', 'id'=>'usuario_nombres')); ?>
+				<?php echo CHtml::label('Nombres', 'Usuario_nombres'); ?>
+				<?php echo Chtml::textField('Usuario[nombre]', null, array('class'=>'form-control', 'placeholder'=>'Nombre', 'id'=>'Usuario_nombres')); ?>
 			</div>
 		</div>
 	</div>
@@ -72,24 +78,20 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Apellidos', 'usuario_apellidos'); ?>
-				<?php echo Chtml::textField('Usuario[apellido]', null, array('class'=>'form-control', 'placeholder'=>'Apellidos', 'id'=>'usuario_apellidos')); ?>
+				<?php echo CHtml::label('Apellidos', 'Usuario_apellidos'); ?>
+				<?php echo Chtml::textField('Usuario[apellido]', null, array('class'=>'form-control', 'placeholder'=>'Apellidos', 'id'=>'Usuario_apellidos')); ?>
 			</div>
 		</div>
 	</div>
 
-	<div class="form-group">
-		<div class="radio">
-			<label>
-			<?php echo CHtml::radioButton('Usuario[genero]', true, array('value'=>1)); ?>
-			Masculino
-		  </label>
-		</div>
-		<div class="radio">
-			<label>
-			<?php echo CHtml::radioButton('Usuario[genero]', false, array('value'=>0)); ?>
-			Femenino
-		  </label>
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php echo CHtml::label('Género', 'Usuario_genero'); ?>
+				<div class="form-group">
+					<?php echo CHtml::dropDownList('Usuario[genero]', null, $genero, array('prompt' => 'Seleccione')); ?>
+				</div>
+			</div>
 		</div>
 	</div>
 
@@ -98,10 +100,10 @@
 			<div class="form-group">
 				<?php echo CHtml::label('Fecha nacimiento', ''); ?>
 				<div class="form-group">
-				<?php echo CHtml::label('Mes', 'mes_nacimiento'); ?>
-				<?php echo CHtml::dropDownList('mes_nacimiento', '1', $meses, array( )); ?>
-				<?php echo CHtml::label('Año', 'anho_nacimiento'); ?>
-				<?php echo CHtml::dropDownList('anho_nacimiento', 2013, $anhos, array( )); ?>
+				<?php echo CHtml::label('Mes', 'Usuario_mes_nacimiento]'); ?>
+				<?php echo CHtml::dropDownList('Usuario[mes_nacimiento]', '1', $meses, array( )); ?>
+				<?php echo CHtml::label('Año', 'Usuario_anho_nacimiento]'); ?>
+				<?php echo CHtml::dropDownList('Usuario[anho_nacimiento]', 2013, $anhos, array( )); ?>
 				</div>
 			</div>
 		</div>
@@ -112,10 +114,10 @@
 			<div class="form-group">
 				<?php echo CHtml::label('Edad', ''); ?>
 				<div class="form-group">
-				<?php echo CHtml::label('Desde', 'fecha_inicio'); ?>
-				<?php echo CHtml::dateField('Pregunta[]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio')); ?>
-				<?php echo CHtml::label('Hasta', 'fecha_fin'); ?>
-				<?php echo CHtml::dateField('Pregunta[]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin')); ?>
+				<?php echo CHtml::label('Desde', 'Usuario_fecha_inicio'); ?>
+				<?php echo CHtml::dateField('Usuario[fecha_inicio]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
+				<?php echo CHtml::label('Hasta', 'Usuario_fecha_fin'); ?>
+				<?php echo CHtml::dateField('Usuario[fecha_fin]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin', 'disabled'=>'disabled')); ?>
 				</div>
 			</div>
 		</div>
@@ -124,9 +126,10 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Ocupación', 'ocupacion'); ?>
-				<?php echo CHtml::dropDownList('ocupacion', '1', array(), array( )); ?>
-				
+				<?php echo CHtml::label('Ocupación', 'Usuario_ocupacion'); ?>
+				<div class="form-group">
+				<?php echo CHtml::dropDownList('Usuario[ocupacion]', null, CHtml::ListData($ocupacion, 'id_ocu', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -134,20 +137,26 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Estado civil', 'estado_civil'); ?>
-				<?php echo CHtml::dropDownList('estado_civil', '1', array(), array( )); ?>
-				
+				<?php echo CHtml::label('Estado civil', 'Usuario_estado_civil'); ?>
+				<div class="form-group">
+					<?php echo CHtml::dropDownList('Usuario[estado_civil]', null, CHtml::ListData($estadoCivil, 'id_estado_civil', 'descripcion'), array('prompt' => 'Seleccione')); ?>
+				</div>
 			</div>
 		</div>
 	</div>
 
 	<div class="row">
 		<div class="col-md-4">
-			<?php echo CHtml::label('Lugar donde vive', ''); ?>
 			<div class="form-group">
-				<?php echo CHtml::label('Pais', 'estado_civil'); ?>
-				<?php echo CHtml::dropDownList('estado_civil', '1', array(), array( )); ?>
-				
+				<?php echo CHtml::label('Lugar donde vive', ''); ?>
+				<div class="form-group">
+				<?php echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
+				<?php echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				</div>
+				<div class="form-group">
+				<?php echo CHtml::label('Pais', 'Usuario_pais'); ?>
+				<?php echo CHtml::dropDownList('Usuario[pais]', null, CHtml::ListData($pais, 'id_pais', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -248,7 +257,7 @@
 						endif;
 					?>
 				</td>
-				<td><?php foreach ($usuario->direcciones as $direccion) {	echo $direccion->direccion; }  ?></td>
+				<td><?php foreach ($usuario->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
 				<td>
 					<p class="text-center">
 					<?php //echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$usuario->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>

@@ -127,12 +127,12 @@ class PublicoObjetivoController extends Controller
 
 		$usuariosPorPagina = 20;
 		$pagina            = (isset($_GET['page']) ? $_GET['page'] : 1);
-		//$pagina          = (int) $pagina;
+		$pagina          = (int) $pagina;
 		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
 
 		$criterio         = new CDbcriteria();
 		$criterio->limit  = $usuariosPorPagina;
-		$criterio->offset = $pagina;
+		//$criterio->offset = $pagina;
 		$criterio->order  = 'apellido1';
 
 		
@@ -140,53 +140,101 @@ class PublicoObjetivoController extends Controller
 		if(isset($_POST['Usuario']))
 		{
 			
-			//$identificacion = (isset($_POST['Usuario']['identificacion'])) ? $_POST['Usuario']['identificacion'] : '';
-			//$criterio->addSearchCondition('id_char', $identificacion, true, 'OR');
-			
-			//$criterio->addCondition("id_char = '".$identificacion."'");
-			// $criterio->params = array(':identificacion'=>$identificacion);
-
-			//$criterio->condition = "id_char1 =:id_char";
-			//$criterio->params = array(':id_char' => $identificacion);
-
-			// $criterio->addCondition('id_char = :identificacion');
-			// $criterio->params = array(':identificacion'=>$identificacion);
+			$identificacion = (isset($_POST['Usuario']['identificacion'])) ? $_POST['Usuario']['identificacion'] : '';
+			if($identificacion != '')
+			{
+				$criterio->addSearchCondition('id_char', $identificacion, true, 'OR', 'ILIKE');
+			}
 
 			$nombresCadena = (isset($_POST['Usuario']['nombre'])) ? $_POST['Usuario']['nombre'] : '';
-			$nombres = explode(' ', $nombresCadena);
-			foreach ($nombres as $nombre) {
+			if($nombresCadena != '')
+			{
+				$nombres = explode(' ', $nombresCadena);
+				foreach ($nombres as $nombre) 
+				{
 					$criterio->addSearchCondition('nombre1', $nombre, true, 'OR', 'ILIKE');
 					$criterio->addSearchCondition('nombre2', $nombre, true, 'OR', 'ILIKE');
-					//$criterio->addSearchCondition('apellido1', $nombre, true, 'OR', 'ILIKE');
-					//$criterio->addSearchCondition('apellido2', $nombre, true, 'OR', 'ILIKE');
+				}
 			}
 
 			$apellidosCadena = (isset($_POST['Usuario']['apellido'])) ? $_POST['Usuario']['apellido'] : '';
-			$apellidos = explode(' ', $apellidosCadena);
-			foreach ($apellidos as $apellido) {
+			if($apellidosCadena != '')
+			{
+				$apellidos = explode(' ', $apellidosCadena);
+				foreach ($apellidos as $apellido) 
+				{
 					$criterio->addSearchCondition('apellido1', $apellido, true, 'OR', 'ILIKE');
 					$criterio->addSearchCondition('apellido2', $apellido, true, 'OR', 'ILIKE');
+				}
 			}
 
-			if(isset($_POST['Usuario']['genero'])){
 			$generoCadena = (isset($_POST['Usuario']['genero'])) ? $_POST['Usuario']['genero'] : '';
-			$genero = $generoCadena ==='1' ? true : false;
-			$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
-			//foreach ($apellidos as $apellido) {
-					$criterio->addCondition('genero =:genero');
-					$criterio->params = array(':genero' => $genero);
-					//$criterio->addSearchCondition('apellido2', $apellido, true, 'OR', 'ILIKE');
-			//}
-}
+			var_dump($generoCadena);
+			if($generoCadena != '' || $generoCadena === '1' || $generoCadena === '0')
+			{
+				$genero = $generoCadena === '1' ? true : false;
+				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->addCondition('genero =:genero');
+				$criterio->params = array(':genero' => $genero);
+			}
+
+			// $mesCadena = (isset($_POST['Usuario']['mes_nacimiento'])) ? $_POST['Usuario']['mes_nacimiento'] : '';
+			// $anhoCadena = (isset($_POST['Usuario']['anho_nacimiento'])) ? $_POST['Usuario']['anho_nacimiento'] : '';
+			// if($mesCadena != '' && $anhoCadena !='')
+			// {
+			// 	$mes = new date('m', $mesCadena);
+			// 	$anho = 
+			// 	$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+			// 	$criterio->addCondition('genero =:genero');
+			// 	$criterio->params = array(':genero' => $genero);
+			// }
+
+
+			$fechaInicio = (isset($_POST['Usuario']['fecha_inicio'])) ? $_POST['Usuario']['fecha_inicio'] : '';
+			$fechanFin = (isset($_POST['Usuario']['fecha_fin'])) ? $_POST['Usuario']['fecha_fin'] : '';
+			if($fechaInicio != '' && $fechanFin !='')
+			{
+				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechanFin);
+			}
+			
+			$estadoCivilCadena = (isset($_POST['Usuario']['estado_civil'])) ? $_POST['Usuario']['estado_civil'] : '';
+			if($estadoCivilCadena != '')
+			{
+				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->addCondition('id_estado_civil =:id_estado_civil');
+				$criterio->params = array(':id_estado_civil' => $estadoCivilCadena);
+			}
+
+			$departamentoCadena = (isset($_POST['Usuario']['departamento'])) ? $_POST['Usuario']['departamento'] : '';
+			if($departamentoCadena != '' && $departamentoCadena !='2')
+			{
+				//$departamento = (int) $departamentoCadena;
+				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
+				$criterio->addCondition('id_dep =:id_dep');
+				$criterio->params = array(':id_dep' => $departamentoCadena);
+			}
+
+			$paisCadena = (isset($_POST['Usuario']['pais'])) ? $_POST['Usuario']['pais'] : '';
+			if($paisCadena != '' && $paisCadena !='2')
+			{
+				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
+				$criterio->addCondition('id_pais =:id_pais');
+				$criterio->params = array(':id_pais' => $paisCadena);                
+			}                                                                
 
 		}
 
-
-		//$usu = General::model()->find($criterio);
 		$usuariosGeneral = General::model()->findAll($criterio);
 		$total           = General::model()->count($criterio);
-		var_dump($total);
-		var_dump(count($usuariosGeneral));
+		
+		$ocupacion       = Ocupacion::model()->findAll();
+		$estadoCivil     = EstadoCivil::model()->findAll();
+		$departamento    = Departamentos::model()->findAll();
+		$pais            = Pais::model()->findAll();
+
+		//var_dump($total);
+		//var_dump(count($usuariosGeneral));
 		$paginas = new CPagination($total);
 		$paginas->setPageSize($usuariosPorPagina);
 		$paginas->applyLimit($criterio);
@@ -195,7 +243,11 @@ class PublicoObjetivoController extends Controller
 			'model'           => $model,
 			'usuariosGeneral' => $usuariosGeneral,
 			'pages'           => $paginas,
-			'total' => $total,
+			'total'           => $total,
+			'ocupacion'       => $ocupacion,
+			'estadoCivil'     => $estadoCivil,
+			'departamento'    => $departamento,
+			'pais'            => $pais
 			//'nombres' => $nombresCadena,
 			//'apellidos' => $apellidosCadena
 		));
