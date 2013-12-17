@@ -75,7 +75,17 @@ $cs = Yii::app()->getClientScript();
 				</p>
 			<?php } ?>
 		</div>
-		
+	</div>
+
+	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php echo CHtml::label('Público objetio', 'Publico_objetivo'); ?>
+				<div class="form-group">
+					<?php echo CHtml::dropDownList('Campana[PublicoObjetivo]', null, CHtml::ListData($publicos, 'id_po', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				</div>
+			</div>
+		</div>
 	</div>
 
 	<div class="form-group">

@@ -4,22 +4,31 @@
  * This is the model class for table "crmcampana".
  *
  * The followings are the available columns in table 'crmcampana':
- * @property integer $id_camp
- * @property string $contenido
+ * @property integer $id_cam
+ * @property integer $id_tc
  * @property string $asunto
+ * @property string $contenido
  * @property string $urlimage
  * @property string $fecini
  * @property string $fecfin
+ * @property integer $precio
+ * @property string $fecenvio
+ * @property boolean $estado
+ * @property boolean $personalizada
+ * @property string $almacen
  * @property string $feccre
  * @property string $fecmod
  * @property string $id_usu
  *
  * The followings are the available model relations:
+ * @property Crmcampanausu[] $crmcampanausus
  * @property General $idUsu
+ * @property Crmtipocam $idTc
  */
 class Campana extends CActiveRecord
 {
 	public $image;
+	
 	/**
 	 * @return string the associated database table name
 	 */
@@ -38,14 +47,16 @@ class Campana extends CActiveRecord
 		return array(
 			array('asunto, id_usu', 'required', 'message' => 'No puede ser vacio.'),
 			array('urlimage', 'required', 'message' => 'Debe seleccionar una imagen.'),
+			array('id_tc, precio', 'numerical', 'integerOnly'=>true),
 			array('asunto', 'length', 'max'=>128),
 			array('urlimage', 'length', 'max'=>100),
-			array('contenido, fecini, fecfin, feccre, fecmod', 'safe'),
+			array('almacen', 'length', 'max'=>3),
+			array('contenido, fecini, fecfin, fecenvio, estado, personalizada, feccre, fecmod', 'safe'),
 			// Atributo para subir la imagen al servidor.
 			array('image', 'file', 'types'=>'jpg, gif, png'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_camp, contenido, asunto, urlimage, fecini, fecfin, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_cam, id_tc, asunto, contenido, urlimage, fecini, fecfin, precio, fecenvio, estado, personalizada, almacen, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -70,7 +81,9 @@ class Campana extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
+			'crmcampanausus' => array(self::HAS_MANY, 'Crmcampanausu', 'id_cam'),
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
+			'idTc' => array(self::BELONGS_TO, 'Crmtipocam', 'id_tc'),
 		);
 	}
 
@@ -80,12 +93,18 @@ class Campana extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id_camp' => 'Id Camp',
-			'contenido' => 'Contenido',
+			'id_cam' => 'Id Cam',
+			'id_tc' => 'Id Tc',
 			'asunto' => 'Asunto',
+			'contenido' => 'Contenido',
 			'urlimage' => 'Urlimage',
 			'fecini' => 'Fecini',
 			'fecfin' => 'Fecfin',
+			'precio' => 'Precio',
+			'fecenvio' => 'Fecenvio',
+			'estado' => 'Estado',
+			'personalizada' => 'Personalizada',
+			'almacen' => 'Almacen',
 			'feccre' => 'Feccre',
 			'fecmod' => 'Fecmod',
 			'id_usu' => 'Id Usu',
@@ -110,12 +129,18 @@ class Campana extends CActiveRecord
 
 		$criteria=new CDbCriteria;
 
-		$criteria->compare('id_camp',$this->id_camp);
-		$criteria->compare('contenido',$this->contenido,true);
+		$criteria->compare('id_cam',$this->id_cam);
+		$criteria->compare('id_tc',$this->id_tc);
 		$criteria->compare('asunto',$this->asunto,true);
+		$criteria->compare('contenido',$this->contenido,true);
 		$criteria->compare('urlimage',$this->urlimage,true);
 		$criteria->compare('fecini',$this->fecini,true);
 		$criteria->compare('fecfin',$this->fecfin,true);
+		$criteria->compare('precio',$this->precio);
+		$criteria->compare('fecenvio',$this->fecenvio,true);
+		$criteria->compare('estado',$this->estado);
+		$criteria->compare('personalizada',$this->personalizada);
+		$criteria->compare('almacen',$this->almacen,true);
 		$criteria->compare('feccre',$this->feccre,true);
 		$criteria->compare('fecmod',$this->fecmod,true);
 		$criteria->compare('id_usu',$this->id_usu,true);

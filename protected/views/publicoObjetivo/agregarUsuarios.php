@@ -43,7 +43,7 @@
 //$('#hola').tooltip();
 </script>
 	<div class="page-header">
-	  <h2>Agregar usuarios <small>Público ojetivo (<?php echo $model->nombre; ?>)</small></h2>
+	  <h2>Agregar usuarios <small>Público objetivo (<?php echo $model->nombre; ?>)</small></h2>
 	</div>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -192,9 +192,13 @@
 			<tr>
 				<td><?php 
 					$activo = false;
-					foreach ($model->usuarios as $value) {
+					foreach ($model->usuarios as $value) 
+					{
 						if($value->id_usupo == $usuario->id)
+						{
 							$activo = true;
+							break;
+						}
 					}
 				echo CHtml::checkBox('Usuarios[agregar]', $activo, array('class'=>'activacion','data-idpo'=>$model->id_po, 'id'=>$usuario->id, 'value'=>$usuario->id)); ?></td>
 				<td><?php echo $usuario->id_char; ?></td>
@@ -320,7 +324,8 @@ $this->widget('CLinkPager', array(
 		});
 		 
 		request.fail(function( jqXHR, textStatus ) {
-		  alert( "Request failed: " + textStatus );
+
+		  	alert( "Request failed: " + textStatus );
 		});
 	}
 </script>

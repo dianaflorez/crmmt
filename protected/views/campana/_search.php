@@ -12,8 +12,8 @@
 )); ?>
 
 	<div class="row">
-		<?php echo $form->label($model,'id_camp'); ?>
-		<?php echo $form->textField($model,'id_camp'); ?>
+		<?php echo $form->label($model,'id_cam'); ?>
+		<?php echo $form->textField($model,'id_cam'); ?>
 	</div>
 
 	<div class="row">

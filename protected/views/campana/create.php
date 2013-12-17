@@ -15,4 +15,4 @@ $this->menu=array(
 
 <h1>Create Campana</h1>
 
-<?php $this->renderPartial('_form', array('model'=>$model, 'error'=>$error)); ?>
+<?php $this->renderPartial('_form', array('model'=>$model, 'publicos'=>$publicos, 'error'=>$error)); ?>

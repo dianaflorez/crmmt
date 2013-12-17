@@ -50,9 +50,10 @@ class Usuweb extends CActiveRecord
 			array('login', 'length', 'max'=>20),
 			array('estado', 'length', 'max'=>1),			
 			array('password', 'length', 'max'=>40),
+			array('feccre, fecmod, recibir_correo', 'safe'),
 			// The following rule is used by search().
 			// Please remove those attributes that should not be searched.
-			array('id_usuario, login, password, level,idUsuario.nombre1', 'safe', 'on'=>'search'),
+			array('id_usuario, login, password, level, feccre, fecmod, estado, recibir_correo',  'safe', 'on'=>'search'),
    	     	//password and repeat password
 		    array('password, claveant', 'required', 'on'=>'insert'),
             array('password, repeat_clave', 'required', 'on'=>'insert'),
@@ -87,7 +88,10 @@ class Usuweb extends CActiveRecord
 			'repeat_clave' => 'Repetir Clave',
 			'level' => 'Level',
 			'claveant'=>'Clave Anterior',
-			'estado'=>'Estado'
+			'feccre' => 'Feccre',
+			'fecmod' => 'Fecmod',
+			'estado' => 'Estado',
+			'recibir_correo' => 'Recibir Correo',
 		);
 	}
 
@@ -116,7 +120,11 @@ class Usuweb extends CActiveRecord
 		$criteria->compare('estado',$this->estado,true);		
 		$criteria->compare('password',$this->password,true);
 		$criteria->compare('level',$this->level);
-//		$criteria->compare('idUsuario.nombre1',$this->id_usuario,true);		
+//		$criteria->compare('idUsuario.nombre1',$this->id_usuario,true);	
+		$criteria->compare('feccre',$this->feccre,true);
+		$criteria->compare('fecmod',$this->fecmod,true);
+		//$criteria->compare('estado',$this->estado,true);
+		$criteria->compare('recibir_correo',$this->recibir_correo);	
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

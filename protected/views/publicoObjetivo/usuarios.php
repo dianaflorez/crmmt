@@ -10,7 +10,7 @@
 //$('#hola').tooltip();
 </script>
 	<div class="page-header">
-	  <h2>Usuarios inscritos <small>Público ojetivo (<?php echo $model->nombre; ?>)</small></h2>
+	  <h2>Usuarios inscritos <small>Público objetivo (<?php echo $model->nombre; ?>)</small></h2>
 	</div>
 	<?php echo CHtml::link('<span class="glyphicon glyphicon-plus-sign"></span> Usuarios', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po)), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
 <div class="table-responsive">
