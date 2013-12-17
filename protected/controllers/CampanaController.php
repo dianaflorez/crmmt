@@ -38,7 +38,7 @@ class CampanaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update','admin','delete','view','index','create'),
+				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -192,60 +192,50 @@ class CampanaController extends Controller
 		));
 	}
 
+	public function actionVeamos()
+	{
+		// Clase proporcuinada por mailchimp para el uso de su API.
+		Yii::import('application.extensions.mailchimp.Mailchimp');
+		// Llave del API autorizada en el perfil.
+		$api_key    = '515d5d909933946cd00c0473675cf6b7-us3';
+		$MailChimp = new Mailchimp($api_key);
+		$result = $MailChimp->call('lists/list', array(
+		           /* 'id'                => $listid,
+		            'email'             => array('email'=>$email),
+		            'merge_vars'        => $merge_vars,
+		            'double_optin'      => false,
+		            'update_existing'   => true,
+		            'replace_interests' => false,
+		            'send_welcome'      => false,*/
+		));
 
-	// public function actionCorreo()
-	// {
-	// 	if(Yii::app()->request->isPostRequest)
-	// 	{
-	// 		Yii::import('application.extensions.PHPMailer.*');
-		
-	// 		$texto               = $_POST['contenido'];
-	// 		$correo              = new phpmailer();
-	// 		$correo->isSMTP();
-	// 		$correo->Host        = 'smtp.gmail.com';
-	// 		$correo->Port        = 465;
-	// 		$correo->SMTPAuth    = true;
-	// 		$correo->Username    = 'ventas@marcasytendencias.com';
-	// 		$correo->Password    = 'v3nt4s2013';
-	// 		$correo->SMTPSecure  = 'ssl';
-	// 		$fallidos            = array();
-	// 		$enviados            = array();
-	// 		$todos               = array();
+		$susc = $MailChimp->call('lists/batch-subscribe', array(
+		            'id'                => 'a61184ea34',
+		            'batch'             => array('email'=>array('email'=> 'jaoi55@gmail.com')),
+		            // 'merge_vars'        => $merge_vars,
+		            // 'double_optin'      => false,
+		            // 'update_existing'   => true,
+		            // 'replace_interests' => false,
+		            // 'send_welcome'      => false,
+		));
+		var_dump($susc);
 
-	// 		for($i=0; $i<100; $i++){
-	// 			$correo->SetFrom('ventas@marcasytendencias.com', 'Servidor');
-	// 			$correo->Subject = 'Asuntooo '.$i + 1;
-	// 			$correo->MsgHtml($texto);
-	// 			$correo->AddAddress('jaoi55@gmail.com', 'John');
-	// 			try{
-	// 				if(!$correo->send()){
-	// 					array_push($fallidos, $correo->ErrorInfo);
-	// 					/*var_dump('No se pudo enviar el correo.');
-	// 					var_dump($correo->ErrorInfo);
-	// 					*/
-	// 				}else{
-	// 					//var_dump('Se envió el correo.');
-	// 					array_push($enviados, $correo->Subject);
-	// 				}
-	// 				if($i % 70 === 0){
-	// 					usleep(50000000);
-	// 				}
-	// 			}catch(Exception $e){
-	// 				array_push($todos,array('excepcion' => $e->getMessage() + ' Ultimo correo '+ $correo->Subject));
-	// 				$this->renderJSON($todos);
-	// 			}
+	}
 
-	// 		}
-	// 		array_push($todos, array('enviados' => $enviados));
-	// 		array_push($todos, array('fallidos' => $fallidos));
-	// 		//$todos = array('enviados'=>$enviados, 'fallidos'=>$fallidos);
-	// 		//var_dump($_POST['Campana']);
-	// 		$this->renderJSON($todos);
-	// 	}
+	protected function convertirListaMailChimp($publicoObjetivo)
+	{
+		$result = $MailChimp->call('lists/list', array(
+		           /* 'id'                => $listid,
+		            'email'             => array('email'=>$email),
+		            'merge_vars'        => $merge_vars,
+		            'double_optin'      => false,
+		            'update_existing'   => true,
+		            'replace_interests' => false,
+		            'send_welcome'      => false,*/
+		));
+		var_dump($result);
 
-
-		
-	// }
+	}
 
 	/**
 	 * Return data to browser as JSON

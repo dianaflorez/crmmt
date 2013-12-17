@@ -45,6 +45,20 @@ class UsuarioPublicoObjetivo extends CActiveRecord
 	}
 
 	/**
+	 * Asigna la fecha de creación o actualización automáticamente antes de grabar el modelo.
+	 **/
+
+	public function beforeSave() {
+	    if ($this->isNewRecord)
+	        $this->feccre = new CDbExpression('CURRENT_TIMESTAMP');
+	    else
+	        $this->fecmod = new CDbExpression('CURRENT_TIMESTAMP');
+	 
+	    return parent::beforeSave();
+	}
+
+
+	/**
 	 * @return array relational rules.
 	 */
 	public function relations()

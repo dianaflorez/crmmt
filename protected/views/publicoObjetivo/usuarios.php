@@ -3,14 +3,12 @@
 /* @var $this PublicoObjetivoController */
 /* @var $model PublicoObjetivo */
 /* @var $form CActiveForm */
+	$noExiste = 'No registra';
 	$noMostrar = array('id_po', 'feccre', 'fecmod', 'id_usu');
 ?>
 <script>
 //$('#hola').tooltip();
 </script>
-	<div class="page-header">
-	  <h2>Público ojetivo (<?php echo $model->nombre; ?>) <small>Usuarios inscritos</small></h2>
-	</div>
 	<div class="page-header">
 	  <h2>Usuarios inscritos <small>Público ojetivo (<?php echo $model->nombre; ?>)</small></h2>
 	</div>
@@ -36,10 +34,44 @@
 				<td><?php echo $usuario->general->id_char; ?></td>
 				<td><?php echo $usuario->general->nombre1.' '.$usuario->general->nombre2; ?></td>
 				<td><?php echo $usuario->general->apellido1.' '.$usuario->general->apellido2; ?></td>
-				<td class="hidden-xs"><?php echo $usuario->general->informacionPersonal->fecha_nacimiento; ?></td>
-				<td><?php if($usuario->general->informacionPersonal->genero) echo 'Masculino'; else echo 'Femenino'; ?></td>
-				<td><?php echo $usuario->general->informacionPersonal->ocupacion->nombre; ?></td>
-				<td><?php echo $usuario->general->informacionPersonal->estadoCivil->descripcion; ?></td>
+				<td class="hidden-xs">
+					<?php 
+						if($usuario->general->informacionPersonal) 
+							echo $usuario->general->informacionPersonal->fecha_nacimiento;
+						else
+							echo $noExiste;
+					?>
+				</td>
+				<td>
+					<?php 
+						if($usuario->general->informacionPersonal)
+						{
+							if($usuario->general->informacionPersonal->genero) 
+								echo 'Masculino'; 
+							else 
+								echo 'Femenino'; 
+						}
+						else{
+							echo $noExiste;
+						}
+					?>
+				</td>
+				<td>
+					<?php 
+						if($usuario->general->informacionPersonal) 
+							echo $usuario->general->informacionPersonal->ocupacion->nombre;
+						else
+							echo $noExiste;
+					?>
+				</td>
+				<td>
+					<?php 
+						if($usuario->general->informacionPersonal) 
+							echo $usuario->general->informacionPersonal->estadoCivil->descripcion;
+						else
+							echo $noExiste;
+					?>
+				</td>
 				<td><?php foreach ($usuario->general->direcciones as $direccion) {	echo $direccion->direccion;	}  ?></td>
 				<td><?php foreach ($usuario->general->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
 				<td><?php if($usuario->estado) echo 'Activo'; else echo 'Desactivado'; ?></td>

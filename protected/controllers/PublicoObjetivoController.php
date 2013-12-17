@@ -28,11 +28,11 @@ class PublicoObjetivoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'agregarUsuarios'),
+				'actions'=>array('index','view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'usuarios', 'agregarUsuarios'),
+				'actions'=>array('create','update', 'usuarios', 'agregarUsuarios', 'agregar'),
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -69,7 +69,7 @@ class PublicoObjetivoController extends Controller
 
 		if(isset($_POST['PublicoObjetivo']))
 		{
-			$model->attributes=$_POST['PublicoObjetivo'];
+			$model->attributes = $_POST['PublicoObjetivo'];
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_po));
@@ -252,6 +252,48 @@ class PublicoObjetivoController extends Controller
 			//'apellidos' => $apellidosCadena
 		));
 	}
+
+	public function actionAgregar()
+	{	
+		//var_dump(Yii::app()->user->getState('uaaasuid'));
+		if(isset($_POST['id_po']) && Yii::app()->user->getState('usuid') != null)
+		//if(isset($id) && Yii::app()->user->getState('usuid') != null)
+		{
+			$id                   = (int) $_POST['id_po'];//$id;
+			$model                = $this->loadModel($id);
+			$id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
+
+			// $usuario_po = UsuarioPublicoObjetivo::model()->findByPk($id_usupo);
+			// if($usuario_po)
+			// {
+			// 	$usuario->estado = 
+			// }
+			// else
+			// {
+				$usuario_po           = new UsuarioPublicoObjetivo;
+				$usuario_po->id_po    = $id;
+				$usuario_po->id_usupo = $id_usupo;
+				$usuario_po->id_usu   = Yii::app()->user->getState('usuid');
+			// }
+
+			try
+			{
+				if($usuario_po->save())
+				{
+					echo 'true';
+				}
+				else
+				{
+					throw new CHttpException(500,'La petición fallo.');
+				}
+			}
+			catch(Exception $e){
+				throw new CHttpException(500,'La petición fallo.');
+			}
+		}
+	}
+
+
 	/**
 	 * Deletes a particular model.
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.

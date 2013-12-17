@@ -172,8 +172,9 @@
 <div class="pull-right">Resultados <?php echo $total; ?></div>	
 
 <div class="table-responsive">
-	<table id='hola' class="table table-bordered table-striped">
+	<table id='registrosUsuarios' class="table table-bordered table-striped">
 		<thead>
+			<th></th>
 			<th>Identificación</th>
 			<th>Apellidos</th>
 			<th>Nombres</th>
@@ -189,6 +190,13 @@
 		<tbody>
 			<?php foreach ($usuariosGeneral as $usuario): ?>
 			<tr>
+				<td><?php 
+					$activo = false;
+					foreach ($model->usuarios as $value) {
+						if($value->id_usupo == $usuario->id)
+							$activo = true;
+					}
+				echo CHtml::checkBox('Usuarios[agregar]', $activo, array('class'=>'activacion','data-idpo'=>$model->id_po, 'id'=>$usuario->id, 'value'=>$usuario->id)); ?></td>
 				<td><?php echo $usuario->id_char; ?></td>
 				<td><?php echo $usuario->apellido1.' '.$usuario->apellido2; ?></td>
 				<td><?php echo $usuario->nombre1.' '.$usuario->nombre2; ?></td>
@@ -260,7 +268,7 @@
 				<td><?php foreach ($usuario->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
 				<td>
 					<p class="text-center">
-					<?php //echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$usuario->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
+					<?php echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/agregar/', array('id'=>$model->id_po, 'id_usupo'=>$usuario->id)), array('data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
 					<?php //echo CHtml::link('<span class="glyphicon glyphicon-user"></span>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$usuario->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?>
 					</p>
 				</td>
@@ -284,3 +292,35 @@ $this->widget('CLinkPager', array(
 ?>
 
 <?php $this->endWidget(); ?>
+
+
+<script>
+	$(document).on('ready', iniciar());
+
+	function iniciar(){
+		$('#registrosUsuarios .activacion').on('click', activar);
+	}
+
+	function activar(e){
+		var hola = $(e.target).prop('checked');
+		console.log('veamos '+hola);
+		var request = $.ajax({
+			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar/'); ?>",
+			type: "POST",
+			data: 
+			{ 
+				id_po : $(e.target).data("idpo"),
+				id_usupo: $(e.target).val(),
+			},
+			dataType: "html"
+		});
+		 
+		request.done(function( msg ) {
+		  $( "#log" ).html( msg );
+		});
+		 
+		request.fail(function( jqXHR, textStatus ) {
+		  alert( "Request failed: " + textStatus );
+		});
+	}
+</script>
