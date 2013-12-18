@@ -18,37 +18,28 @@
 		//$cs->registerCssFile($baseUrl.'/lib/bootstrap/css/bootstrap.min.css');
 		$cs->registerCssFile($baseUrl.'/css/main.css');
 		$cs->registerCssFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.css');
+    $cs->registerCssFile($baseUrl.'/lib/font-awesome/css/font-awesome.min.css');
 		//$cs->registerScriptFile($baseUrl.'/lib/jquery/jquery.min.js');
 		$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 		
 		//$cs->registerScriptFile($baseUrl.'/lib/handlebars/handlebars-v1.1.2.js');
-		//$cs->registerScriptFile($baseUrl.'/lib/bootstrap/js/bootstrap.min.js', CClientScript::POS_END); 
-	
+		//$cs->registerScriptFile($baseUrl.'/lib/bootstrap/js/bootstrap.min.js', CClientScript::POS_END); 	
 
-		
 
 	?>
-	<!-- blueprint CSS framework -->
-	<!-- -<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/screen.css" media="screen, projection" /> -->
-	<!-- <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/print.css" media="print" /> -->
-	<!--[if lt IE 8]>
-	<link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/ie.css" media="screen, projection" />
-	<![endif]-->
-
-	<!-- <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/main.css" /> -->
-	<!-- <link rel="stylesheet" type="text/css" href="<?php echo Yii::app()->request->baseUrl; ?>/css/form.css" /> -->
 
 	<title><?php echo CHtml::encode($this->pageTitle); ?></title>
 </head>
 
 <body>
-	<?php if (Yii::app()->user->checkAccess("SuperAdmin")) {  ?>
+	   <?php if (Yii::app()->user->checkAccess("SuperAdmin")) {  ?>
        
         <?php	if(Yii::app()->user->name=="Guest") { ?>
             <a href="index.php?r=site/login">Login</a>	
         <?php	}else{ ?>
             <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a>	
-        <?php	} ?>
+    <?php	} ?>
+
 
 <!--Menu Admin -->    
     <?php }elseif (Yii::app()->user->checkAccess("Admin")) {  ?>
@@ -70,8 +61,9 @@
         <?php	} ?>
         
     <?php }else { ?>
+
     
-       <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -102,7 +94,7 @@
                 <li><a href="#">Enviar Email Campania</a></li>
               </ul>
             </li>
-            <li><a href="#contact">Publico Objetivo</a></li>
+            <li><?php echo CHtml::link('Público Objetivo', Yii::app()->createUrl('publicoobjetivo/', array())); ?></li>
             <li class="dropdown">
               <a href="formulario" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -119,38 +111,28 @@
             <li><a href="#contact">Usuarios CRM</a></li>
            
           </ul>
+          <ul class="nav navbar-nav navbar-right">
+            <li>
+              <?php if(Yii::app()->user->name=="Guest"): ?>
+             
+                <?php echo CHtml::link('Login', Yii::app()->createUrl('site/login')); ?>
+              <?php else: ?>
+              <?php echo CHtml::link('Logout '.Yii::app()->user->name, Yii::app()->createUrl('site/logout')); ?>
+              <?php endif; ?>
+            </li>
+          </ul>
         </div><!--/.nav-collapse -->
       </div>
     </div>
         
     
     <?php	} ?>   
-    
-    <div style=" width:370px; border: 0px solid #000; float: right;">
-		<?php	if(Yii::app()->user->name=="Guest") { ?>
-            <a style="text-decoration:underline" href="index.php?r=site/login">Login</a>
-        <?php	}else{ ?>
-            <a style="text-decoration:underline" href="index.php?r=site/login">Logout <?php echo Yii::app()->user->name;  ?></a>
-        <?php	} ?>
-	</div>
 
-<div class="container" id="page">
 
-	<?php if(isset($this->breadcrumbs)):?>
-		<?php $this->widget('zii.widgets.CBreadcrumbs', array(
-			'links'=>$this->breadcrumbs,
-		)); ?><!-- breadcrumbs -->
-	<?php endif?>
-	<div class="container">
-	<?php echo $content; ?>
-	</div>
-	<footer class="container">
-		Copyright &copy; <?php echo date('Y'); ?> by My Company.<br/>
-		All Rights Reserved.<br/>
-		<?php echo Yii::powered(); ?>
-	</footer><!-- footer -->
+  <div id="principal" class="container">
+  	<?php echo $content; ?>
+  </div>	
 
-</div><!-- page -->
-	
+
 </body>
 </html>

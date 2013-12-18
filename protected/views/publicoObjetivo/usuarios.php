@@ -9,10 +9,22 @@
 <script>
 //$('#hola').tooltip();
 </script>
-	<div class="page-header">
-	  <h2>Usuarios inscritos <small>Público objetivo (<?php echo $model->nombre; ?>)</small></h2>
+<div class="page-header">
+  <h2><?php echo $model->nombre; ?> <small>Público objetivo</small></h2>
+</div>
+
+<div class="row">
+	<div class="container">
+	<?php echo CHtml::link('<i class="fa fa-arrow-circle-up fa-lg"> Públicos objetivo</i>', Yii::app()->createUrl('publicoobjetivo/'), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
 	</div>
-	<?php echo CHtml::link('<span class="glyphicon glyphicon-plus-sign"></span> Usuarios', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po)), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
+</div>
+
+<ul class="nav nav-tabs nav-justified navegacion">
+  <li class="active"><?php echo CHtml::link('<i class="fa fa-eye fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?>
+</li>
+  <li><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
+</ul>
+
 <div class="table-responsive">
 	<table id='hola' class="table table-bordered table-striped">
 		<thead>

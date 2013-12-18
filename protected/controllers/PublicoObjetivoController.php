@@ -28,12 +28,17 @@ class PublicoObjetivoController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view'),
+				'actions'=>array('view'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update', 'usuarios', 'agregarUsuarios', 'agregar'),
+				'actions'=>array('create','update'),
 				'users'=>array('@'),
+			),
+
+			array('allow', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar'),
+				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
@@ -313,9 +318,17 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('PublicoObjetivo');
+		// $dataProvider=new CActiveDataProvider('PublicoObjetivo');
+		// $this->render('index',array(
+		// 	'dataProvider'=>$dataProvider,
+		// ));
+
+		$publicos = PublicoObjetivo::model()->findAll();
+
+		//var_dump(PublicoObjetivo::model()->getAttributes());
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			//'model'=>$model,
+			'publicos'=>$publicos
 		));
 	}
 

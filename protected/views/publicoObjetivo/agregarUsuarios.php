@@ -42,9 +42,21 @@
 <script>
 //$('#hola').tooltip();
 </script>
-	<div class="page-header">
-	  <h2>Agregar usuarios <small>Público objetivo (<?php echo $model->nombre; ?>)</small></h2>
+<div class="page-header">
+  <h2><?php echo $model->nombre; ?> <small>Público objetivo</small></h2>
+</div>
+
+<div class="row">
+	<div class="container">
+	<?php echo CHtml::link('<i class="fa fa-arrow-circle-up fa-lg"> Públicos objetivo</i>', Yii::app()->createUrl('publicoobjetivo/'), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
 	</div>
+</div>
+
+<ul class="nav nav-tabs nav-justified navegacion">
+  <li><?php echo CHtml::link('<i class="fa fa-eye fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?>
+</li>
+  <li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
+</ul>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'usuarios-form',

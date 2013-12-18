@@ -30,10 +30,22 @@ $('#hola').tooltip();
 				<?php endif; ?>
 				<?php endforeach; ?>
 				<td>
-					<p class="text-center">
-					<?php echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Modificar"));  ?>
-					<?php echo CHtml::link('<span class="glyphicon glyphicon-user"></span>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Usuarios"));  ?>
-					</p>
+					
+
+					<!-- <ul class="list-group">
+						<li class="list-group-item"> -->
+						<p class="text-center">
+					   		<?php echo CHtml::link('<i class="fa fa-edit fa-2x fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
+							
+						<!-- </p>
+					  </li>
+					  <li class="list-group-item">
+						<p class="text-center"> -->
+					   <?php echo CHtml::link('<i class="fa fa-users fa-2x fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Ver usuarios"));  ?>
+						
+						</p>
+					<!--   </li>
+					</ul> -->
 				</td>
 			</tr>
 			<?php endforeach; ?>

@@ -2,19 +2,18 @@
 /* @var $this PublicoObjetivoController */
 /* @var $dataProvider CActiveDataProvider */
 
-$this->breadcrumbs=array(
-	'Publico Objetivos',
-);
-
-$this->menu=array(
-	array('label'=>'Create PublicoObjetivo', 'url'=>array('create')),
-	array('label'=>'Manage PublicoObjetivo', 'url'=>array('admin')),
-);
 ?>
 
-<h1>Publico Objetivos</h1>
 
-<?php $this->widget('zii.widgets.CListView', array(
-	'dataProvider'=>$dataProvider,
-	'itemView'=>'_view',
-)); ?>
+<?php //$this->widget('zii.widgets.CListView', array(
+	//'dataProvider'=>$dataProvider,
+	//'itemView'=>'_view',
+//)); ?>
+
+
+<div class="page-header">
+	<h2>Público Objetivo <small>Ver todos</small></h2>
+</div>
+
+	<?php $this->renderPartial('_pub_obj', array('publicos'=>$publicos)); ?>
+
