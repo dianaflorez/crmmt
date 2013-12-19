@@ -135,7 +135,7 @@ class PublicoObjetivoController extends Controller
 		$pagina          = (int) $pagina;
 		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
 
-		$criterio         = new CDbcriteria();
+		$criterio         = new CDbCriteria();
 		$criterio->limit  = $usuariosPorPagina;
 		//$criterio->offset = $pagina;
 		$criterio->order  = 'apellido1';
@@ -174,7 +174,8 @@ class PublicoObjetivoController extends Controller
 			}
 
 			$generoCadena = (isset($_POST['Usuario']['genero'])) ? $_POST['Usuario']['genero'] : '';
-			var_dump($generoCadena);
+			//var_dump($generoCadena);
+			
 			if($generoCadena != '' || $generoCadena === '1' || $generoCadena === '0')
 			{
 				$genero = $generoCadena === '1' ? true : false;
@@ -209,6 +210,14 @@ class PublicoObjetivoController extends Controller
 				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('id_estado_civil =:id_estado_civil');
 				$criterio->params = array(':id_estado_civil' => $estadoCivilCadena);
+			}
+
+			$ocupacionCadena = (isset($_POST['Usuario']['ocupacion'])) ? $_POST['Usuario']['ocupacion'] : '';
+			if($ocupacionCadena != '')
+			{
+				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->addCondition('id_ocupacion =:id_ocupacion');
+				$criterio->params = array(':id_ocupacion' => (int) $ocupacionCadena);
 			}
 
 			$departamentoCadena = (isset($_POST['Usuario']['departamento'])) ? $_POST['Usuario']['departamento'] : '';

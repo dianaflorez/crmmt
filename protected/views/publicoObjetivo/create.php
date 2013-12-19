@@ -2,25 +2,21 @@
 /* @var $this PublicoObjetivoController */
 /* @var $model PublicoObjetivo */
 
-$this->breadcrumbs=array(
-	'Publico Objetivos'=>array('index'),
-	'Create',
-);
+// $this->breadcrumbs=array(
+// 	'Publico Objetivos'=>array('index'),
+// 	'Create',
+// );
 
-$this->menu=array(
-	array('label'=>'List PublicoObjetivo', 'url'=>array('index')),
-	array('label'=>'Manage PublicoObjetivo', 'url'=>array('admin')),
-);
+// $this->menu=array(
+// 	array('label'=>'List PublicoObjetivo', 'url'=>array('index')),
+// 	array('label'=>'Manage PublicoObjetivo', 'url'=>array('admin')),
+// );
 ?>
 
-<h1>Create PublicoObjetivo</h1>
+<div class="page-header">
+	<h2>Crear <small>Público Objetivo</small></h2>
+</div>
+
+<?php $this->renderPartial('_form', array('model'=>$model)); ?> 
 
 	
-		<div class="container">
-		<?php $this->renderPartial('_form', array('model'=>$model)); ?> 
-		</div>
-	
-
-		<div class="container">
-		<?php $this->renderPartial('_pub_obj', array('publicos'=>$publicos)); ?>
-		</div>

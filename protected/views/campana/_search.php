@@ -23,7 +23,7 @@
 
 	<div class="row">
 		<?php echo $form->label($model,'fechaini'); ?>
-		<?php echo $form->textField($model,'fechaini'); ?>
+		<?php echo $form->textField($model,'fecini'); ?>
 	</div>
 
 	<div class="row buttons">

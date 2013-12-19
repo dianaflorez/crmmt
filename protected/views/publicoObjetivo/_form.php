@@ -15,8 +15,6 @@
 	'enableAjaxValidation'=>false,
 )); ?>
 
-	
-
 
 	<div class="form-group">
 		<?php echo $form->labelEx($model,'nombre'); ?>
@@ -40,5 +38,6 @@
 
 	<div class="form-group">
 		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary')); ?>
+		<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('publicoobjetivo/'), array('class'=>'btn btn-default','role'=>'button'));  ?>
 	</div>
 <?php $this->endWidget(); ?>

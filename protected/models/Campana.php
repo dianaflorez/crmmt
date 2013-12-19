@@ -46,6 +46,7 @@ class Campana extends CActiveRecord
 		// will receive user inputs.
 		return array(
 			array('asunto, id_usu', 'required', 'message' => 'No puede ser vacio.'),
+			array('id_tc', 'required', 'message' => 'Por favor seleccione un tipo de campaña.'),
 			array('urlimage', 'required', 'message' => 'Debe seleccionar una imagen.'),
 			array('id_tc, precio', 'numerical', 'integerOnly'=>true),
 			array('asunto', 'length', 'max'=>128),
@@ -53,7 +54,7 @@ class Campana extends CActiveRecord
 			array('almacen', 'length', 'max'=>3),
 			array('contenido, fecini, fecfin, fecenvio, estado, personalizada, feccre, fecmod', 'safe'),
 			// Atributo para subir la imagen al servidor.
-			array('image', 'file', 'types'=>'jpg, gif, png'),
+			//array('image', 'file', 'types'=>'jpg, gif, png'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id_cam, id_tc, asunto, contenido, urlimage, fecini, fecfin, precio, fecenvio, estado, personalizada, almacen, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
@@ -83,7 +84,7 @@ class Campana extends CActiveRecord
 		return array(
 			'crmcampanausus' => array(self::HAS_MANY, 'Crmcampanausu', 'id_cam'),
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
-			'idTc' => array(self::BELONGS_TO, 'Crmtipocam', 'id_tc'),
+			'tipoCampana' => array(self::BELONGS_TO, 'TipoCam', 'id_tc'),
 		);
 	}
 
@@ -104,7 +105,7 @@ class Campana extends CActiveRecord
 			'fecenvio' => 'Fecenvio',
 			'estado' => 'Estado',
 			'personalizada' => 'Personalizada',
-			'almacen' => 'Almacen',
+			'almacen' => 'Almacén',
 			'feccre' => 'Feccre',
 			'fecmod' => 'Fecmod',
 			'id_usu' => 'Id Usu',

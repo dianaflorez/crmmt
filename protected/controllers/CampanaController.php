@@ -38,7 +38,7 @@ class CampanaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos'),
+				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -60,6 +60,7 @@ class CampanaController extends Controller
 		));
 	}
 
+
 	/**
 	 * Creates a new model.
 	 * If creation is successful, the browser will be redirected to the 'view' page.
@@ -67,14 +68,11 @@ class CampanaController extends Controller
 	public function actionCreate()
 	{
 		$model = new Campana;
+		$model->almacen = 'MTA';
 		$error = null;
-		$publicos = PublicoObjetivo::model()->findAll();
+		//$publicos = PublicoObjetivo::model()->findAll();
+		$tiposCampana = TipoCam::model()->findAll();
 
-		// Clase proporcuinada por mailchimp para el uso de su API.
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		// Llave del API autorizada en el perfil.
-		//$api_key    = '515d5d909933946cd00c0473675cf6b7-us3';
-		$MailChimp = new Mailchimp($this->api_key);
 		       
 		if(isset($_POST['Campana']))
 		{
@@ -82,7 +80,6 @@ class CampanaController extends Controller
 			//$this->performAjaxValidation($model);
 
 			$model->attributes = $_POST['Campana'];
-			//$model->feccre     = date('Y-m-d H:i:s', strtotime('Wed, 21 Jul 2010 00:28:50 GMT'));
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 			 
 
@@ -104,47 +101,8 @@ class CampanaController extends Controller
 			  //  	var_dump($model->getErrors());
 				if($model->save())
 				{
-					try
-					{
-						$correosDesuscripcion = $this->obtenerCorreosDesuscripcion($_POST['Campana']['PublicoObjetivo']);
-										$this->desuscribirLista($correosDesuscripcion);
-					   
-						if(isset($_POST['Campana']['PublicoObjetivo']))
-						{
-							$correosSuscripcion = $this->obtenerCorreosSuscripcion($_POST['Campana']['PublicoObjetivo']);
-							if(count($correosSuscripcion) > 0)
-							{
-								if($this->suscribirLista($correosSuscripcion))
-								{
-									$id_campana = $this->crearMailChimpCampana($model);	
-									if($id_campana != false)
-									{
-										// Enviar correo.
-										$enviar = $MailChimp->call('campaigns/send', array(
-											'cid' => $id_campana
-										));
-										
-										
-									}
-								}
-							}
-						}
-						// Enviar correo.
-						// $enviar = $MailChimp->call('campaigns/send', array(
-						// 	'cid' => $campana['id']
-						// ));
-
-						
-
-						$this->redirect(array('view','id'=>$model->id_cam));
-						
-					}
-					catch(Exception $e)
-					{
-						$error = $e->getMessage();
-						$model->delete();
-						//$this->redirect(array('view','id'=>$model->id_cam));
-					}
+					$this->redirect(array('index'));
+					
 				}
 
 				
@@ -156,8 +114,97 @@ class CampanaController extends Controller
 
 		$this->render('create',array(
 			'model' => $model,
-			'publicos' => $publicos,
+			'tiposCampana' => $tiposCampana,
 			'error' => $error
+		));
+	}
+
+	/**
+	 * Creates a new model.
+	 * If creation is successful, the browser will be redirected to the 'view' page.
+	 */
+	public function actionEnviar($id)
+	{
+		$model = $this->loadModel($id);
+		$error = null;
+		$errorPublicoOjetivo = null;
+		$publicos = PublicoObjetivo::model()->findAll();
+
+		// Clase proporcuinada por mailchimp para el uso de su API.
+		Yii::import('application.extensions.mailchimp.Mailchimp');
+		// Llave del API autorizada en el perfil.
+		$MailChimp = new Mailchimp($this->api_key);
+		       
+		if(isset($_POST['Campana']))
+		{
+			// Uncomment the following line if AJAX validation is needed
+			//$this->performAjaxValidation($model);
+
+			try
+			{
+				$id_cam = isset($_POST['Campana']['id_cam']) ? $_POST['Campana']['id_cam'] : null;
+				$model = $this->loadModel($id_cam);
+
+				$correosDesuscripcion = $this->obtenerCorreosDesuscripcion($_POST['Campana']['PublicoObjetivo']);
+				$this->desuscribirLista($correosDesuscripcion);
+			   
+				if(isset($_POST['Campana']['PublicoObjetivo']))
+				{
+					$id_publico = (int) $_POST['Campana']['PublicoObjetivo'];
+					$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_publico);
+					
+					if($publicoObjetivo === null)
+					{
+						$errorPublicoOjetivo = 'No ha seleccionado un público';
+					}
+
+
+					$correosSuscripcion = $this->obtenerCorreosSuscripcion($_POST['Campana']['PublicoObjetivo']);
+					if(count($correosSuscripcion) > 0)
+					{
+						if($this->suscribirLista($correosSuscripcion))
+						{
+							$id_campana = $this->crearMailChimpCampana($model);	
+							if($id_campana != false)
+							{
+								// Enviar correo.
+								// $enviar = $MailChimp->call('campaigns/send', array(
+								// 	'cid' => $id_campana
+								// ));
+								$model->estado = true;
+								if($model->save())
+								{
+									$this->redirect(array('index'));
+								}
+								else
+								{
+									var_dump($model->getErrors());
+								}
+								
+							}
+						}
+					}
+				}
+				else
+				{
+					$errorPublicoOjetivo = 'No ha seleccionado un público';
+				}
+				
+			}
+			catch(Exception $e)
+			{
+				$error = $e->getMessage();
+				//$model->delete();
+				//$this->redirect(array('view','id'=>$model->id_cam));
+			}
+		
+		}
+
+		$this->render('enviar',array(
+			'model'               => $model,
+			'publicos'            => $publicos,
+			'error'               => $error,
+			'errorPublicoOjetivo' => $errorPublicoOjetivo
 		));
 	}
 
@@ -294,7 +341,7 @@ class CampanaController extends Controller
 		// 	return array();
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		$MailChimp = new Mailchimp($this->api_key);
-		 $emails = array();
+		$emails = array();
 		// foreach ($publicoObjetivo->usuarios as $usuario) {
 		// 	$cantidadEmails = count($usuario->general->emails);
 		// 	if($cantidadEmails > 0)
@@ -450,9 +497,15 @@ class CampanaController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Campana');
+		//$dataProvider=new CActiveDataProvider('Campana');
+		$criterio         = new CDbCriteria();
+		
+		$criterio->order  = 'feccre DESC';
+
+		$campanas = Campana::model()->findAll($criterio);
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			//'dataProvider'=>$dataProvider,
+			'campanas' => $campanas
 		));
 	}
 

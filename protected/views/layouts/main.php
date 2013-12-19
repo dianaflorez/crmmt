@@ -87,14 +87,14 @@
               </ul>
             </li>
             <li class="dropdown">
-              <a href="campana" class="dropdown-toggle" data-toggle="dropdown">Campanias <b class="caret"></b></a>
+              <?php echo CHtml::link('Campaña', Yii::app()->createUrl('campana/')); ?>
               <ul class="dropdown-menu">
-                <li><a href="campana/create">Nueva Campania</a></li>              
-                <li><a href="campana/admin">Lista Campanias</a></li>
+                <li><a href="campana/create">Nueva Campaña</a></li>              
+                <li><a href="campana/admin">Lista Campaña</a></li>
                 <li><a href="#">Enviar Email Campania</a></li>
               </ul>
             </li>
-            <li><?php echo CHtml::link('Público Objetivo', Yii::app()->createUrl('publicoobjetivo/', array())); ?></li>
+            <li><?php echo CHtml::link('Público Objetivo', Yii::app()->createUrl('publicoobjetivo/')); ?></li>
             <li class="dropdown">
               <a href="formulario" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
               <ul class="dropdown-menu">
@@ -115,9 +115,9 @@
             <li>
               <?php if(Yii::app()->user->name=="Guest"): ?>
              
-                <?php echo CHtml::link('Login', Yii::app()->createUrl('site/login')); ?>
+                <?php echo CHtml::link('<i class="fa fa-sign-in"></i> Iniciar sesión', Yii::app()->createUrl('site/login')); ?>
               <?php else: ?>
-              <?php echo CHtml::link('Logout '.Yii::app()->user->name, Yii::app()->createUrl('site/logout')); ?>
+              <?php echo CHtml::link(Yii::app()->user->name.' <i class="fa fa-sign-out"></i>', Yii::app()->createUrl('site/logout')); ?>
               <?php endif; ?>
             </li>
           </ul>

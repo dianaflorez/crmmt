@@ -14,7 +14,7 @@
 ?>
 
 <div class="page-header">
-	<h2>Crear <small>Campana</small></h2>
+	<h2>Enviar <small>Campana</small></h2>
 </div>
 
-<?php $this->renderPartial('_form', array('model'=>$model, 'tiposCampana'=>$tiposCampana, 'error'=>$error)); ?>
+<?php $this->renderPartial('_previewEnviar', array('model'=>$model, 'publicos'=>$publicos, 'error'=>$error, 'errorPublicoOjetivo'=>$errorPublicoOjetivo)); ?>
