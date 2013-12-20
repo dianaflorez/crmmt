@@ -21,8 +21,8 @@ $('#publico_objetivo').tooltip();
 				<td class="hidden-xs"><?php echo $publico->descripcion; ?></td>
 				<td>
 					<p class="text-center">
-					   	<?php echo CHtml::link('<i class="fa fa-edit fa-2x fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-						<?php echo CHtml::link('<i class="fa fa-users fa-2x fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Ver usuarios"));  ?>
+					   	<?php echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
+						<?php echo CHtml::link('<i class="fa fa-users fa-lg fa-border"></i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$publico->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Ver usuarios"));  ?>
 					</p>
 				</td>
 			</tr>

@@ -46,12 +46,14 @@ $cs = Yii::app()->getClientScript();
 		<div class="col-md-4">
 			<div class="form-group">
 				<?php echo CHtml::label('Tipo campaña', 'Campana_id_tc'); ?>
-				<?php echo CHtml::dropDownList('Campana[id_tc]', null, CHtml::ListData($tiposCampana, 'id_tc', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				<div class="form-group">
+				<?php echo CHtml::dropDownList('Campana[id_tc]', null, CHtml::ListData($tiposCampana, 'id_tc', 'nombre'), array('prompt' => 'Seleccione', 'class'=>'form-control', 'options' => array($model->id_tc => array('selected' => true)))); ?>
 				<?php if($form->error($model,'id_tc') != ''): ?>
 					<p class="text-danger">					
 						<?php echo $model->getError('id_tc'); ?>		
 					</p>
 				<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -71,8 +73,8 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-12">
-			<div class="form-group">
+		<div class="col-md-12 no-email">
+			<div id="duracion" class="form-group">
 				<?php echo CHtml::label('Duración', ''); ?>
 				<div class="form-group">
 				<?php echo CHtml::label('Fecha inicio', 'Campana_fecini'); ?>
@@ -85,15 +87,29 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group <?php if($form->error($model,'precio') != ''){ echo 'has-error'; } ?>">
+		<div class="col-md-4 no-email">
+			<div id="precio" class="form-group <?php if($form->error($model,'precio') != ''){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model,'precio'); ?>
 				<?php echo $form->numberField($model,'precio', array('class'=>'form-control','maxlength'=>128, 'placeholder'=>'Precio')); ?>
-				<?php if($form->error($model,'precio') != '') { ?>
+				<?php if($form->error($model,'precio') != ''): ?>
 					<p class="text-danger">					
 						<?php echo $model->getError('precio'); ?>		
 					</p>
-				<?php } ?>
+				<?php endif; ?>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div id="personalizada no-email" class="col-md-4">
+			<div class="form-group <?php if($form->error($model,'personalizada') != ''){ echo 'has-error'; } ?>">
+				<?php echo $form->labelEx($model,'personalizada'); ?>
+				<?php echo  $form->checkBox($model,'personalizada',array('separator'=>'')); ?>
+				<?php if($form->error($model,'personalizada') != ''): ?>
+					<p class="text-danger">					 
+						<?php echo $model->getError('personalizada'); ?>		
+					</p>
+				<?php endif; ?>
 			</div>
 		</div>
 	</div>
@@ -109,29 +125,17 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group <?php if($form->error($model,'almacen') != ''){ echo 'has-error'; } ?>">
+		<div class="col-md-4 no-email">
+			<div id="almacen" class="form-group <?php if($form->error($model,'almacen') != ''){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model,'almacen'); ?>
+				<div class="form-group">
 				<?php echo  $form->radioButtonList($model,'almacen',array('MTA'=>'MT','MTO'=>'MTOrange'),array('separator'=>' ')); ?>
-				<?php if($form->error($model,'almacen') != '') { ?>
+				<?php if($form->error($model,'almacen') != ''): ?>
 					<p class="text-danger">					
 						<?php echo $model->getError('almacen'); ?>		
 					</p>
-				<?php } ?>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group <?php if($form->error($model,'personalizada') != ''){ echo 'has-error'; } ?>">
-				<?php echo $form->labelEx($model,'personalizada'); ?>
-				<?php echo  $form->checkBox($model,'personalizada',array('separator'=>'')); ?>
-				<?php if($form->error($model,'personalizada') != '') { ?>
-					<p class="text-danger">					 
-						<?php echo $model->getError('personalizada'); ?>		
-					</p>
-				<?php } ?>
+				<?php endif; ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -169,6 +173,37 @@ $cs = Yii::app()->getClientScript();
 
 	function inicio(){
 		$('#Campana_contenido').jqte();
+		$('#Campana_id_tc').on('change', visibilidadElementos);
+		$('#personalizada').slideUp();
+	}
+
+	function visibilidadElementos(e){
+		var opcionSeleccionada = $('option:selected', this);
+		var valorSeleccionado = opcionSeleccionada.val();
+		console.log(opcionSeleccionada.text()+' '+valorSeleccionado);
+		if(opcionSeleccionada.text() === 'email'){
+			// $('#duracion').slideUp();
+			// $('#precio').slideUp();
+			// $('#almacen').slideUp();
+			// $('#personalizada').slideDown();
+			// $('#Campana_fecini').prop('disabled', true);
+			// $('#Campana_fecfin').prop('disabled', true);
+			$('.no-email').each(function(){
+				$(this).slideUp();
+			});
+			
+		}else{
+			// $('#duracion').slideDown();
+			// $('#precio').slideDown();
+			// $('#personalizada').slideUp();
+			// $('#Campana_fecini').prop('disabled', false);
+			// $('#Campana_fecfin').prop('disabled', false);
+			$('.no-email').each(function(){
+				$(this).slideDown();
+			});
+
+
+		}
 	}
 
 </script>

@@ -87,7 +87,7 @@ $cs = Yii::app()->getClientScript();
 			<div class="form-group">
 				<?php echo CHtml::label('Público objetivo', 'Publico_objetivo'); ?>
 				<div class="form-group">
-					<?php echo CHtml::dropDownList('Campana[PublicoObjetivo]', null, CHtml::ListData($publicos, 'id_po', 'nombre'), array('prompt' => 'Seleccione')); ?>
+					<?php echo CHtml::dropDownList('Campana[PublicoObjetivo]', null, CHtml::ListData($publicos, 'id_po', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 					<?php if($errorPublicoOjetivo != null): ?>
 					<p class="text-danger">					
 						<?php echo $errorPublicoOjetivo; ?>		

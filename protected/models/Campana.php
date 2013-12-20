@@ -47,7 +47,7 @@ class Campana extends CActiveRecord
 		return array(
 			array('asunto, id_usu', 'required', 'message' => 'No puede ser vacio.'),
 			array('id_tc', 'required', 'message' => 'Por favor seleccione un tipo de campaña.'),
-			array('urlimage', 'required', 'message' => 'Debe seleccionar una imagen.'),
+			//array('urlimage', 'required', 'message' => 'Debe seleccionar una imagen.'),
 			array('id_tc, precio', 'numerical', 'integerOnly'=>true),
 			array('asunto', 'length', 'max'=>128),
 			array('urlimage', 'length', 'max'=>100),

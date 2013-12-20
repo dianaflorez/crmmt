@@ -132,19 +132,14 @@ class PublicoObjetivoController extends Controller
 
 		$usuariosPorPagina = 20;
 		$pagina            = (isset($_GET['page']) ? $_GET['page'] : 1);
-		$pagina          = (int) $pagina;
-		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
-
-		$criterio         = new CDbCriteria();
-		$criterio->limit  = $usuariosPorPagina;
-		$criterio->offset = $pagina;
-		$criterio->order  = 'apellido1';
-
+		$pagina            = (int) $pagina;
 		
+		$criterio         = new CDbCriteria();	
 
 		if(isset($_POST['Usuario']))
 		{
-			
+			$pagina = 0;
+			//$_GET['page'] = 1;
 			$identificacion = (isset($_POST['Usuario']['identificacion'])) ? $_POST['Usuario']['identificacion'] : '';
 			if($identificacion != '')
 			{
@@ -239,6 +234,13 @@ class PublicoObjetivoController extends Controller
 
 		}
 
+		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
+
+		
+		$criterio->limit  = $usuariosPorPagina;
+		$criterio->offset = $comenzar_desde;
+		$criterio->order  = 'apellido1';
+
 		$usuariosGeneral = General::model()->findAll($criterio);
 		$total           = General::model()->count($criterio);
 		
@@ -252,6 +254,8 @@ class PublicoObjetivoController extends Controller
 		$paginas = new CPagination($total);
 		$paginas->setPageSize($usuariosPorPagina);
 		$paginas->applyLimit($criterio);
+		if(isset($_POST['Usuario']))
+			$paginas->currentPage = 0;
 
 		$this->render('agregarUsuarios', array(
 			'model'           => $model,
@@ -269,43 +273,38 @@ class PublicoObjetivoController extends Controller
 
 	public function actionAgregar()
 	{	
-		//var_dump(Yii::app()->user->getState('uaaasuid'));
 		if(isset($_POST['id_po']) && Yii::app()->user->getState('usuid') != null)
-		//if(isset($id) && Yii::app()->user->getState('usuid') != null)
 		{
-			// $id                   = (int) $_POST['id_po'];//$id;
-			// $model                = $this->loadModel($id);
-			// $id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
+			$id                   = (int) $_POST['id_po'];//$id;
+			$model                = $this->loadModel($id);
+			$id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
 
 			
-			// $usuario_po           = new UsuarioPublicoObjetivo;
-			// $usuario_po->id_po    = $id;
-			// $usuario_po->id_usupo = $id_usupo;
-			// $usuario_po->id_usu   = Yii::app()->user->getState('usuid');
+			$usuario_po           = new UsuarioPublicoObjetivo;
+			$usuario_po->id_po    = $id;
+			$usuario_po->id_usupo = $id_usupo;
+			$usuario_po->id_usu   = Yii::app()->user->getState('usuid');
 		
 
-			// try
-			// {
-			// 	if($usuario_po->save())
-			// 	{
-			// 		echo 'true';
-			// 	}
-			// 	else
-			// 	{
-			// 		throw new CHttpException(500,'La petición fallo.');
-			// 	}
-			// }
-			// catch(Exception $e)
-			// {
-				//throw new CHttpException(500,'La petición fallo.');
-			 	//$this->layout=false;
-			 	throw new CHttpException(500,'La petición fallo.');
-			//}
+			try
+			{
+				if($usuario_po->save())
+				{
+					echo 'true';
+				}
+				else
+				{
+					throw new CHttpException(500,'La petición fallo.');
+				}
+			}
+			catch(Exception $e)
+			{
+				throw new CHttpException(500,'La petición fallo.');
+			}
 		}
 		else
 		{
-			throw new CHttpException(400, Yii::t('err', 'bad request'));
-			//}
+			throw new CHttpException(400, 'La petición fallo.');
 		}		
 	}
 

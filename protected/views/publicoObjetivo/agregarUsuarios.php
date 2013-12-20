@@ -50,8 +50,7 @@
 </div>
 
 <ul class="nav nav-tabs nav-justified navegacion">
-  <li><?php echo CHtml::link('<i class="fa fa-eye fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?>
-</li>
+  <li><?php echo CHtml::link('<i class="fa fa-eye fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?></li>
   <li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
 </ul>
 
@@ -98,7 +97,7 @@
 			<div class="form-group">
 				<?php echo CHtml::label('Género', 'Usuario_genero'); ?>
 				<div class="form-group">
-					<?php echo CHtml::dropDownList('Usuario[genero]', null, $genero, array('prompt' => 'Seleccione')); ?>
+					<?php echo CHtml::dropDownList('Usuario[genero]', null, $genero, array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
@@ -137,7 +136,7 @@
 			<div class="form-group">
 				<?php echo CHtml::label('Ocupación', 'Usuario_ocupacion'); ?>
 				<div class="form-group">
-				<?php echo CHtml::dropDownList('Usuario[ocupacion]', null, CHtml::ListData($ocupacion, 'id_ocu', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				<?php echo CHtml::dropDownList('Usuario[ocupacion]', null, CHtml::ListData($ocupacion, 'id_ocu', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
@@ -148,7 +147,7 @@
 			<div class="form-group">
 				<?php echo CHtml::label('Estado civil', 'Usuario_estado_civil'); ?>
 				<div class="form-group">
-					<?php echo CHtml::dropDownList('Usuario[estado_civil]', null, CHtml::ListData($estadoCivil, 'id_estado_civil', 'descripcion'), array('prompt' => 'Seleccione')); ?>
+					<?php echo CHtml::dropDownList('Usuario[estado_civil]', null, CHtml::ListData($estadoCivil, 'id_estado_civil', 'descripcion'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
@@ -160,11 +159,11 @@
 				<?php echo CHtml::label('Lugar donde vive', ''); ?>
 				<div class="form-group">
 				<?php echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
-				<?php echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				<?php echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 				<div class="form-group">
 				<?php echo CHtml::label('Pais', 'Usuario_pais'); ?>
-				<?php echo CHtml::dropDownList('Usuario[pais]', null, CHtml::ListData($pais, 'id_pais', 'nombre'), array('prompt' => 'Seleccione')); ?>
+				<?php echo CHtml::dropDownList('Usuario[pais]', null, CHtml::ListData($pais, 'id_pais', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>

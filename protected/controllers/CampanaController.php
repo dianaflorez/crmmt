@@ -38,7 +38,7 @@ class CampanaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar'),
+				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar', 'duplicar'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -438,6 +438,19 @@ class CampanaController extends Controller
 
 	// }
 
+	public function actionDuplicar($id)
+	{
+		$model=Campana::model()->findByPk($id);
+		//$model = new Campana;
+		//$model->attributes=$anotherModel->attributes;
+		$model->id_cam = null;
+		$model->estado = false;
+		$model->isNewRecord = true;
+	
+		if($model->save())
+			$this->redirect(array('index'));
+	}
+
 	/**
 	 * Return data to browser as JSON
 	 * @param array $data
@@ -463,20 +476,31 @@ class CampanaController extends Controller
 	public function actionUpdate($id)
 	{
 		$model=$this->loadModel($id);
-
-		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
-
-		if(isset($_POST['Campana']))
+		
+		if(!$model->estado)
 		{
-			$model->attributes=$_POST['Campana'];
-			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_cam));
-		}
+			$error = null;
+			$tiposCampana = TipoCam::model()->findAll();
+			// Uncomment the following line if AJAX validation is needed
+			// $this->performAjaxValidation($model);
 
-		$this->render('update',array(
-			'model'=>$model,
-		));
+			if(isset($_POST['Campana']))
+			{
+				$model->attributes=$_POST['Campana'];
+				if($model->save())
+					$this->redirect(array('index'));
+			}
+
+			$this->render('create',array(
+				'model' => $model,
+				'tiposCampana' => $tiposCampana,
+				'error' => $error
+			));
+		}
+		else
+		{
+			$this->redirect(array('index'));
+		}
 	}
 
 	/**

@@ -115,7 +115,8 @@ return array(
 	                'baseUrl'=>'lib/bootstrap/',
 	                'js'=>array('js/bootstrap.min.js'),
 	                'css'=>array(                        // and css
-	                    'css/bootstrap.min.css',
+	                   	//'css/bootstrap.min.flat.css',
+	                   	'css/bootstrap.min.css',
 	                    //'css/custom.css',
 	                    //'css/bootstrap-responsive.min.css',
 	                ),
