@@ -181,7 +181,7 @@ class PublicoObjetivoController extends Controller
 				$genero = $generoCadena === '1' ? true : false;
 				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('genero =:genero');
-				$criterio->params = array(':genero' => $genero);
+				$criterio->params += array(':genero' => $genero);
 			}
 
 			// $mesCadena = (isset($_POST['Usuario']['mes_nacimiento'])) ? $_POST['Usuario']['mes_nacimiento'] : '';
@@ -209,7 +209,7 @@ class PublicoObjetivoController extends Controller
 			{
 				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('id_estado_civil =:id_estado_civil');
-				$criterio->params = array(':id_estado_civil' => $estadoCivilCadena);
+				$criterio->params += array(':id_estado_civil' => $estadoCivilCadena);
 			}
 
 			$ocupacionCadena = (isset($_POST['Usuario']['ocupacion'])) ? $_POST['Usuario']['ocupacion'] : '';
@@ -217,7 +217,7 @@ class PublicoObjetivoController extends Controller
 			{
 				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('id_ocupacion =:id_ocupacion');
-				$criterio->params = array(':id_ocupacion' => (int) $ocupacionCadena);
+				$criterio->params += array(':id_ocupacion' => (int) $ocupacionCadena);
 			}
 
 			$departamentoCadena = (isset($_POST['Usuario']['departamento'])) ? $_POST['Usuario']['departamento'] : '';
@@ -226,7 +226,7 @@ class PublicoObjetivoController extends Controller
 				//$departamento = (int) $departamentoCadena;
 				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
 				$criterio->addCondition('id_dep =:id_dep');
-				$criterio->params = array(':id_dep' => $departamentoCadena);
+				$criterio->params += array(':id_dep' => $departamentoCadena);
 			}
 
 			$paisCadena = (isset($_POST['Usuario']['pais'])) ? $_POST['Usuario']['pais'] : '';
@@ -234,7 +234,7 @@ class PublicoObjetivoController extends Controller
 			{
 				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
 				$criterio->addCondition('id_pais =:id_pais');
-				$criterio->params = array(':id_pais' => $paisCadena);                
+				$criterio->params += array(':id_pais' => $paisCadena);                
 			}                                                                
 
 		}

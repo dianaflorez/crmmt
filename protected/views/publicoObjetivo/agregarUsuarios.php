@@ -110,9 +110,9 @@
 				<?php echo CHtml::label('Fecha nacimiento', ''); ?>
 				<div class="form-group">
 				<?php echo CHtml::label('Mes', 'Usuario_mes_nacimiento]'); ?>
-				<?php echo CHtml::dropDownList('Usuario[mes_nacimiento]', '1', $meses, array( )); ?>
+				<?php echo CHtml::dropDownList('Usuario[mes_nacimiento]', '1', $meses, array('disabled'=>'disabled')); ?>
 				<?php echo CHtml::label('Año', 'Usuario_anho_nacimiento]'); ?>
-				<?php echo CHtml::dropDownList('Usuario[anho_nacimiento]', 2013, $anhos, array( )); ?>
+				<?php echo CHtml::dropDownList('Usuario[anho_nacimiento]', 2013, $anhos, array('disabled'=>'disabled')); ?>
 				</div>
 			</div>
 		</div>
