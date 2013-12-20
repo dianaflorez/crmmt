@@ -66,6 +66,16 @@ $cs = Yii::app()->getClientScript();
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'contenido'); ?>
 				<div class="well well-sm">
+					<div class="row">
+						
+						<div class="col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
+						    <div class="thumbnail">
+						      <img src="<?php echo $model->urlimage; ?>" alt="..." class="img-responsive">
+						    </div>
+					  	</div>
+					  	
+					</div>
+
 				<?php echo $model->contenido; ?>
 				</div>
 			</div>
@@ -91,7 +101,8 @@ $cs = Yii::app()->getClientScript();
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-primary')); ?> 
+				<?php echo CHtml::link('Enviar Prueba', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-primary','role'=>'button'));  ?>
+				<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-warning')); ?> 
 				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default','role'=>'button'));  ?>
 			</div>
 		</div>

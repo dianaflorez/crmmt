@@ -137,7 +137,7 @@ class PublicoObjetivoController extends Controller
 
 		$criterio         = new CDbCriteria();
 		$criterio->limit  = $usuariosPorPagina;
-		//$criterio->offset = $pagina;
+		$criterio->offset = $pagina;
 		$criterio->order  = 'apellido1';
 
 		
@@ -273,38 +273,40 @@ class PublicoObjetivoController extends Controller
 		if(isset($_POST['id_po']) && Yii::app()->user->getState('usuid') != null)
 		//if(isset($id) && Yii::app()->user->getState('usuid') != null)
 		{
-			$id                   = (int) $_POST['id_po'];//$id;
-			$model                = $this->loadModel($id);
-			$id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
+			// $id                   = (int) $_POST['id_po'];//$id;
+			// $model                = $this->loadModel($id);
+			// $id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
 
-			// $usuario_po = UsuarioPublicoObjetivo::model()->findByPk($id_usupo);
-			// if($usuario_po)
-			// {
-			// 	$usuario->estado = 
-			// }
-			// else
-			// {
-				$usuario_po           = new UsuarioPublicoObjetivo;
-				$usuario_po->id_po    = $id;
-				$usuario_po->id_usupo = $id_usupo;
-				$usuario_po->id_usu   = Yii::app()->user->getState('usuid');
-			// }
+			
+			// $usuario_po           = new UsuarioPublicoObjetivo;
+			// $usuario_po->id_po    = $id;
+			// $usuario_po->id_usupo = $id_usupo;
+			// $usuario_po->id_usu   = Yii::app()->user->getState('usuid');
+		
 
-			try
-			{
-				if($usuario_po->save())
-				{
-					echo 'true';
-				}
-				else
-				{
-					throw new CHttpException(500,'La petición fallo.');
-				}
-			}
-			catch(Exception $e){
-				throw new CHttpException(500,'La petición fallo.');
-			}
+			// try
+			// {
+			// 	if($usuario_po->save())
+			// 	{
+			// 		echo 'true';
+			// 	}
+			// 	else
+			// 	{
+			// 		throw new CHttpException(500,'La petición fallo.');
+			// 	}
+			// }
+			// catch(Exception $e)
+			// {
+				//throw new CHttpException(500,'La petición fallo.');
+			 	//$this->layout=false;
+			 	throw new CHttpException(500,'La petición fallo.');
+			//}
 		}
+		else
+		{
+			throw new CHttpException(400, Yii::t('err', 'bad request'));
+			//}
+		}		
 	}
 
 

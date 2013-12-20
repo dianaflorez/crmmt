@@ -22,9 +22,10 @@
 </ul>
 
 <div class="table-responsive">
-	<table id='hola' class="table table-bordered table-striped">
+	<table class="table table-bordered table-striped">
 		<thead>
 			<th>Identificación</th>
+			<th>email</th>
 			<th>Nombres</th>
 			<th>Apellidos</th>
 			<th class="hidden-xs">Fecha de nacimiento</th>
@@ -40,6 +41,13 @@
 			<?php foreach ($model->usuarios as $usuario): ?>
 			<tr>
 				<td><?php echo $usuario->general->id_char; ?></td>
+				<td>
+					<ul class="list-group">
+						<?php foreach ($usuario->general->emails as $email): ?>
+					 	<li class="list-group-item"><?php echo $email->direccion; ?></li>
+					  	<?php endforeach; ?>
+					</ul>
+				</td>
 				<td><?php echo $usuario->general->nombre1.' '.$usuario->general->nombre2; ?></td>
 				<td><?php echo $usuario->general->apellido1.' '.$usuario->general->apellido2; ?></td>
 				<td class="hidden-xs">

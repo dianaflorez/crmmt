@@ -88,14 +88,15 @@ class CampanaController extends Controller
 			//var_dump($model->image);
 			if($model->image != null)
 			{
-				$nombre = Yii::app()->basePath.'/../images/'.rand(1, 10000).$model->image;
-				$model->image -> saveAs($nombre);
-				$image = Yii::app()->image->load($nombre);   
+				$nombre = rand(1, 10000).$model->image;
+				$directorio = Yii::app()->basePath.'/../images/'.$nombre;
+				$model->image -> saveAs($directorio);
+				$image = Yii::app()->image->load($directorio);   
 			   	$image->resize(560, 100, Image::WIDTH);    
 			   	$image->save();
 
-			   	$model->urlimage = $nombre;
-
+			   	//$model->urlimage = $nombre;
+			   	$model->urlimage = Yii::app()->getBaseUrl(true).'/images/'.$nombre;
 			 	// var_dump($model->validate());
 			  //  	var_dump($model->hasErrors());
 			  //  	var_dump($model->getErrors());

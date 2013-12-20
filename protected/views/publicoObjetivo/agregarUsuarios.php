@@ -198,10 +198,9 @@
 			</thead>	
 		<tbody>
 			<?php foreach ($usuariosGeneral as $usuario): ?>
-			<tr>
-				<td><?php 
+			<?php 
 					$activo = false;
-					foreach ($model->usuarios as $value) 
+					foreach ($model->usuarios as $value)
 					{
 						if($value->id_usupo == $usuario->id)
 						{
@@ -209,7 +208,13 @@
 							break;
 						}
 					}
-				echo CHtml::checkBox('Usuarios[agregar]', $activo, array('class'=>'activacion','data-idpo'=>$model->id_po, 'id'=>$usuario->id, 'value'=>$usuario->id)); ?></td>
+			?> 
+			<tr <?php echo 'id="'.$usuario->id.'"'; echo 'data-idpo="'.$model->id_po.'" '; if($activo){ echo 'class="success"'; } ?> >
+				<td>
+					<?php if(!$activo): ?>
+					<?php echo CHtml::checkBox('Usuarios[agregar]', $activo, array('class'=>'','data-idpo'=>$model->id_po, 'id'=>'chk_'.$usuario->id, 'value'=>$usuario->id)); ?>
+					<?php endif; ?>
+				</td>
 				<td><?php echo $usuario->id_char; ?></td>
 				<td><?php echo $usuario->apellido1.' '.$usuario->apellido2; ?></td>
 				<td><?php echo $usuario->nombre1.' '.$usuario->nombre2; ?></td>
@@ -281,8 +286,9 @@
 				<td><?php foreach ($usuario->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
 				<td>
 					<p class="text-center">
-					<?php echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/agregar/', array('id'=>$model->id_po, 'id_usupo'=>$usuario->id)), array('data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
-					<?php //echo CHtml::link('<span class="glyphicon glyphicon-user"></span>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$usuario->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?>
+					<?php if(!$activo && $cantidadEmails > 0): ?>
+					<?php echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', null ,array('class'=>'btn btn-primary activacion', 'id'=>'btn_'.$usuario->id, 'data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
+					 <?php endif; ?>
 					</p>
 				</td>
 			</tr>
@@ -315,26 +321,39 @@ $this->widget('CLinkPager', array(
 	}
 
 	function activar(e){
-		var hola = $(e.target).prop('checked');
-		console.log('veamos '+hola);
-		var request = $.ajax({
-			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar/'); ?>",
+		var fila = $(e.target).parent().closest('tr');
+		//debugger;
+		var id_po = fila.data('idpo');
+		var id_usupo = fila.attr("id");
+		
+		var peticion = $.ajax({
+			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar'); ?>",
 			type: "POST",
 			data: 
 			{ 
-				id_po : $(e.target).data("idpo"),
-				id_usupo: $(e.target).val(),
+				id_po : id_po,
+				id_usupo: id_usupo,
 			},
 			dataType: "html"
 		});
 		 
-		request.done(function( msg ) {
-		  $( "#log" ).html( msg );
+		peticion.done(function( msg ) {
+			console.log('exito '+msg);
+			fila.addClass('success');
+			$('#btn_'+id_usupo).hide();
+			$('#chk_'+id_usupo).hide();
 		});
 		 
-		request.fail(function( jqXHR, textStatus ) {
-
-		  	alert( "Request failed: " + textStatus );
+		peticion.fail(function( jqXHR, textStatus ) {
+			console.log('fallo '+textStatus);
+			fila.addClass('warning');
+			var foo = function (){
+				fila.removeClass('warning');
+			};
+			setTimeout(foo, 1500);
 		});
+
+		e.preventDefault();
+		console.log('El turbo activado');
 	}
 </script>
