@@ -159,7 +159,8 @@
 				<?php echo CHtml::label('Lugar donde vive', ''); ?>
 				<div class="form-group">
 				<?php echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
-				<?php echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+				<?php echo CHtml::dropDownList('Usuario[departamento]', null, array(), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+				<?php //echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 				<div class="form-group">
 				<?php echo CHtml::label('Pais', 'Usuario_pais'); ?>
@@ -317,6 +318,53 @@ $this->widget('CLinkPager', array(
 
 	function iniciar(){
 		$('#registrosUsuarios .activacion').on('click', activar);
+		$('#Usuario_pais').on('change', consultarDepartamentos);
+	}
+
+	function consultarDepartamentos(e){
+		console.log('Cambio '+e.target.value);
+
+		var peticion = $.ajax({
+			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/departamentos'); ?>",
+			type: "GET",
+			data: 
+			{ 
+				id : e.target.value,
+				//id_usupo: id_usupo,
+			},
+			dataType: "json"
+		});
+		 
+		peticion.done(function( msg ) {
+			console.log('exito '+msg);
+			agregarDepartamentos(msg);
+			// fila.addClass('success');
+			// $('#btn_'+id_usupo).hide();
+			// $('#chk_'+id_usupo).hide();
+		});
+		 
+		peticion.fail(function( jqXHR, textStatus ) {
+			console.log('fallo '+textStatus);
+			// fila.addClass('warning');
+			// var foo = function (){
+			// 	fila.removeClass('warning');
+			// };
+			// setTimeout(foo, 1500);
+		});
+	}
+
+	function agregarDepartamentos(datos){
+		var departamentos = $("#Usuario_departamento");
+		departamentos.empty();
+		if(datos.length === 0){
+			$("#Usuario_departamento").hide();
+			return 0;
+		}
+		$("#Usuario_departamento").show();
+		
+		$.each(datos, function() {
+		    departamentos.append($("<option />").val(this.id_dep).text(this.nombre));
+		});
 	}
 
 	function activar(e){

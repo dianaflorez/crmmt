@@ -37,7 +37,7 @@ class PublicoObjetivoController extends Controller
 			),
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar'),
+				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -134,7 +134,7 @@ class PublicoObjetivoController extends Controller
 		$pagina            = (isset($_GET['page']) ? $_GET['page'] : 1);
 		$pagina            = (int) $pagina;
 		
-		$criterio         = new CDbCriteria();	
+		$criterio = new CDbCriteria();	
 
 		if(isset($_POST['Usuario']))
 		{
@@ -202,7 +202,7 @@ class PublicoObjetivoController extends Controller
 			$estadoCivilCadena = (isset($_POST['Usuario']['estado_civil'])) ? $_POST['Usuario']['estado_civil'] : '';
 			if($estadoCivilCadena != '')
 			{
-				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->join = 'JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('id_estado_civil =:id_estado_civil');
 				$criterio->params += array(':id_estado_civil' => $estadoCivilCadena);
 			}
@@ -210,7 +210,7 @@ class PublicoObjetivoController extends Controller
 			$ocupacionCadena = (isset($_POST['Usuario']['ocupacion'])) ? $_POST['Usuario']['ocupacion'] : '';
 			if($ocupacionCadena != '')
 			{
-				$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				$criterio->join = 'JOIN informacion_personal ON t.id = informacion_personal.id';
 				$criterio->addCondition('id_ocupacion =:id_ocupacion');
 				$criterio->params += array(':id_ocupacion' => (int) $ocupacionCadena);
 			}
@@ -219,7 +219,7 @@ class PublicoObjetivoController extends Controller
 			if($departamentoCadena != '' && $departamentoCadena !='2')
 			{
 				//$departamento = (int) $departamentoCadena;
-				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
+				$criterio->join = 'JOIN direcciones ON t.id = direcciones.id';
 				$criterio->addCondition('id_dep =:id_dep');
 				$criterio->params += array(':id_dep' => $departamentoCadena);
 			}
@@ -227,14 +227,14 @@ class PublicoObjetivoController extends Controller
 			$paisCadena = (isset($_POST['Usuario']['pais'])) ? $_POST['Usuario']['pais'] : '';
 			if($paisCadena != '' && $paisCadena !='2')
 			{
-				$criterio->join ='JOIN direcciones ON t.id = direcciones.id';
+				$criterio->join = 'JOIN direcciones ON t.id = direcciones.id';
 				$criterio->addCondition('id_pais =:id_pais');
 				$criterio->params += array(':id_pais' => $paisCadena);                
 			}                                                                
 
 		}
 
-		$comenzar_desde    = ($pagina - 1) * $usuariosPorPagina;
+		$comenzar_desde = ($pagina - 1) * $usuariosPorPagina;
 
 		
 		$criterio->limit  = $usuariosPorPagina;
@@ -306,6 +306,18 @@ class PublicoObjetivoController extends Controller
 		{
 			throw new CHttpException(400, 'La petición fallo.');
 		}		
+	}
+
+	public function actionDepartamentos($id)
+	{
+		$criterio = new CDbCriteria;
+		$criterio->addCondition('id_pais =:id_pais');
+		$criterio->params = array(':id_pais'=>$id);
+		$criterio->order = 'nombre ASC';
+
+		$paises = Departamentos::model()->findAll($criterio);
+		echo CJavaScript::jsonEncode($paises);
+		Yii::app()->end();
 	}
 
 

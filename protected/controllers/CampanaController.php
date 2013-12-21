@@ -304,8 +304,8 @@ class CampanaController extends Controller
 		try
 		{
 			$suscripcion = $MailChimp->call('lists/batch-unsubscribe', array(
-			            'id'                => 'a61184ea34',
-			            'batch'             => $emails,
+			           	'id'            => 'a61184ea34',
+			           	'batch'         => $emails,
 			           	'delete_member' => true
 			));
 			//var_dump($suscripcion);
@@ -492,9 +492,9 @@ class CampanaController extends Controller
 			}
 
 			$this->render('create',array(
-				'model' => $model,
+				'model'        => $model,
 				'tiposCampana' => $tiposCampana,
-				'error' => $error
+				'error'        => $error
 			));
 		}
 		else
