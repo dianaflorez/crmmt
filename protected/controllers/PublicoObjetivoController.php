@@ -180,11 +180,11 @@ class PublicoObjetivoController extends Controller
 			}
 
 			// $mesCadena = (isset($_POST['Usuario']['mes_nacimiento'])) ? $_POST['Usuario']['mes_nacimiento'] : '';
-			// $anhoCadena = (isset($_POST['Usuario']['anho_nacimiento'])) ? $_POST['Usuario']['anho_nacimiento'] : '';
+			// //$anhoCadena = (isset($_POST['Usuario']['anho_nacimiento'])) ? $_POST['Usuario']['anho_nacimiento'] : '';
 			// if($mesCadena != '' && $anhoCadena !='')
 			// {
 			// 	$mes = new date('m', $mesCadena);
-			// 	$anho = 
+			// 	//$anho = 
 			// 	$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 			// 	$criterio->addCondition('genero =:genero');
 			// 	$criterio->params = array(':genero' => $genero);
@@ -241,13 +241,15 @@ class PublicoObjetivoController extends Controller
 		$criterio->offset = $comenzar_desde;
 		$criterio->order  = 'apellido1';
 
-		$usuariosGeneral = General::model()->findAll($criterio);
-		$total           = General::model()->count($criterio);
+		$usuariosGeneral  = General::model()->findAll($criterio);
+		$total            = General::model()->count($criterio);
 		
-		$ocupacion       = Ocupacion::model()->findAll();
-		$estadoCivil     = EstadoCivil::model()->findAll();
-		$departamento    = Departamentos::model()->findAll();
-		$pais            = Pais::model()->findAll();
+		$ocupacion           = Ocupacion::model()->findAll();
+		$estadoCivil         = EstadoCivil::model()->findAll();
+		$departamento        = Departamentos::model()->findAll();
+		$criterioPais        = new CDbCriteria;
+		$criterioPais->order = 'nombre ASC';
+		$pais                = Pais::model()->findAll($criterioPais);
 
 		//var_dump($total);
 		//var_dump(count($usuariosGeneral));

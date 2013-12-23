@@ -475,18 +475,18 @@ class CampanaController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$model = $this->loadModel($id);
 		
 		if(!$model->estado)
 		{
-			$error = null;
+			$error        = null;
 			$tiposCampana = TipoCam::model()->findAll();
 			// Uncomment the following line if AJAX validation is needed
 			// $this->performAjaxValidation($model);
 
 			if(isset($_POST['Campana']))
 			{
-				$model->attributes=$_POST['Campana'];
+				$model->attributes = $_POST['Campana'];
 				if($model->save())
 					$this->redirect(array('index'));
 			}

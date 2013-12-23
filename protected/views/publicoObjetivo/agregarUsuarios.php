@@ -121,6 +121,7 @@
 		<div class="col-md-12">
 			<div class="form-group">
 				<?php echo CHtml::label('Edad', ''); ?>
+				<?php echo CHtml::checkBox('', false, array('id' => 'activarEdad')); ?>
 				<div class="form-group">
 				<?php echo CHtml::label('Desde', 'Usuario_fecha_inicio'); ?>
 				<?php echo CHtml::dateField('Usuario[fecha_inicio]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
@@ -157,7 +158,7 @@
 		<div class="col-md-4">
 			<div class="form-group">
 				<?php echo CHtml::label('Lugar donde vive', ''); ?>
-				<div class="form-group">
+				<div id= "departamentos" class="form-group">
 				<?php echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
 				<?php echo CHtml::dropDownList('Usuario[departamento]', null, array(), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				<?php //echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
@@ -317,9 +318,25 @@ $this->widget('CLinkPager', array(
 	$(document).on('ready', iniciar());
 
 	function iniciar(){
-		$('#registrosUsuarios .activacion').on('click', activar);
+		$('#registrosUsuarios .activacion').on('click', activarUsuario);
 		$('#Usuario_pais').on('change', consultarDepartamentos);
+		$('#activarEdad').on('click', habilitarFechas);
+
+		$('#Usuario_departamento').prop('disabled', false);
+		$('#departamentos').hide();
 	}
+
+	function habilitarFechas(){
+		console.log('habilitar');
+		if($('#activarEdad').prop('checked')){
+			$('#Usuario_fecha_inicio').prop('disabled', false);
+			$('#Usuario_fecha_fin').prop('disabled', false);
+		}else{
+			$('#Usuario_fecha_inicio').prop('disabled', true);
+			$('#Usuario_fecha_fin').prop('disabled', true);
+		}
+	}
+	
 
 	function consultarDepartamentos(e){
 		console.log('Cambio '+e.target.value);
@@ -330,48 +347,42 @@ $this->widget('CLinkPager', array(
 			data: 
 			{ 
 				id : e.target.value,
-				//id_usupo: id_usupo,
 			},
-			dataType: "json"
+			dataType: 'json'
 		});
 		 
 		peticion.done(function( msg ) {
 			console.log('exito '+msg);
 			agregarDepartamentos(msg);
-			// fila.addClass('success');
-			// $('#btn_'+id_usupo).hide();
-			// $('#chk_'+id_usupo).hide();
 		});
 		 
 		peticion.fail(function( jqXHR, textStatus ) {
 			console.log('fallo '+textStatus);
-			// fila.addClass('warning');
-			// var foo = function (){
-			// 	fila.removeClass('warning');
-			// };
-			// setTimeout(foo, 1500);
 		});
 	}
 
 	function agregarDepartamentos(datos){
-		var departamentos = $("#Usuario_departamento");
+		var departamentos = $('#Usuario_departamento');
 		departamentos.empty();
 		if(datos.length === 0){
-			$("#Usuario_departamento").hide();
+			$('#Usuario_departamento').prop('disabled', true);
+			$('#departamentos').hide();
 			return 0;
 		}
-		$("#Usuario_departamento").show();
+		$('#Usuario_departamento').prop('disabled', false);
+		$('#departamentos').show();
 		
+		departamentos.prepend($('<option />').val('').text('Seleccione'));
 		$.each(datos, function() {
-		    departamentos.append($("<option />").val(this.id_dep).text(this.nombre));
+		    departamentos.append($('<option />').val(this.id_dep).text(this.nombre));
 		});
 	}
 
-	function activar(e){
+	function activarUsuario(e){
 		var fila = $(e.target).parent().closest('tr');
 		//debugger;
 		var id_po = fila.data('idpo');
-		var id_usupo = fila.attr("id");
+		var id_usupo = fila.attr('id');
 		
 		var peticion = $.ajax({
 			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar'); ?>",
@@ -381,7 +392,7 @@ $this->widget('CLinkPager', array(
 				id_po : id_po,
 				id_usupo: id_usupo,
 			},
-			dataType: "html"
+			dataType: 'html'
 		});
 		 
 		peticion.done(function( msg ) {
@@ -394,10 +405,10 @@ $this->widget('CLinkPager', array(
 		peticion.fail(function( jqXHR, textStatus ) {
 			console.log('fallo '+textStatus);
 			fila.addClass('warning');
-			var foo = function (){
+			var quitarFila = function (){
 				fila.removeClass('warning');
 			};
-			setTimeout(foo, 1500);
+			setTimeout(quitarFila, 1500);
 		});
 
 		e.preventDefault();
