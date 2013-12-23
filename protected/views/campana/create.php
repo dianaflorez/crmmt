@@ -17,4 +17,5 @@
 	<h2>Crear <small>Campana</small></h2>
 </div>
 
+
 <?php $this->renderPartial('_form', array('model'=>$model, 'tiposCampana'=>$tiposCampana, 'error'=>$error)); ?>

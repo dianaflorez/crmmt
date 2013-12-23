@@ -10,7 +10,6 @@ $cs = Yii::app()->getClientScript();
 //$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 ?>
 
-<div class="form">
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'campana-form',
 		'htmlOptions' => array('enctype'=>'multipart/form-data', 'role'=>'form'),
@@ -115,16 +114,6 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group">
-				<?php echo $form->labelEx($model,'contenido'); ?>
-				<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de la campaña')); ?>
-				<?php echo $form->error($model,'contenido'); ?>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
 		<div class="col-md-4 no-email">
 			<div id="almacen" class="form-group <?php if($form->error($model,'almacen') != ''){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model,'almacen'); ?>
@@ -155,17 +144,33 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="form-group">
-				<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary')); ?> 
-				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default','role'=>'button'));  ?>
+				<?php echo $form->labelEx($model,'contenido'); ?>
+				<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de la campaña')); ?>
+				<?php echo $form->error($model,'contenido'); ?>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-6">
+				<div class="form-group">
+					<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
+				</div>
+			</div>
+			<div class="col-md-6">
+				<div class="form-group">
+				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+				</div>
 			</div>
 		</div>
 	</div>
 
 <?php $this->endWidget(); ?>
 
-</div><!-- form -->
+
 
 <script type="text/javascript">
 	
