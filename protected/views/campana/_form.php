@@ -155,12 +155,12 @@ $cs = Yii::app()->getClientScript();
 
 	<div class="row">
 		<div class="col-md-6">
-			<div class="col-md-6">
+			<div class="col-md-8">
 				<div class="form-group">
 					<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
 				</div>
 			</div>
-			<div class="col-md-6">
+			<div class="col-md-4">
 				<div class="form-group">
 				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
 				</div>
