@@ -51,7 +51,7 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
+		<div class="col-md-6">
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'asunto'); ?>
 				<div class="well well-sm">
@@ -66,16 +66,15 @@ $cs = Yii::app()->getClientScript();
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'contenido'); ?>
 				<div class="well well-sm">
+					<?php if($model->urlimage): ?>
 					<div class="row">
-						
 						<div class="col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
 						    <div class="thumbnail">
 						      <img src="<?php echo $model->urlimage; ?>" alt="..." class="img-responsive">
 						    </div>
 					  	</div>
-					  	
 					</div>
-
+					<?php endif; ?>
 				<?php echo $model->contenido; ?>
 				</div>
 			</div>
@@ -99,11 +98,31 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group">
-				<?php echo CHtml::link('Enviar Prueba', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-primary','role'=>'button'));  ?>
-				<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-warning')); ?> 
-				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default','role'=>'button'));  ?>
+		<div class="col-md-6">
+			<div class="col-md-8">
+				<div class="form-group">
+					<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control')); ?> 
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary', 'id'=> 'enviarPrueba'));  ?>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-8">
+				<div class="form-group">
+					<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-warning btn-block')); ?> 
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('campana/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -117,7 +136,60 @@ $cs = Yii::app()->getClientScript();
 	$(document).on('ready', inicio);
 
 	function inicio(){
-		$('#Campana_contenido').jqte();
+		//$('#Campana_contenido').jqte();
+		$('#enviarPrueba').on('click', enviarPrueba);
+		$('#correo_prueba').on('click', restablecer);
 	}
 
+	function restablecer(e){
+		$('#correo_prueba').parent().removeClass('has-error');
+	}
+
+	function enviarPrueba(e)
+	{
+		console.log('click');
+		id_cam = $('#Campana_id_cam').val();
+		correo_prueba = $('#correo_prueba').val();
+		console.log(id_cam);
+		console.log(correo_prueba);
+
+		if(esEmail(correo_prueba)){
+			var peticion = $.ajax({
+				url: "<?php echo Yii::app()->createUrl('campana/enviarPrueba'); ?>",
+				type: "POST",
+				data: 
+				{ 
+					id : id_cam,
+					correoPrueba: correo_prueba,
+				},
+				dataType: 'html'
+			});
+			 
+			peticion.done(function( msg ) {
+				console.log('exito '+msg);
+				// fila.addClass('success');
+				// $('#btn_'+id_usupo).hide();
+				// $('#chk_'+id_usupo).hide();
+			});
+			 
+			peticion.fail(function( jqXHR, textStatus ) {
+				console.log('fallo '+textStatus);
+				// fila.addClass('warning');
+				// var quitarFila = function (){
+				// 	fila.removeClass('warning');
+				// };
+				// setTimeout(quitarFila, 1500);
+			});
+		}else{
+			//alert('El correo no es válido');
+			$('#correo_prueba').parent().toggleClass('has-error');
+		}
+	
+	}
+
+	function esEmail(email) {
+	  	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+	  	return regex.test(email);
+	}
+	
 </script>
