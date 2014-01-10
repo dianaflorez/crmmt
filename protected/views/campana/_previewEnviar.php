@@ -82,31 +82,36 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
+		
+		<div class="col-md-6">
+			<div class="panel panel-info">
+		  <div class="panel-heading">Prueba la campaña antes de enviarla.</div>
+		  <div class="panel-body">
+		   <?php echo CHtml::label('Correo', 'correo_prueba'); ?>
+				<div class="form-group">
+					<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control')); ?> 
+				</div>
+			
+				<div class="form-group">
+				<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary btn-block', 'id'=> 'enviarPrueba'));  ?>
+				</div>
+		  </div>
+		</div>
+				
+		</div>
+	</div>
+
+	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
 				<?php echo CHtml::label('Público objetivo', 'Publico_objetivo'); ?>
 				<div class="form-group">
 					<?php echo CHtml::dropDownList('Campana[PublicoObjetivo]', null, CHtml::ListData($publicos, 'id_po', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
-					<?php if($errorPublicoOjetivo != null): ?>
+					<?php if($errorPublicoObjetivo != null): ?>
 					<p class="text-danger">					
-						<?php echo $errorPublicoOjetivo; ?>		
+						<?php echo $errorPublicoObjetivo; ?>		
 					</p>
 					<?php endif; ?>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-6">
-			<div class="col-md-8">
-				<div class="form-group">
-					<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control')); ?> 
-				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group">
-				<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary', 'id'=> 'enviarPrueba'));  ?>
 				</div>
 			</div>
 		</div>

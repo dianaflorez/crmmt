@@ -28,10 +28,10 @@ class PreguntaController extends Controller
 	public function filterFormulario($filterChain)
 	{
 		$this->id_for = null;
-        if (isset($_GET['idfor']))
-            $this->id_for = $_GET['idfor'];
-        else if (isset($_POST['idfor']))
-            $this->id_for = $_POST['idfor'];
+        if (isset($_GET['id_for']))
+            $this->id_for = $_GET['id_for'];
+        else if (isset($_POST['id_for']))
+            $this->id_for = $_POST['id_for'];
         if($this->id_for)
         	$filterChain->run();
         else

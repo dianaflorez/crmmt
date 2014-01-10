@@ -64,7 +64,7 @@ class FormularioController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model=new Formulario;
+		$model = new Formulario;
 
 		$preguntas = array();
 		// Uncomment the following line if AJAX validation is needed
@@ -91,14 +91,14 @@ class FormularioController extends Controller
 	 */
 	public function actionUpdate($id)
 	{
-		$model=$this->loadModel($id);
+		$model = $this->loadModel($id);
 
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
 		if(isset($_POST['Formulario']))
 		{
-			$model->attributes=$_POST['Formulario'];
+			$model->attributes = $_POST['Formulario'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_for));
 		}
@@ -230,7 +230,8 @@ class FormularioController extends Controller
 			}
 			
 		}
-
+		$this->layout = 'column1';
+		
 		$this->render('encuesta', array(
 			'model'  => $model,
 			'activa' => true
@@ -246,7 +247,6 @@ class FormularioController extends Controller
 	{
 		$model = $this->loadModel($id);
 		
-
 		$this->render('revisar', array(
 			'model'  => $model,
 			'activa' => false
@@ -273,9 +273,17 @@ class FormularioController extends Controller
 	 */
 	public function actionIndex()
 	{
-		$dataProvider=new CActiveDataProvider('Formulario');
+		// $dataProvider=new CActiveDataProvider('Formulario');
+		// $this->render('index',array(
+		// 	'dataProvider'=>$dataProvider,
+		// ));
+		$criterio         = new CDbCriteria();
+		$criterio->order  = 'feccre DESC';
+
+		$formularios = Formulario::model()->findAll($criterio);
 		$this->render('index',array(
-			'dataProvider'=>$dataProvider,
+			//'dataProvider'=>$dataProvider,
+			'formularios' => $formularios
 		));
 	}
 

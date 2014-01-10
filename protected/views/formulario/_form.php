@@ -10,7 +10,6 @@
 	//$cs->registerScriptFile($baseUrl.'/js/pagina.js', CClientScript::POS_END);
 ?>
 
-<div class="ot">
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'formulario-form',
 		'htmlOptions' => array('role'=>'form'),
@@ -33,35 +32,50 @@
 			<?php } ?>
 		</div>
 
-		<div class="form-group <?php if($form->error($model,'titulo') != ''){ echo 'has-error'; } ?>">
-			<?php echo $form->labelEx($model,'titulo'); ?>
-			<?php echo $form->textField($model,'titulo', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Título')); ?>
-			<?php if($form->error($model,'titulo')!='') { ?>
-					<p class="text-danger">					
-						<?php echo $model->getError('titulo'); ?>			
-					</p>
-			<?php } ?>
-		</div>
-
-		<div class="form-group">
-			<?php echo CHtml::label('Contenido', null); ?>
-		</div>
-			<div class="form-group">
-			<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de su encuesta')); ?>
-			<?php echo $form->error($model,'contenido', array('class'=>'col-md-1')); ?>
-			</div>
-
-
-		<div class="form-group">
-			<div class="col-md-2">
-				<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?>
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group <?php if($form->error($model,'titulo') != ''){ echo 'has-error'; } ?>">
+					<?php echo $form->labelEx($model,'titulo'); ?>
+					<?php echo $form->textField($model,'titulo', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Título')); ?>
+					<?php if($form->error($model,'titulo') != ''):?>
+						<p class="text-danger">					
+							<?php echo $model->getError('titulo'); ?>			
+						</p>
+					<?php endif; ?>
+				</div>
 			</div>
 		</div>
+
+		<div class="row">
+			<div class="col-md-6">
+				<div class="form-group">
+					<?php echo $form->labelEx($model,'contenido');//echo CHtml::label('Contenido', null); ?>
+					<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de su encuesta')); ?>
+					<?php echo $form->error($model,'contenido', array('class'=>'col-md-1')); ?>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-8">
+				<div class="form-group">
+					<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('formulario/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+				</div>
+			</div>
+		</div>
+	</div>
 		
 
 
 	<?php $this->endWidget(); ?>
-</div><!-- form -->
+<!-- form -->
 <script type="text/javascript">
 	
 	$(document).on('ready', inicio);

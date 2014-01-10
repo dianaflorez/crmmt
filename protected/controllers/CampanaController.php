@@ -82,10 +82,8 @@ class CampanaController extends Controller
 			$model->attributes = $_POST['Campana'];
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 			 
-
 			// Almacenar la imagen.
 			$model->image = CUploadedFile::getInstance($model, 'image');
-			//var_dump($model->image);
 			if($model->image !== null)
 			{
 				$nombre = rand(1, 10000).$model->image;
@@ -95,11 +93,7 @@ class CampanaController extends Controller
 			   	$image->resize(560, 100, Image::WIDTH);    
 			   	$image->save();
 
-			   	//$model->urlimage = $nombre;
 			   	$model->urlimage = Yii::app()->getBaseUrl(true).'/images/'.$nombre;
-			 	// var_dump($model->validate());
-			  //  	var_dump($model->hasErrors());
-			  //  	var_dump($model->getErrors());		
 			}
 
 			if($model->save())
@@ -107,9 +101,6 @@ class CampanaController extends Controller
 				$this->redirect(array('index'));
 					
 			}	
-			// else{
-			//  	$model->validate();
-			// }
 		}
 
 		$this->render('create',array(
@@ -126,11 +117,14 @@ class CampanaController extends Controller
 	public function actionEnviar($id)
 	{
 		$model = $this->loadModel($id);
+		if($model->estado)
+			$this->redirect(array('index'));
+
 		$error = null;
-		$errorPublicoOjetivo = null;
+		$errorPublicoObjetivo = null;
 		$publicos = PublicoObjetivo::model()->findAll();
 
-		// Clase proporcuinada por mailchimp para el uso de su API.
+		// Clase proporcionada por mailchimp para el uso de su API.
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		// Llave del API autorizada en el perfil.
 		$MailChimp = new Mailchimp($this->api_key);
@@ -146,35 +140,39 @@ class CampanaController extends Controller
 				$model = $this->loadModel($id_cam);
 
 				//$correosDesuscripcion = $this->obtenerCorreosDesuscripcion($_POST['Campana']['PublicoObjetivo']);
-				//$this->desuscribirLista($correosDesuscripcion);
+				//$this->desuscribirListaMailChimp($correosDesuscripcion);
 			   
 				if(isset($_POST['Campana']['PublicoObjetivo']))
 				{
-					$idPublico       = (int) $_POST['Campana']['PublicoObjetivo'];
-					$publicoObjetivo = PublicoObjetivo::model()->findByPk($idPublico);
+					$id_publico       = (int) $_POST['Campana']['PublicoObjetivo'];
+					$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_publico);
 					
 					if($publicoObjetivo === null)
 					{
-						$errorPublicoOjetivo = 'No ha seleccionado un público';
+						$errorPublicoObjetivo = 'No ha seleccionado un público';
 					}
 
-					$correosSuscripcion = $this->obtenerCorreosSuscripcion($idPublico);
+					$correosSuscripcion = $this->obtenerCorreosSuscripcion($id_publico);
+					
 					if(count($correosSuscripcion) > 0)
 					{
-						if($this->suscribirLista($correosSuscripcion))
+						if($this->suscribirListaMailChimp($correosSuscripcion))
 						{
-							$idSegmento = $this->crearSegmentoMailChimp($idPublico);
-							$idCamMailChimp  = $this->crearCampanaMailChimp($model,  $idSegmento);	
+							//$mailChimp = new UtilidadesMailChimp;
+							$id_segmento = $this->crearSegmentoMailChimp($id_publico);
+							$id_cam_mailchimp  = $this->crearCampanaMailChimp($model,  $id_segmento);	
 							
-							if($idCamMailChimp !== false)
+							if($id_cam_mailchimp !== false)
 							{
 								// Enviar correo.
 								$enviar = $MailChimp->call('campaigns/send', array(
-									'cid' => $idCamMailChimp
+									'cid' => $id_cam_mailchimp
 								));
+								
 								$model->estado = true;
 
-								//$this->eliminarSegmentoMailChimp($idSegmento);
+								//$this->eliminarSegmentoMailChimp($id_segmento);
+								$this->registrarUsuariosCampanaEnviada($id_cam, $id_publico);
 
 								if($model->save())
 								{
@@ -191,7 +189,7 @@ class CampanaController extends Controller
 				}
 				else
 				{
-					$errorPublicoOjetivo = 'No ha seleccionado un público';
+					$errorPublicoObjetivo = 'No ha seleccionado un público';
 				}
 				
 			}
@@ -206,7 +204,7 @@ class CampanaController extends Controller
 			'model'               => $model,
 			'publicos'            => $publicos,
 			'error'               => $error,
-			'errorPublicoOjetivo' => $errorPublicoOjetivo
+			'errorPublicoObjetivo' => $errorPublicoObjetivo
 		));
 	}
 
@@ -218,62 +216,62 @@ class CampanaController extends Controller
 			$correoPrueba = $_POST['correoPrueba'];
 			$model = $this->loadModel($id_cam);
 		
-			try
-			{
-
-				$validator = new CEmailValidator;
-				if(!$validator->validateValue($correoPrueba))
-					throw new Exception("Error Processing Request");
-				
-				$correosSuscripcion = array();
-				array_push($correosSuscripcion, array('email'=>array('email'=>$correoPrueba)));
-			
-
-				// Clase proporcuinada por mailchimp para el uso de su API.
-				Yii::import('application.extensions.mailchimp.Mailchimp');
-				// Llave del API autorizada en el perfil.
-				$MailChimp = new Mailchimp($this->api_key);
-            
-			
-		
-				if(count($correosSuscripcion) > 0)
+			if(!$model->estado)
+			{	
+				try
 				{
-					if($this->suscribirLista($correosSuscripcion))
+
+					$validator = new CEmailValidator;
+					if(!$validator->validateValue($correoPrueba))
+						throw new Exception("Error Processing Request");
+					
+					$correosSuscripcion = array();
+					array_push($correosSuscripcion, array('email'=>array('email'=>$correoPrueba)));
+				
+
+					// Clase proporcionada por mailchimp para el uso de su API.
+					Yii::import('application.extensions.mailchimp.Mailchimp');
+					// Llave del API autorizada en el perfil.
+					$MailChimp = new Mailchimp($this->api_key);
+	            
+				
+			
+					if(count($correosSuscripcion) > 0)
 					{
-						$segmento = $MailChimp->call('lists/static-segment-add', array(
-							           	'id'   => 'a61184ea34',
-							           	'name' => 'segmento_'.rand(1, 100000)
-						));
-						
-						
-						$correosSegmento = array();
-						array_push($correosSegmento, array('email'=>$correoPrueba));
-						
-
-						$agregarUsuariosSegmento = $MailChimp->call('lists/static-segment-members-add', array(
-						           	'id'     => 'a61184ea34',
-						           	'seg_id' => $segmento['id'],
-						           	'batch'  => $correosSegmento
-						));
-
-						//$idSegmento = $this->crearSegmentoMailChimp(1, true);
-						$idCamMailChimp  = $this->crearCampanaMailChimp($model,  $segmento['id']);	
-						
-						if($idCamMailChimp)
+						if($this->suscribirListaMailChimp($correosSuscripcion))
 						{
-							// Enviar correo.
-							$enviar = $MailChimp->call('campaigns/send', array(
-								'cid' => $idCamMailChimp
+							$segmento = $MailChimp->call('lists/static-segment-add', array(
+								           	'id'   => 'a61184ea34',
+								           	'name' => 'segmento_'.rand(1, 100000)
 							));
+														
+							$correosSegmento = array();
+							array_push($correosSegmento, array('email'=>$correoPrueba));
 							
+							$agregarUsuariosSegmento = $MailChimp->call('lists/static-segment-members-add', array(
+							           	'id'     => 'a61184ea34',
+							           	'seg_id' => $segmento['id'],
+							           	'batch'  => $correosSegmento
+							));
+
+							$id_cam_mailchimp  = $this->crearCampanaMailChimp($model,  $segmento['id']);	
 							
+							if($id_cam_mailchimp)
+							{
+								// Enviar correo.
+								$enviar = $MailChimp->call('campaigns/send', array(
+									'cid' => $id_cam_mailchimp
+								));
+								
+								
+							}
 						}
 					}
 				}
-			}
-			catch(Exception $e)
-			{
-				throw new CHttpException(500,'La petición fallo.');
+				catch(Exception $e)
+				{
+					throw new CHttpException(500,'La petición fallo.');
+				}
 			}
 		}
 		
@@ -281,7 +279,9 @@ class CampanaController extends Controller
 	}
 
 
-	protected function suscribirLista($emails)
+
+
+	protected function suscribirListaMailChimp($emails)
 	{
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		$MailChimp = new Mailchimp($this->api_key);
@@ -301,6 +301,27 @@ class CampanaController extends Controller
 		}
 	}
 
+	protected function registrarUsuariosCampanaEnviada($id_cam, $id_po)
+	{
+		$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_po);
+		if(!$publicoObjetivo)
+			return array();
+		try
+		{
+			$transaccion = $publicoObjetivo->dbConnection->beginTransaction();
+			foreach ($publicoObjetivo->usuarios as $usuario) {
+				$campanaUsuario = new CampanaUsuario;
+				$campanaUsuario->id_cam = $id_cam;
+				$campanaUsuario->id_usuc = $usuario->id_usu;
+				$campanaUsuario->save();
+			}
+			$transaccion->commit();
+		}
+		catch(Exception $e)
+		{
+			$transaccion->rollback();
+		}
+	}
 
 	protected function obtenerCorreosSuscripcion($id_po, $esSegmento=false)
 	{
@@ -340,21 +361,14 @@ class CampanaController extends Controller
 							           	'name' => 'segmento_'.rand(1, 100000)
 			));
 			
-			// if(!$prueba)
-			// {
-				$correosSegmento = $this->obtenerCorreosSuscripcion($idPublico, true);
-			// }
-			// else
-			// {
-			// 	$correosSegmento = array();
-			// 	array_push($correosSegmento, array('email'=>$usuario->general->emails[0]->direccion));
-			// }
+			$correosSegmento = $this->obtenerCorreosSuscripcion($idPublico, true);
 
 			$agregarUsuariosSegmento = $MailChimp->call('lists/static-segment-members-add', array(
 			           	'id'     => 'a61184ea34',
 			           	'seg_id' => $segmento['id'],
 			           	'batch'  => $correosSegmento
 			));
+
 			return $segmento['id'];
 		}
 		catch(Exception $e)
@@ -371,8 +385,8 @@ class CampanaController extends Controller
 		try
 		{
 			$segmentoEliminar = $MailChimp->call('lists/static-segment-del', array(
-							           	'id'   => 'a61184ea34',
-							           	'seg_id' => $idSegmento
+			           	'id'   => 'a61184ea34',
+			           	'seg_id' => $idSegmento
 			));
 			
 			return true;
@@ -410,9 +424,9 @@ class CampanaController extends Controller
 							'content'  => array(
 							'sections' => array(
 								// Secciones editables en la plantilla.
-								'std_preheader_content'=> 'Estamos para ofrecerte los mejores articulos y promociones.',
-								'imagen_subida' => $campana->urlimage ? '<img src="'.$campana->urlimage.'" style="max-width:600px;>' : '', // '<img src="http://localhost:8888/crmmt/images/descarga.jpg" style="max-width:600px;>',
-								'std_content00' => $campana->contenido,
+								'std_preheader_content' => 'Estamos para ofrecerte los mejores articulos y promociones.',
+								'imagen_subida'         => $campana->urlimage ? '<img src="'.$campana->urlimage.'" style="max-width:600px;>' : '', // '<img src="http://localhost:8888/crmmt/images/descarga.jpg" style="max-width:600px;>',
+								'std_content00'         => $campana->contenido,
 								)
 							),
 							'segment_opts' => array('saved_segment_id' => $idSegmento, 'match'=> 'all', array('field' => 'static_segment', 'value' => $idSegmento,  'p' => 'eq'))
@@ -428,11 +442,9 @@ class CampanaController extends Controller
 
 	public function actionDuplicar($id)
 	{
-		$model=Campana::model()->findByPk($id);
-		//$model = new Campana;
-		//$model->attributes=$anotherModel->attributes;
-		$model->id_cam = null;
-		$model->estado = false;
+		$model              = Campana::model()->findByPk($id);
+		$model->id_cam      = null;
+		$model->estado      = false;
 		$model->isNewRecord = true;
 	
 		if($model->save())
@@ -567,7 +579,7 @@ class CampanaController extends Controller
 
 	public function actionVeamos()
 	{
-		// // Clase proporcuinada por mailchimp para el uso de su API.
+		// // Clase proporcionada por mailchimp para el uso de su API.
 		// Yii::import('application.extensions.mailchimp.Mailchimp');
 		// // Llave del API autorizada en el perfil.
 		// $api_key    = '515d5d909933946cd00c0473675cf6b7-us3';

@@ -17,4 +17,4 @@
 	<h2>Enviar <small>Campana</small></h2>
 </div>
 
-<?php $this->renderPartial('_previewEnviar', array('model'=>$model, 'publicos'=>$publicos, 'error'=>$error, 'errorPublicoOjetivo'=>$errorPublicoOjetivo)); ?>
+<?php $this->renderPartial('_previewEnviar', array('model'=>$model, 'publicos'=>$publicos, 'error'=>$error, 'errorPublicoObjetivo'=>$errorPublicoObjetivo)); ?>

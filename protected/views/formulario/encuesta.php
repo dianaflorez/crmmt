@@ -3,7 +3,7 @@
 	<p><?php echo $model->contenido; ?></p>
 </div>
 
-<div class="form col-md-6">
+
 	<?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'encuesta-form',
 		'htmlOptions' => array('role'=>'form'),
@@ -14,8 +14,11 @@
 		'enableAjaxValidation'=>false,
 	)); ?>
 	<?php foreach ($model->preguntas as $pregunta): ?>
+	<div class="row">
+			<div class="col-md-6">
 		<div class="well well-sm">
-			<h3><?php echo $pregunta->txtpre; ?></h3>
+			<?php echo $pregunta->txtpre; ?>
+			
 			<div class="form-group">
 				<?php 
 				if($pregunta->id_tpr === null): 
@@ -43,14 +46,20 @@
 					echo CHtml::dateField('Pregunta['.$pregunta->id_pre.']', date('Y-m-d'), array('class'=>"form-control fecha", 'name'=> 'pregunta_'.$pregunta->id_pre, 'disabled'=>$activa ? '' : 'disabled'));
 				endif; ?>
 			</div>
+			</div>
+			</div>
 		</div>
 	<?php endforeach; ?>
 
-	<div class="form-group">
-		<div class="col-md-2">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?>
+	<div class="row">
+		<div class="col-md-6">
+			
+				<div class="form-group">
+					<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-primary btn-block')); ?> 
+				</div>
+			
 		</div>
 	</div>
 	<?php $this->endWidget(); ?>
-</div>
+
 		

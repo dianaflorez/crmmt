@@ -10,7 +10,6 @@
 	$cs->registerScriptFile($baseUrl.'/js/pagina.js', CClientScript::POS_END);
 ?>
 
-<div class="row">
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 	'id'=>'pregunta-form',
@@ -39,14 +38,18 @@
 		<?php endif; ?>
 	</div>
 
-	<div class="form-group">
-		<?php echo $form->labelEx($model,'txtpre'); ?>
-		<?php echo $form->textField($model,'txtpre', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Pregunta')); ?>
-		<?php if($form->error($model,'txtpre')!=''): ?>
-				<p class="text-danger">					
-					<?php echo $model->getError('txtpre'); ?>			
-				</p>
-		<?php endif; ?>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<?php echo $form->labelEx($model,'txtpre'); ?>
+				<?php echo $form->textField($model,'txtpre', array('class'=>'form-control', 'maxlength'=>64, 'placeholder'=>'Pregunta')); ?>
+				<?php if($form->error($model,'txtpre')!=''): ?>
+						<p class="text-danger">					
+							<?php echo $model->getError('txtpre'); ?>			
+						</p>
+				<?php endif; ?>
+			</div>
+		</div>
 	</div>
 
 	<?php if($model->isNewRecord): ?>
@@ -85,40 +88,53 @@
 		</div>
 	</div>
 	
-	<div class="form-group">
-		<div id="panel_opciones">
-			<div class="panel panel-default">
-				<div class="panel-heading">
-					<div class="row">
-					<p>
-						<div class="col-md-4">
-							<span class="hidden-xs hidden-sm"><strong>Opciones de respuesta</strong></span> 
+	<div class="row">
+		<div class="col-md-6">
+			<div class="form-group">
+				<div id="panel_opciones">
+					<div class="panel panel-default">
+						<div class="panel-heading">
+							<div class="row">
+							<p>
+								<div class="col-md-6">
+									<span class="hidden-xs hidden-sm"><strong>Opciones de respuesta</strong></span> 
+								</div>
+								<div class="col-md-6">
+									<button class="btn btn-primary form-control" id="agregar_opcion">
+										<span class="glyphicon glyphicon-plus-sign"></span> Opción
+									</button>
+								</div>
+							</p>
+							</div>
 						</div>
-						<div class="col-md-offset-6 col-md-2">
-							<button class="btn btn-primary form-control" id="agregar_opcion">
-								<span class="glyphicon glyphicon-plus-sign"></span> Opción
-							</button>
+						<div id="pregunta_panel" class="panel-body">
+							<fieldset id="opciones">
+							</fieldset>
 						</div>
-					</p>
 					</div>
-				</div>
-				<div id="pregunta_panel" class="panel-body">
-					<fieldset id="opciones">
-					</fieldset>
 				</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="form-group">
-		<div class="col-md-2">
-		<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?>
+	<div class="row">
+		<div class="col-md-6">
+			<div class="col-md-8">
+				<div class="form-group">
+					<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
+				</div>
+			</div>
+			<div class="col-md-4">
+				<div class="form-group">
+				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('formulario/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+				</div>
+			</div>
 		</div>
 	</div>
 
 <?php $this->endWidget(); ?>
 
-</div><!-- form -->
+<!-- form -->
 
 
 <script id="opcion_template" type="text/template">

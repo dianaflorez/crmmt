@@ -24,7 +24,7 @@
 <div class="table-responsive">
 	<table class="table table-bordered table-striped">
 		<thead>
-			<th>Identificación</th>
+			<th class="hidden-xs">Identificación</th>
 			<th>email</th>
 			<th>Nombres</th>
 			<th>Apellidos</th>
@@ -34,19 +34,32 @@
 			<th>Estado civil</th>
 			<th>Dirección</th>
 			<th>País</th>
-			<th>Estado</th>
+			<th>Activo</th>
 			<th></th>
 			</thead>
 		<tbody>
 			<?php foreach ($model->usuarios as $usuario): ?>
 			<tr>
-				<td><?php echo $usuario->general->id_char; ?></td>
+				<td class="hidden-xs"><?php echo $usuario->general->id_char; ?></td>
 				<td>
-					<ul class="list-group">
-						<?php foreach ($usuario->general->emails as $email): ?>
-					 	<li class="list-group-item"><?php echo $email->direccion; ?></li>
-					  	<?php endforeach; ?>
-					</ul>
+					<?php
+						$cantidadEmails = count($usuario->general->emails);
+						if($cantidadEmails > 0):
+							echo $usuario->general->emails[0]->direccion;
+							if($cantidadEmails > 1): 
+					?>
+							<span class="badge pull-right">
+								<?php echo $cantidadEmails; ?>
+							</span>
+					<?php
+							endif;			
+						else:
+							echo $noExiste;
+						endif;
+					?>
+					<?php //foreach ($usuario->general->emails as $email): ?>
+				 	<?php //echo $usuario->general->emails[0]->direccion; ?>
+				  	<?php //endforeach; ?>
 				</td>
 				<td><?php echo $usuario->general->nombre1.' '.$usuario->general->nombre2; ?></td>
 				<td><?php echo $usuario->general->apellido1.' '.$usuario->general->apellido2; ?></td>
@@ -88,9 +101,33 @@
 							echo $noExiste;
 					?>
 				</td>
-				<td><?php foreach ($usuario->general->direcciones as $direccion) {	echo $direccion->direccion;	}  ?></td>
+				<td>
+					<?php
+						$cantidadDirecciones = count($usuario->general->direcciones);
+						if($cantidadDirecciones > 0):
+							echo $usuario->general->direcciones[0]->direccion;
+							if($cantidadDirecciones > 1): 
+					?>
+							<span class="badge pull-right">
+								<?php echo $cantidadDirecciones; ?>
+							</span>
+					<?php
+							endif;			
+						else:
+							echo $noExiste;
+						endif;
+					?>
+					<?php //foreach ($usuario->general->direcciones as $direccion) {	echo $direccion->direccion;	}  ?></td>
 				<td><?php foreach ($usuario->general->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
-				<td><?php if($usuario->estado) echo 'Activo'; else echo 'Desactivado'; ?></td>
+				<td>
+					<p class="text-center">
+						<?php if($usuario->estado): ?>
+						<i class="fa fa-check-circle-o fa-lg"></i>'
+						<?php else: ?>
+						<i class="fa fa-circle-o fa-lg"></i>
+						<?php endif; ?>
+					</p>
+				</td>
 				<td>
 					<p class="text-center">
 					<?php //echo CHtml::link('<span class="glyphicon glyphicon-edit"></span>', Yii::app()->createUrl('publicoobjetivo/update/', array('id'=>$usuario->id_po)), array('data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
