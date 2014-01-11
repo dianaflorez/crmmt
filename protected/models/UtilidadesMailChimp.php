@@ -3,9 +3,9 @@
 class UtilidadesMailChimp{
 
 	const $API_KEY = '515d5d909933946cd00c0473675cf6b7-us3';
-	//public static 
+	//static static 
 
-	public function crearSegmentoMailChimp($id_publico)
+	static function crearSegmentoMailChimp($id_statico)
 	{
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		$MailChimp = new Mailchimp(self::$API_KEY);
@@ -17,7 +17,7 @@ class UtilidadesMailChimp{
 							           	'name' => 'segmento_'.rand(1, 100000)
 			));
 			
-			$correosSegmento = $this->obtenerCorreosSuscripcion($id_publico, true);
+			$correosSegmento = $this->obtenerCorreosSuscripcion($id_statico, true);
 
 			$agregarUsuariosSegmento = $MailChimp->call('lists-segment-members-add', array(
 			           	'id'     => 'a61184ea34',
@@ -33,7 +33,7 @@ class UtilidadesMailChimp{
 		}
 	}
 
-	public function eliminarSegmentoMailChimp($id_segmento)
+	static function eliminarSegmentoMailChimp($id_segmento)
 	{
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		$MailChimp = new Mailchimp(self::$API_KEY);
@@ -53,7 +53,7 @@ class UtilidadesMailChimp{
 		}
 	}
 
-	public function crearCampanaMailChimp($campana, $id_segmento)
+	static function crearCampanaMailChimp($campana, $id_segmento)
 	{
 		Yii::import('application.extensions.mailchimp.Mailchimp');
 		$MailChimp = new Mailchimp(self::$API_KEY);

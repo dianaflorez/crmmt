@@ -281,13 +281,11 @@ class PublicoObjetivoController extends Controller
 			$model                = $this->loadModel($id);
 			$id_usupo             = (int) $_POST['id_usupo'];//$id_usupo;
 
-			
 			$usuario_po           = new UsuarioPublicoObjetivo;
 			$usuario_po->id_po    = $id;
 			$usuario_po->id_usupo = $id_usupo;
 			$usuario_po->id_usu   = Yii::app()->user->getState('usuid');
 		
-
 			try
 			{
 				if($usuario_po->save())

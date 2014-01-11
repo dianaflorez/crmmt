@@ -32,7 +32,7 @@ class FormularioController extends Controller
 				'users'=>array('?'),
 			),
 			array('allow',// allow authenticated user to perform 'view' actions
-				'actions'=>array('view'),
+				'actions'=>array('view', 'exito'),
 				'users'=>array('@'),
 			),
 			array('allow',
@@ -134,6 +134,11 @@ class FormularioController extends Controller
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
+		if($this->encuestaRespondida($id, $id_usur))
+			//$this->render('exito', array());	
+			$this->redirect(array('exito'));
+			//var_dump('ya fue respondida por esta persona');
+		
 		if(isset($_POST['Pregunta']))
 		{
 			// Validar número de respuestas que llegan por POST debe ser
@@ -217,6 +222,7 @@ class FormularioController extends Controller
 						
 					}
 					$transaccion->commit(); // Si todo salio bien, procedemos a almacenar.
+					$this->redirect(array('exito'));
 				}
 				catch(Exception $e)
 				{
@@ -238,6 +244,29 @@ class FormularioController extends Controller
 		));	
 	}
 
+
+	protected function encuestaRespondida($id_for, $id_usur)
+	{
+		$criterio = new CDbCriteria;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio->addCondition('id_for =:id_for');
+		$criterio->params += array(':id_for' => $id_for);
+		$criterio->addCondition('id_usur =:id_usur');
+		$criterio->params += array(':id_usur' => $id_usur);
+
+		$respuestasExistentes = Respuesta::model()->count($criterio);
+		if($respuestasExistentes > 0)
+			return true;
+		else
+			return false;
+	}
+
+	public function actionExito()
+	{
+		$this->layout = 'column1';
+		$this->render('exito', array());	
+			
+	}
 
 	/**
 	 * Genera una vista previa no editable de la encuesta.
