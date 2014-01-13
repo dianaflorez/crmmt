@@ -70,7 +70,7 @@ class Pregunta extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
-			'idTp' => array(self::BELONGS_TO, 'Crmtipopre', 'id_tp'),
+			'tipo' => array(self::BELONGS_TO, 'TipoPregunta', 'id_tp'),
 			'idTpr' => array(self::BELONGS_TO, 'Crmtipopreres', 'id_tpr'),
 			'formularioPregunta' => array(self::HAS_ONE, 'FormularioPregunta', 'id_pre'),
 			'opciones' => array(self::HAS_MANY, 'OpcionPregunta', 'id_pre'),

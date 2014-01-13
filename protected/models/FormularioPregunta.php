@@ -71,7 +71,7 @@ class FormularioPregunta extends CActiveRecord
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'idPre' => array(self::BELONGS_TO, 'Pregunta', 'id_pre'),
 			'idFor' => array(self::BELONGS_TO, 'Crmformulario', 'id_for'),
-			'crmrespuestas' => array(self::HAS_MANY, 'Crmrespuesta', 'id_fp'),
+			'respuestas' => array(self::HAS_MANY, 'Respuesta', 'id_fp'),
 		);
 	}
 

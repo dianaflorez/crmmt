@@ -57,7 +57,7 @@ class Respuesta extends CActiveRecord
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'idUsur' => array(self::BELONGS_TO, 'General', 'id_usur'),
 			'idFp' => array(self::BELONGS_TO, 'Crmforpre', 'id_fp'),
-			'idOp' => array(self::BELONGS_TO, 'Crmopcionpre', 'id_op'),
+			'opcion' => array(self::BELONGS_TO, 'OpcionPregunta', 'id_op'),
 		);
 	}
 

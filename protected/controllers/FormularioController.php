@@ -36,7 +36,7 @@ class FormularioController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta'),
+				'actions'=>array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -134,10 +134,8 @@ class FormularioController extends Controller
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
-		if($this->encuestaRespondida($id, $id_usur))
-			//$this->render('exito', array());	
-			$this->redirect(array('exito'));
-			//var_dump('ya fue respondida por esta persona');
+		// if($this->encuestaRespondida($id, $id_usur))
+		// 	$this->redirect(array('exito'));
 		
 		if(isset($_POST['Pregunta']))
 		{
@@ -244,6 +242,103 @@ class FormularioController extends Controller
 		));	
 	}
 
+
+	public function actionResultado($id)
+	{
+		$model = $this->loadModel($id);
+		$preguntas = $model->preguntas;
+		//var_dump($model->respuestas);
+		//header('Content-type: application/json');
+		$objeto = array();
+		foreach ($preguntas as $pregunta) {
+			$temporal = array();
+			$temporal['id_pre'] = $pregunta->id_pre;
+			$temporal['pregunta'] = $pregunta->txtpre;
+			$temporal['tipo'] = $pregunta->tipo->nombre;
+			$respuestas = array();
+			//$gola = $pregunta->formularioPregunta->respuestas;
+
+			$resultados = array();
+			$numeroRespuestas = count($pregunta->formularioPregunta->respuestas);
+			foreach ($pregunta->opciones as $opcion) {
+				$resultados['id_op'] = $opcion->id_op;
+				$resultados['txtop'] = $opcion->txtop;
+				$resultados['cantidad'] = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
+				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? (100 * $resultados['cantidad']) / $numeroRespuestas : null;
+				array_push($respuestas, $resultados);
+			}
+			// $opciones = CJSON::decode(CJSON::encode($pregunta->opciones));
+			// foreach ($pregunta->formularioPregunta->respuestas as $respuesta) {
+			// 	$array = CJSON::decode(CJSON::encode($respuesta));
+			// 	$array['opcion'] = $respuesta->opcion;
+			// 	array_push($respuestas, $array);
+			// }
+			//if($temporal['tipo'] === 'abierta')
+			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas) : $respuestas;
+			//$temporal['respuestas']['txtop'] = $pregunta->formularioPregunta->respuestas;
+			array_push($objeto, $temporal);
+			//var_dump($pregunta->respuestas);
+			// $criterio = new CDbCriteria;
+			// $criterio
+			// $criterio->addCondition('')
+			 //var_dump($pregunta->formularioPregunta->respuestas);
+		}
+
+		$this->render('resultado', array(
+			'model'  => $model,
+			'preguntas' => $preguntas,
+			'datosReportes' => $objeto 
+			//'activa' => false
+		));	
+		//echo CJSON::encode($objeto);
+		//Yii::app()->end();
+	}
+
+	public function actionResultadoJson($id)
+	{
+		$model = $this->loadModel($id);
+		$preguntas = $model->preguntas;
+		//var_dump($model->respuestas);
+		header('Content-type: application/json');
+		$objeto = array();
+		foreach ($preguntas as $pregunta) {
+			$temporal = array();
+			$temporal['id_pre'] = $pregunta->id_pre;
+			$temporal['pregunta'] = $pregunta->txtpre;
+			$temporal['tipo'] = $pregunta->tipo->nombre;
+			$respuestas = array();
+			//$gola = $pregunta->formularioPregunta->respuestas;
+
+			$resultados = array();
+			$numeroRespuestas = count($pregunta->formularioPregunta->respuestas);
+			foreach ($pregunta->opciones as $opcion) {
+				$resultados['id_op'] = $opcion->id_op;
+				$resultados['txtop'] = $opcion->txtop;
+				$resultados['cantidad'] = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
+				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? (100 * $resultados['cantidad']) / $numeroRespuestas : null;
+				array_push($respuestas, $resultados);
+			}
+			// $opciones = CJSON::decode(CJSON::encode($pregunta->opciones));
+			// foreach ($pregunta->formularioPregunta->respuestas as $respuesta) {
+			// 	$array = CJSON::decode(CJSON::encode($respuesta));
+			// 	$array['opcion'] = $respuesta->opcion;
+			// 	array_push($respuestas, $array);
+			// }
+			//if($temporal['tipo'] === 'abierta')
+			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas) : $respuestas;
+			//$temporal['respuestas']['txtop'] = $pregunta->formularioPregunta->respuestas;
+			array_push($objeto, $temporal);
+			//var_dump($pregunta->respuestas);
+			// $criterio = new CDbCriteria;
+			// $criterio
+			// $criterio->addCondition('')
+			 //var_dump($pregunta->formularioPregunta->respuestas);
+		}
+
+		
+		echo CJSON::encode($objeto);
+		Yii::app()->end();
+	}
 
 	protected function encuestaRespondida($id_for, $id_usur)
 	{
