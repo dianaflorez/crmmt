@@ -82,22 +82,32 @@ $cs = Yii::app()->getClientScript();
 	</div>
 
 	<div class="row">
-		
 		<div class="col-md-6">
 			<div class="panel panel-info">
-		  <div class="panel-heading">Prueba la campaña antes de enviarla.</div>
-		  <div class="panel-body">
-		   <?php echo CHtml::label('Correo', 'correo_prueba'); ?>
-				<div class="form-group">
-					<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control')); ?> 
-				</div>
-			
-				<div class="form-group">
-				<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary btn-block', 'id'=> 'enviarPrueba'));  ?>
-				</div>
-		  </div>
-		</div>
-				
+			  	<div class="panel-heading">Prueba la campaña antes de enviarla.</div>
+			  	<div class="panel-body">
+			  		<div class="row form-inline">
+			  			
+			  			<fieldset>
+					   <?php //echo CHtml::label('Correo', 'correo_prueba'); ?>
+					   <div class="col-sm-8 col-md-8">
+							<div class="form-group">
+								<div class="input-group margin-bottom-sm">
+		  							<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+									<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control', 'placeholder'=>'Correo')); ?> 
+								</div>
+							</div>
+						</div>
+						<div class="col-sm-4 col-md-4">
+						<div class="form-group">
+						<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary form-control', 'id'=> 'enviarPrueba'));  ?>
+						</div>
+						</div>
+						</fieldset>
+						
+					</div>
+			  	</div>
+			</div>
 		</div>
 	</div>
 

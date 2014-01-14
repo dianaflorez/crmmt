@@ -13,47 +13,79 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 	<h2>Resultados <small>Encuesta</small></h2>
 </div>
 
-<div>
-	<h3><?php echo $model->titulo; ?></h3>
-	<p><?php echo $model->contenido; ?></p>
-</div>
+<div class="col-md-6">
+	<div class="panel panel-info">
+		<div class="panel-heading">
+			Título de la encuesta
+		</div>
+		<div class="panel-body">
+			<?php echo $model->titulo; ?>
+		</div>
+		<div class="panel-heading">
+			Descripción de la encuesta
+		</div>
+		<div class="panel-body">
+			<?php echo $model->contenido; ?>
+		</div>
+		<div class="panel-heading">
+			Usuarios que respondieron
+		</div>
+		<div class="panel-body">
+			<?php echo $usuariosRespondieron; ?>
+		</div>
+	</div>
 
 
-	<?php $form=$this->beginWidget('CActiveForm', array(
-		'id'=>'encuesta-form',
-		'htmlOptions' => array('role'=>'form'),
-		// Please note: When you enable ajax validation, make sure the corresponding
-		// controller action is handling ajax validation correctly.
-		// There is a call to performAjaxValidation() commented in generated controller code.
-		// See class documentation of CActiveForm for details on this.
-		'enableAjaxValidation'=>false,
-	)); ?>
+	 <?php //$form=$this->beginWidget('CActiveForm', array(
+	// 	'id'=>'encuesta-form',
+	// 	'htmlOptions' => array('role'=>'form'),
+	// 	// Please note: When you enable ajax validation, make sure the corresponding
+	// 	// controller action is handling ajax validation correctly.
+	// 	// There is a call to performAjaxValidation() commented in generated controller code.
+	// 	// See class documentation of CActiveForm for details on this.
+	// 	'enableAjaxValidation'=>false,
+	// )); ?>
+
+	<div class="page-header">
+		<h4>Preguntas</h4>
+	</div>
 	<?php foreach ($preguntas as $pregunta): ?>
-	<div class="row">
-			<div class="col-md-6">
-		<div class="well well-sm">
-			<?php echo $pregunta->txtpre; ?>
-			
-			<div class="form-group">
-				<div id="pie_<?php echo $pregunta->id_pre; ?>">
-					
+		<div class="panel panel-info">
+			<div class="panel-heading">
+				<?php echo $pregunta->txtpre; ?>
+				<?php 
+					if($pregunta->tipo->nombre === 'unica')
+						echo '(Única)';
+					elseif($pregunta->tipo->nombre === 'multiple')
+						echo '(Múltiple)';
+					elseif($pregunta->tipo->nombre === 'abierta')
+						echo '(Abierta)';
+				 ?>
+			</div>
+				
+			<?php if($pregunta->tipo->nombre === 'abierta'): ?>
+				<ul class="list-group">
+					<?php $respuestasAbiertas = array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas); ?> 
+					<?php foreach ($respuestasAbiertas as $texto): ?>
+						<li class="list-group-item"><?php echo $texto; ?></li>
+					<?php endforeach; ?>
+				</ul>
+			<?php else: ?>
+				<div class="panel-body">
+					<div id="grafico_<?php echo $pregunta->id_pre; ?>"></div>
 				</div>
-			</div>
-			</div>
-			</div>
+			<?php endif; ?>
 		</div>
 	<?php endforeach; ?>
-	<?php $this->endWidget(); ?>
+	
+	<?php //$this->endWidget(); ?>
+</div>
 <script>
-var preguntas = <?php echo  CJSON::encode($datosReportes).';'; ?> 
-$(document).on('ready', inicio);
+	var datos = <?php echo  CJSON::encode($datosReportes).';'; ?> 
+	$(document).on('ready', inicio);
 
 	function inicio(){
-		$.each( preguntas, function( key, pregunta ) {
-		  	//alert( key + ": " + value );
-		  	
-			
-
+		$.each( datos, function( key, pregunta ) {
 			if(pregunta.tipo === 'unica'){
 				var valores = $.map( pregunta.respuestas, function( n ) {
 			    	return n.porcentaje;
@@ -63,8 +95,8 @@ $(document).on('ready', inicio);
 				});
 				console.log(valores);
 
-					var paper = Raphael('pie_'+pregunta.id_pre, 300, 200);
-					 paper.piechart(
+				var entorno = Raphael('grafico_'+pregunta.id_pre, 350, 200);
+				entorno.piechart(
 				   100, // pie center x coordinate
 				   100, // pie center y coordinate
 				   90,  // pie radius
@@ -72,20 +104,20 @@ $(document).on('ready', inicio);
 				    {
 				    	legend: etiquetas
 				    }
-			  );
+			  	);
 			}else if(pregunta.tipo === 'multiple'){
 
 				var valores = $.map( pregunta.respuestas, function( n ) {
-		    	return n.cantidad;
-			});
-			var etiquetas = $.map( pregunta.respuestas, function( n ) {
-			    return n.txtop+' ('+n.cantidad+')';
-			});
-			console.log(valores);
+		    		return n.cantidad;
+				});
+				var etiquetas = $.map( pregunta.respuestas, function( n ) {
+				    return n.txtop+' ('+n.cantidad+')';
+				});
+				console.log(valores);
 
-				var r = Raphael('pie_'+pregunta.id_pre, 300, 200),
+				var entorno = Raphael('grafico_'+pregunta.id_pre, 300, 200),
                     fin = function () {
-                        this.flag = r.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+                        this.flag = entorno.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
                     },
                     fout = function () {
                         this.flag.animate({opacity: 0}, 300, function () {this.remove();});
@@ -96,7 +128,7 @@ $(document).on('ready', inicio);
                             y.push(this.bars[i].y);
                             res.push(this.bars[i].value || "0");
                         }
-                        this.flag = r.popup(this.bars[0].x, Math.min.apply(Math, y), res.join(", ")).insertBefore(this);
+                        this.flag = entorno.popup(this.bars[0].x, Math.min.apply(Math, y), res.join(", ")).insertBefore(this);
                     },
                     fout2 = function () {
                         this.flag.animate({opacity: 0}, 300, function () {this.remove();});
@@ -104,13 +136,8 @@ $(document).on('ready', inicio);
                     txtattr = { font: "12px sans-serif" };
                 
                 //r.text(160, 10, "Single Series Chart").attr(txtattr);
-                // r.text(480, 10, "Multiline Series Stacked Chart").attr(txtattr);
-                // r.text(160, 250, "Multiple Series Chart").attr(txtattr);
-                // r.text(480, 250, "Multiline Series Stacked Chart\nColumn Hover").attr(txtattr);
-                
-                //r.barchart(10, 10, 300, 220, [[55, 20, 13, 32, 5, 1, 2, 10]]).hover(fin, fout);
-                r.barchart(10, 10, 300, 220, [valores]).hover(fin, fout).label([etiquetas]);
-               // r.label(etiquetas);
+                entorno.barchart(10, 10, 300, 220, [valores]).hover(fin, fout).label([etiquetas]);
+               
 			}
 			
 		});

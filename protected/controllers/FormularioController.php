@@ -256,42 +256,40 @@ class FormularioController extends Controller
 			$temporal['pregunta'] = $pregunta->txtpre;
 			$temporal['tipo'] = $pregunta->tipo->nombre;
 			$respuestas = array();
-			//$gola = $pregunta->formularioPregunta->respuestas;
-
+			
 			$resultados = array();
 			$numeroRespuestas = count($pregunta->formularioPregunta->respuestas);
-			foreach ($pregunta->opciones as $opcion) {
+			foreach ($pregunta->opciones as $opcion)
+			{
 				$resultados['id_op'] = $opcion->id_op;
 				$resultados['txtop'] = $opcion->txtop;
 				$resultados['cantidad'] = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
-				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? (100 * $resultados['cantidad']) / $numeroRespuestas : null;
+				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
 				array_push($respuestas, $resultados);
 			}
-			// $opciones = CJSON::decode(CJSON::encode($pregunta->opciones));
-			// foreach ($pregunta->formularioPregunta->respuestas as $respuesta) {
-			// 	$array = CJSON::decode(CJSON::encode($respuesta));
-			// 	$array['opcion'] = $respuesta->opcion;
-			// 	array_push($respuestas, $array);
-			// }
-			//if($temporal['tipo'] === 'abierta')
-			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas) : $respuestas;
-			//$temporal['respuestas']['txtop'] = $pregunta->formularioPregunta->respuestas;
+			
+			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? null : $respuestas;
 			array_push($objeto, $temporal);
-			//var_dump($pregunta->respuestas);
-			// $criterio = new CDbCriteria;
-			// $criterio
-			// $criterio->addCondition('')
-			 //var_dump($pregunta->formularioPregunta->respuestas);
+			
 		}
+
+
+		$criterio = new CDbCriteria;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $id);
+
+		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+		
+		$usuariosRespondieronId = array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
 
 		$this->render('resultado', array(
 			'model'  => $model,
 			'preguntas' => $preguntas,
-			'datosReportes' => $objeto 
-			//'activa' => false
+			'datosReportes' => $objeto,
+			'usuariosRespondieron' => count($usuariosRespondieronId)
 		));	
-		//echo CJSON::encode($objeto);
-		//Yii::app()->end();
 	}
 
 	public function actionResultadoJson($id)
@@ -301,7 +299,8 @@ class FormularioController extends Controller
 		//var_dump($model->respuestas);
 		header('Content-type: application/json');
 		$objeto = array();
-		foreach ($preguntas as $pregunta) {
+		foreach ($preguntas as $pregunta) 
+		{
 			$temporal = array();
 			$temporal['id_pre'] = $pregunta->id_pre;
 			$temporal['pregunta'] = $pregunta->txtpre;
@@ -335,8 +334,16 @@ class FormularioController extends Controller
 			 //var_dump($pregunta->formularioPregunta->respuestas);
 		}
 
+		$criterio = new CDbCriteria;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $id);
+
+		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
 		
-		echo CJSON::encode($objeto);
+		$usuariosRespondieronId = array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		echo CJSON::encode($usuariosRespondieronId);
 		Yii::app()->end();
 	}
 

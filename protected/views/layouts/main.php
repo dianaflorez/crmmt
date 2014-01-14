@@ -18,7 +18,7 @@
 		//$cs->registerCssFile($baseUrl.'/lib/bootstrap/css/bootstrap.min.css');
 		$cs->registerCssFile($baseUrl.'/css/main.css');
 		$cs->registerCssFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.css');
-    $cs->registerCssFile($baseUrl.'/lib/font-awesome/css/font-awesome.min.css');
+   		$cs->registerCssFile($baseUrl.'/lib/font-awesome/css/font-awesome.min.css');
 		//$cs->registerScriptFile($baseUrl.'/lib/jquery/jquery.min.js');
 		$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 		

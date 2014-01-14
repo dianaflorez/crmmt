@@ -146,7 +146,7 @@ class PreguntaController extends Controller
 									}
 								}
 								$transaccion->commit();
-								$this->redirect(array('view','id' => $model->id_pre));
+								$this->redirect(array('formulario/'));
 							}
 							else
 							{
@@ -279,7 +279,7 @@ class PreguntaController extends Controller
 				if($model->save())
 				{
 					$transaccion->commit();
-					$this->redirect(array('view','id'=>$model->id_pre));
+					$this->redirect(array('formulario/'));
 				}
 				else
 				{
