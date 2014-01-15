@@ -13,6 +13,11 @@ body {
 	margin-bottom: 2em;
 }
 
+.modal-dialog
+{
+  	width: 80%;
+}
+
 /*.container {
 	-webkit-transition: all 1s ease-in-out;
   	-moz-transition: all 1s ease-in-out;

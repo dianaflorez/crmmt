@@ -28,13 +28,54 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 			<?php echo $model->contenido; ?>
 		</div>
 		<div class="panel-heading">
-			Usuarios que respondieron
+			<div class="row form-inline">
+			<fieldset>
+						   <?php //echo CHtml::label('Correo', 'correo_prueba'); ?>
+						   <div class="col-sm-8 col-md-8">
+								<div class="form-group">
+									Usuarios que respondieron
+								</div>
+							</div>
+							<div class="col-md-4">
+								<a class="btn btn-default btn-block"  data-toggle="modal" data-target="#myModal"><i class="fa fa-eye fa-fw"></i> Ver usuarios</a>
+							</div>
+						</fieldset>
+
+
+			</div>
 		</div>
 		<div class="panel-body">
-			<?php echo $usuariosRespondieron; ?>
+			<p>
+			<?php echo count($usuariosId); ?>
+			<!-- <button class="btn btn-primary pull-right" data-toggle="modal" data-target="#myModal">
+			  <i class="fa fa-search"></i> Launch demo modal
+			</button> -->
+			</p>
 		</div>
 	</div>
 
+
+
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h4 class="modal-title" id="myModalLabel">Respondieron la encuesta</h4>
+      </div>
+      <div class="modal-body">
+      	<?php $this->renderPartial('_usuariosEncuesta', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'id_for'=>$model->id_for)); ?>
+        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+        <!-- <button type="button" class="btn btn-primary">Save changes</button> -->
+      </div>
+    </div><!-- /.modal-content -->
+  </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
 
 	 <?php //$form=$this->beginWidget('CActiveForm', array(
 	// 	'id'=>'encuesta-form',

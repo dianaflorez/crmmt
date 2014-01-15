@@ -87,24 +87,22 @@ $cs = Yii::app()->getClientScript();
 			  	<div class="panel-heading">Prueba la campaña antes de enviarla.</div>
 			  	<div class="panel-body">
 			  		<div class="row form-inline">
-			  			
 			  			<fieldset>
-					   <?php //echo CHtml::label('Correo', 'correo_prueba'); ?>
-					   <div class="col-sm-8 col-md-8">
-							<div class="form-group">
-								<div class="input-group margin-bottom-sm">
-		  							<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
-									<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control', 'placeholder'=>'Correo')); ?> 
+						   <?php //echo CHtml::label('Correo', 'correo_prueba'); ?>
+						   <div class="col-sm-8 col-md-8">
+								<div class="form-group">
+									<div class="input-group margin-bottom-sm">
+			  							<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
+										<?php echo CHtml::emailField('correo_prueba', '', array('class'=>'form-control', 'placeholder'=>'Correo')); ?> 
+									</div>
 								</div>
 							</div>
-						</div>
-						<div class="col-sm-4 col-md-4">
-						<div class="form-group">
-						<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary form-control', 'id'=> 'enviarPrueba'));  ?>
-						</div>
-						</div>
+							<div class="col-sm-4 col-md-4">
+								<div class="form-group">
+									<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary form-control', 'id'=> 'enviarPrueba'));  ?>
+								</div>
+							</div>
 						</fieldset>
-						
 					</div>
 			  	</div>
 			</div>
@@ -182,21 +180,12 @@ $cs = Yii::app()->getClientScript();
 			 
 			peticion.done(function( msg ) {
 				console.log('exito '+msg);
-				// fila.addClass('success');
-				// $('#btn_'+id_usupo).hide();
-				// $('#chk_'+id_usupo).hide();
 			});
 			 
 			peticion.fail(function( jqXHR, textStatus ) {
 				console.log('fallo '+textStatus);
-				// fila.addClass('warning');
-				// var quitarFila = function (){
-				// 	fila.removeClass('warning');
-				// };
-				// setTimeout(quitarFila, 1500);
 			});
 		}else{
-			//alert('El correo no es válido');
 			$('#correo_prueba').parent().toggleClass('has-error');
 		}
 	

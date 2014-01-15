@@ -35,6 +35,8 @@
  */
 class General extends CActiveRecord
 {
+	public $nombres, $apellidos, $correo;
+
 	/**
 	 * @return string the associated database table name
 	 */
@@ -60,7 +62,7 @@ class General extends CActiveRecord
 			array('razon_social', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, id_char, dv, nombre1, nombre2, apellido1, apellido2, razon_social, id_clase_tercero', 'safe', 'on'=>'search'),
+			array('id, id_char, dv, nombre1, nombre2, apellido1, apellido2, razon_social, id_clase_tercero, nombres, apellidos, correo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -102,12 +104,13 @@ class General extends CActiveRecord
 			'id' => 'ID',
 			'id_char' => 'Identificación',
 			'dv' => 'Dv',
-			'nombre1' => 'Nombre1',
+			'nombre1' => 'Nombre',
 			'nombre2' => 'Nombre2',
-			'apellido1' => 'Apellido1',
+			'apellido1' => 'Apellido',
 			'apellido2' => 'Apellido2',
 			'razon_social' => 'Razon Social',
 			'id_clase_tercero' => 'Id Clase Tercero',
+			'nombres' => 'holaaa'
 		);
 	}
 
@@ -139,6 +142,7 @@ class General extends CActiveRecord
 		$criteria->compare('razon_social',$this->razon_social,true);
 		$criteria->compare('id_clase_tercero',$this->id_clase_tercero);
 
+		$criteria->order = 'nombre1 ASC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
@@ -155,4 +159,60 @@ class General extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	// public function getNombres()
+	// {
+
+	// 	return ucfirst(strtolower($this->nombre1)).' '.ucfirst(strtolower($this->nombre2));
+	// }
+
+	// public function getApellidos()
+	// {
+	// 	return ucfirst(strtolower($this->apellido1)).' '.ucfirst(strtolower($this->apellido2));
+	// }
+
+	public function getMail()
+	{
+		return $this->emails ? strtolower($this->emails[0]->direccion) : 'No registra';
+	}
+
+	public function filtradoPorUsuarios($usuariosId)
+	{
+		$criteria = new CDbCriteria;
+		$criteria->addInCondition('t.id',$usuariosId);
+		
+		$criteria->addSearchCondition('id_char',$this->id_char,true);
+		$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
+		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
+		
+		$criteria->with = array('emails');
+		//$criteria->compare( 'emails.id', $this->id, true );
+		// if($this->mail){
+		$criteria->addSearchCondition('LOWER(direccion)', strtolower($this->correo), true);
+		$criteria->together = true;
+		// }
+		//$criteria->compare('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);  
+		
+		$sort = new CSort;
+		$sort->attributes = array(
+			'id_char'=>array('*', 'id_char'),
+			'nombres'=>array(
+                    'asc'=>'nombre1 ASC',
+                    'desc'=>'nombre1 DESC',
+            ),
+            'apellidos'=>array(
+                    'asc'=>'apellido1 ASC',
+                    'desc'=>'apellido1 DESC',
+            )
+		);
+		return new CActiveDataProvider('General', array(
+		   'criteria'=>$criteria,
+		   'sort'=>$sort,
+		    'pagination'=>array(
+		        'pageSize'=>20,
+		    ),
+		 ));
+
+	}
+
 }

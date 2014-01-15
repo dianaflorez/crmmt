@@ -36,7 +36,7 @@ class FormularioController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson'),
+				'actions'=>array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson', 'usuariosencuesta'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -273,22 +273,39 @@ class FormularioController extends Controller
 			
 		}
 
-
-		$criterio = new CDbCriteria;
-		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
-		$criterio->distinct = true;
-		$criterio->addCondition('id_for=:id_for');
-		$criterio->params += array(':id_for' => $id);
-
-		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
 		
-		$usuariosRespondieronId = array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		$usuariosId = $this->usuariosRespondida($id);
+		//$usuarios = General::model()->findAllByPk($usuariosRespondieronId);
 
+		// $criteria = new CDbCriteria;
+		// $criteria->addInCondition('id',$usuariosRespondieronId);
+
+		// $sort = new CSort;
+		// $sort->attributes = array(
+		// 	'id_char'=>array('*', 'id_char'),
+		// 	'nombres'=>array(
+  //                   'asc'=>'nombre1 ASC',
+  //                   'desc'=>'nombre1 DESC',
+  //           ),
+  //           'apellidos'=>array(
+  //                   'asc'=>'apellido1 ASC',
+  //                   'desc'=>'apellido1 DESC',
+  //           )
+		// );
+		// $usuarios = new CActiveDataProvider('General', array(
+		//    'criteria'=>$criteria,
+		//    'sort'=>$sort,
+		//     'pagination'=>array(
+		//         'pageSize'=>20,
+		//     ),
+		//  ));
 		$this->render('resultado', array(
 			'model'  => $model,
 			'preguntas' => $preguntas,
 			'datosReportes' => $objeto,
-			'usuariosRespondieron' => count($usuariosRespondieronId)
+			//'usuariosRespondieron' => count($usuariosId),
+			'usuariosId'=>$usuariosId,
+			'usuarios' => new General
 		));	
 	}
 
@@ -347,6 +364,9 @@ class FormularioController extends Controller
 		Yii::app()->end();
 	}
 
+	/**
+	 *	 Verifica si la encuesta ha sido respondida o no.
+	 **/
 	protected function encuestaRespondida($id_for, $id_usur)
 	{
 		$criterio = new CDbCriteria;
@@ -363,6 +383,26 @@ class FormularioController extends Controller
 			return false;
 	}
 
+	/**
+	 *	 Verifica si la encuesta ha sido respondida o no.
+	 **/
+	protected function usuariosRespondida($id_for)
+	{
+		$criterio = new CDbCriteria;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $id_for);
+
+		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+		
+		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+	}
+
+
+	/**
+	 *	 Muestra un mensaje de éxito cuando se diligencia una encuesta(prueba).
+	 **/
 	public function actionExito()
 	{
 		$this->layout = 'column1';
@@ -371,9 +411,8 @@ class FormularioController extends Controller
 	}
 
 	/**
-	 * Genera una vista previa no editable de la encuesta.
-	 * 
-	*/
+	 * 	Genera una vista previa no editable de la encuesta.
+	 **/
 	public function actionRevisarEncuesta($id)
 	{
 		$model = $this->loadModel($id);
@@ -421,6 +460,27 @@ class FormularioController extends Controller
 	/**
 	 * Manages all models.
 	 */
+	public function actionUsuariosEncuesta($id_for)
+	{
+		$model=new General('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['General']))
+			$model->attributes=$_GET['General'];
+		
+		$usuariosId = $this->usuariosRespondida($id_for);;
+
+		$this->render('_usuariosEncuesta',array(
+			'model'=>$model,
+			'usuariosId'=> $usuariosId,
+			'id_for'=>$id_for
+		));
+
+		// 	header('Content-type: application/json');
+
+		// echo CJSON::encode($model);
+		// Yii::app()->end();
+	}
+
 	public function actionAdmin()
 	{
 		$model=new Formulario('search');
@@ -431,6 +491,7 @@ class FormularioController extends Controller
 		$this->render('admin',array(
 			'model'=>$model,
 		));
+	
 	}
 
 	/**
