@@ -102,6 +102,8 @@ class PreguntaController extends Controller
 		$conteo = Respuesta::model()->count($criterio);
 		if($conteo > 0)
 		{
+			$returnUri = Yii::app()->request->urlReferrer;
+			Yii::app()->clientScript->registerMetaTag("5;url={$returnUri}", null, 'refresh');
 			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
 		}
 

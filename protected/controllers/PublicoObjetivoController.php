@@ -349,8 +349,7 @@ class PublicoObjetivoController extends Controller
 
 		//var_dump(PublicoObjetivo::model()->getAttributes());
 		$this->render('index',array(
-			//'model'=>$model,
-			'publicos'=>$publicos
+			'publicos' => $publicos
 		));
 	}
 

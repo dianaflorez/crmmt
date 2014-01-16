@@ -84,7 +84,7 @@ class CampanaController extends Controller
 			 
 			// Almacenar la imagen.
 			$model->image = CUploadedFile::getInstance($model, 'image');
-			if($model->image !== null)
+			if($model->image != null)
 			{
 				$nombre = rand(1, 10000).$model->image;
 				$directorio = Yii::app()->basePath.'/../images/'.$nombre;
@@ -120,9 +120,9 @@ class CampanaController extends Controller
 		if($model->estado)
 			$this->redirect(array('index'));
 
-		$error = null;
+		$error                = null;
 		$errorPublicoObjetivo = null;
-		$publicos = PublicoObjetivo::model()->findAll();
+		$publicos             = PublicoObjetivo::model()->findAll();
 
 		// Clase proporcionada por mailchimp para el uso de su API.
 		Yii::import('application.extensions.mailchimp.Mailchimp');
@@ -137,14 +137,14 @@ class CampanaController extends Controller
 			try
 			{
 				$id_cam = isset($_POST['Campana']['id_cam']) ? $_POST['Campana']['id_cam'] : null;
-				$model = $this->loadModel($id_cam);
+				$model  = $this->loadModel($id_cam);
 
 				//$correosDesuscripcion = $this->obtenerCorreosDesuscripcion($_POST['Campana']['PublicoObjetivo']);
 				//$this->desuscribirListaMailChimp($correosDesuscripcion);
 			   
 				if(isset($_POST['Campana']['PublicoObjetivo']))
 				{
-					$id_publico       = (int) $_POST['Campana']['PublicoObjetivo'];
+					$id_publico      = (int) $_POST['Campana']['PublicoObjetivo'];
 					$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_publico);
 					
 					if($publicoObjetivo === null)
@@ -159,10 +159,10 @@ class CampanaController extends Controller
 						if($this->suscribirListaMailChimp($correosSuscripcion))
 						{
 							//$mailChimp = new UtilidadesMailChimp;
-							$id_segmento = $this->crearSegmentoMailChimp($id_publico);
-							$id_cam_mailchimp  = $this->crearCampanaMailChimp($model,  $id_segmento);	
+							$id_segmento      = $this->crearSegmentoMailChimp($id_publico);
+							$id_cam_mailchimp = $this->crearCampanaMailChimp($model,  $id_segmento);	
 							
-							if($id_cam_mailchimp !== false)
+							if($id_cam_mailchimp != false)
 							{
 								// Enviar correo.
 								$enviar = $MailChimp->call('campaigns/send', array(
@@ -324,7 +324,7 @@ class CampanaController extends Controller
 		}
 	}
 
-	protected function obtenerCorreosSuscripcion($id_po, $esSegmento=false)
+	protected function obtenerCorreosSuscripcion($id_po, $esSegmento = false)
 	{
 		$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_po);
 		if(!$publicoObjetivo)
@@ -390,8 +390,8 @@ class CampanaController extends Controller
 		try
 		{
 			$segmentoEliminar = $MailChimp->call('lists/static-segment-del', array(
-			           	'id'   => 'a61184ea34',
-			           	'seg_id' => $idSegmento
+		           	'id'     => 'a61184ea34',
+		           	'seg_id' => $idSegmento
 			));
 			
 			return true;
@@ -424,7 +424,6 @@ class CampanaController extends Controller
 													'html_clicks' => true,
 													'text_clicks' => true
 												),
-								
 							),
 							'content'  => array(
 							'sections' => array(

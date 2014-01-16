@@ -42,15 +42,16 @@
 					<p class="text-center">
 					   	<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/update/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
 						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-eye fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/revisarEncuesta/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
-						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle fa-lg fa-border"></i>', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
+						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle fa-lg fa-border"></i>', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Agregar pregunta"));  ?>
 						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle-o fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'id_usur'=> 1)), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
+						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-book fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?>
 						
 						<?php 
 							//if($formulario->tipoformulario->nombre === 'email'):
-								echo CHtml::link('<i class="fa fa-plus-square fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/duplicar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); 
+								//echo CHtml::link('<i class="fa fa-plus-square fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/duplicar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); 
 							  	//echo CHtml::link('<i class="fa fa-share-square fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/usuarios/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Enviar prueba")); 
-							  	if($formulario->estado)
-							  		echo CHtml::link('<i class="fa fa-mail-forward fa-lg fa-border"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+							  	//if($formulario->estado)
+							  	//	echo CHtml::link('<i class="fa fa-mail-forward fa-lg fa-border"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
 
 							//endif;	?>
 					</p>

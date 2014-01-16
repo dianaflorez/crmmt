@@ -36,13 +36,12 @@
 				<td><?php  echo ucfirst($campana->tipoCampana->nombre); ?></td>
 				<td>
 					<p class="text-center">
-					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
+					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-border fa-lg"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
 						<?php 
 							if($campana->tipoCampana->nombre === 'email'):
-								echo CHtml::link('<i class="fa fa-plus-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); 
-							  	//echo CHtml::link('<i class="fa fa-share-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar prueba")); 
-							  	if(!$campana->estado)
-							  		echo CHtml::link('<i class="fa fa-mail-forward fa-lg fa-border"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+								echo CHtml::link('<i class="fa fa-copy fa-border fa-lg"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); ?>
+						<?php	  	if(!$campana->estado)
+							  			echo CHtml::link('<i class="fa fa-rocket fa-border fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
 
 							endif;	?>
 					</p>

@@ -1,5 +1,5 @@
 <div>
-	<h2><?php echo $model->titulo; ?></h2>
+	<h4><?php echo $model->titulo; ?></h4>
 	<p><?php echo $model->contenido; ?></p>
 </div>
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -48,6 +48,7 @@
 	</div>
 <?php endforeach; ?>
 
+<?php if($activa): ?>
 <div class="row">
 	<div class="col-md-6">
 		<div class="form-group">
@@ -55,6 +56,7 @@
 		</div>
 	</div>
 </div>
+<?php endif; ?>
 <?php $this->endWidget(); ?>
 
 		

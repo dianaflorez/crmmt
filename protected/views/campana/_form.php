@@ -177,38 +177,32 @@ $cs = Yii::app()->getClientScript();
 	$(document).on('ready', inicio);
 
 	function inicio(){
+		var dropdown = $('#Campana_id_tc');
 		$('#Campana_contenido').jqte();
-		$('#Campana_id_tc').on('change', visibilidadElementos);
+		dropdown.on('change', visibilidadElementos);
 		$('#personalizada').slideUp();
+
+		verificar(dropdown);
 	}
 
-	function visibilidadElementos(e){
-		var opcionSeleccionada = $('option:selected', this);
-		var valorSeleccionado = opcionSeleccionada.val();
-		console.log(opcionSeleccionada.text()+' '+valorSeleccionado);
+	function verificar(dropdown){
+		var opcionSeleccionada = $('option:selected', dropdown);
 		if(opcionSeleccionada.text() === 'email'){
-			// $('#duracion').slideUp();
-			// $('#precio').slideUp();
-			// $('#almacen').slideUp();
-			// $('#personalizada').slideDown();
-			// $('#Campana_fecini').prop('disabled', true);
-			// $('#Campana_fecfin').prop('disabled', true);
 			$('.no-email').each(function(){
 				$(this).slideUp();
 			});
 			
 		}else{
-			// $('#duracion').slideDown();
-			// $('#precio').slideDown();
-			// $('#personalizada').slideUp();
-			// $('#Campana_fecini').prop('disabled', false);
-			// $('#Campana_fecfin').prop('disabled', false);
 			$('.no-email').each(function(){
 				$(this).slideDown();
 			});
-
-
 		}
 	}
+
+	function visibilidadElementos(e){
+		verificar(this);
+	}
+
+
 
 </script>
