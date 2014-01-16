@@ -103,7 +103,7 @@ $cs = Yii::app()->getClientScript();
 		<div id="personalizada no-email" class="col-md-4">
 			<div class="form-group <?php if($form->error($model,'personalizada') != ''){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model,'personalizada'); ?>
-				<?php echo  $form->checkBox($model,'personalizada',array('separator'=>'')); ?>
+				<?php echo  $form->checkBox($model,'personalizada'); ?>
 				<?php if($form->error($model,'personalizada') != ''): ?>
 					<p class="text-danger">					 
 						<?php echo $model->getError('personalizada'); ?>		

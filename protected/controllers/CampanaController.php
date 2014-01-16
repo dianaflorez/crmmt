@@ -291,7 +291,8 @@ class CampanaController extends Controller
 			$suscripcion = $MailChimp->call('lists/batch-subscribe', array(
 			            'id'           => 'a61184ea34',
 			            'batch'        => $emails,
-			            'double_optin' => false
+			            'double_optin' => false,
+			            'update_existing' => true
 			));
 			return true;
 		}
@@ -341,7 +342,11 @@ class CampanaController extends Controller
 				}
 				else
 				{
-					array_push($emails, array('email'=>array('email'=>$usuario->general->emails[0]->direccion)));
+					$merge_vars = array(
+					    'FNAME' => $usuario->general->nombre1,
+					    'LNAME' => $usuario->general->apellido1,
+					);
+					array_push($emails, array('email'=>array('email'=>$usuario->general->emails[0]->direccion), 'merge_vars'=>$merge_vars));
 				}
 				
 			}
@@ -426,11 +431,13 @@ class CampanaController extends Controller
 								// Secciones editables en la plantilla.
 								'std_preheader_content' => 'Estamos para ofrecerte los mejores articulos y promociones.',
 								'imagen_subida'         => $campana->urlimage ? '<img src="'.$campana->urlimage.'" style="max-width:600px;>' : '', // '<img src="http://localhost:8888/crmmt/images/descarga.jpg" style="max-width:600px;>',
-								'std_content00'         => $campana->contenido,
+								'saludo'                => $campana->personalizada === true ? 'Hola *|TITLE:FNAME|*,' : '',
+								'contenido'             => $campana->contenido,
 								)
 							),
 							'segment_opts' => array('saved_segment_id' => $idSegmento, 'match'=> 'all', array('field' => 'static_segment', 'value' => $idSegmento,  'p' => 'eq'))
 					));
+
 			return $campanaMailChimp['id'];
 		}
 		catch(Exception $e)
