@@ -74,24 +74,24 @@ class General extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'emails' => array(self::HAS_MANY, 'Emails', 'id'),
-			'informacionPersonal' => array(self::HAS_ONE, 'InformacionPersonal', 'id'),
+			'emails'                => array(self::HAS_MANY, 'Emails', 'id'),
+			'informacionPersonal'   => array(self::HAS_ONE, 'InformacionPersonal', 'id'),
 			//'informacionPersonal' => array(self::HAS_ONE, 'InformacionPersonal', 'id'),
-			'crmcampanas' => array(self::HAS_MANY, 'Crmcampana', 'id_usu'),
-			'crmcampanausus' => array(self::HAS_MANY, 'Crmcampanausu', 'id_usuc'),
-			'direcciones' => array(self::HAS_MANY, 'Direcciones', 'id'),
-			'usuarioweb' => array(self::HAS_ONE, 'Usuarioweb', 'id_usuario'),
-			'crmusuariopos' => array(self::HAS_MANY, 'Crmusuariopo', 'id_usupo'),
-			'crmusuariopos1' => array(self::HAS_MANY, 'Crmusuariopo', 'id_usu'),
-			'crmpreferencias' => array(self::HAS_MANY, 'Crmpreferencia', 'id_usup'),
-			'crmtipopreres' => array(self::HAS_MANY, 'Crmtipopreres', 'id_usu'),
-			'crmtipopres' => array(self::HAS_MANY, 'Crmtipopre', 'id_usu'),
-			'crmpreguntas' => array(self::HAS_MANY, 'Crmpregunta', 'id_usu'),
-			'crmrespuestas' => array(self::HAS_MANY, 'Crmrespuesta', 'id_usu'),
-			'crmrespuestas1' => array(self::HAS_MANY, 'Crmrespuesta', 'id_usur'),
-			'crmopcionpres' => array(self::HAS_MANY, 'Crmopcionpre', 'id_usu'),
-			'crmforpres' => array(self::HAS_MANY, 'Crmforpre', 'id_usu'),
-			'crmformularios' => array(self::HAS_MANY, 'Crmformulario', 'id_usu'),
+			'crmcampanas'           => array(self::HAS_MANY, 'Crmcampana', 'id_usu'),
+			'crmcampanausus'        => array(self::HAS_MANY, 'Crmcampanausu', 'id_usuc'),
+			'direcciones'           => array(self::HAS_MANY, 'Direcciones', 'id'),
+			'usuarioweb'            => array(self::HAS_ONE, 'Usuarioweb', 'id_usuario'),
+			'crmusuariopos'         => array(self::HAS_MANY, 'Crmusuariopo', 'id_usupo'),
+			'crmusuariopos1'        => array(self::HAS_MANY, 'Crmusuariopo', 'id_usu'),
+			'crmpreferencias'       => array(self::HAS_MANY, 'Crmpreferencia', 'id_usup'),
+			'crmtipopreres'         => array(self::HAS_MANY, 'Crmtipopreres', 'id_usu'),
+			'crmtipopres'           => array(self::HAS_MANY, 'Crmtipopre', 'id_usu'),
+			'crmpreguntas'          => array(self::HAS_MANY, 'Crmpregunta', 'id_usu'),
+			'crmrespuestas'         => array(self::HAS_MANY, 'Crmrespuesta', 'id_usu'),
+			'crmrespuestas1'        => array(self::HAS_MANY, 'Crmrespuesta', 'id_usur'),
+			'crmopcionpres'         => array(self::HAS_MANY, 'Crmopcionpre', 'id_usu'),
+			'crmforpres'            => array(self::HAS_MANY, 'Crmforpre', 'id_usu'),
+			'crmformularios'        => array(self::HAS_MANY, 'Crmformulario', 'id_usu'),
 		);
 	}
 
@@ -101,16 +101,18 @@ class General extends CActiveRecord
 	public function attributeLabels()
 	{
 		return array(
-			'id' => 'ID',
-			'id_char' => 'Identificación',
-			'dv' => 'Dv',
-			'nombre1' => 'Nombre',
-			'nombre2' => 'Nombre2',
-			'apellido1' => 'Apellido',
-			'apellido2' => 'Apellido2',
-			'razon_social' => 'Razon Social',
+			'id'               => 'ID',
+			'id_char'          => 'Identificación',
+			'dv'               => 'Dv',
+			'nombre1'          => 'Nombre',
+			'nombre2'          => 'Nombre2',
+			'apellido1'        => 'Apellido',
+			'apellido2'        => 'Apellido2',
+			'razon_social'     => 'Razon Social',
 			'id_clase_tercero' => 'Id Clase Tercero',
-			'nombres' => 'holaaa'
+			'nombres'          => 'Nombres',
+			'apellidos'        => 'Apellidos',
+			'correo'           => 'Correo'
 		);
 	}
 
@@ -145,7 +147,7 @@ class General extends CActiveRecord
 		$criteria->order = 'nombre1 ASC';
 
 		return new CActiveDataProvider($this, array(
-			'criteria'=>$criteria,
+			'criteria' => $criteria,
 		));
 	}
 
@@ -160,16 +162,16 @@ class General extends CActiveRecord
 		return parent::model($className);
 	}
 
-	// public function getNombres()
-	// {
+	public function getNombresUnidos()
+	{
 
-	// 	return ucfirst(strtolower($this->nombre1)).' '.ucfirst(strtolower($this->nombre2));
-	// }
+		return ucfirst(strtolower($this->nombre1)).' '.ucfirst(strtolower($this->nombre2));
+	}
 
-	// public function getApellidos()
-	// {
-	// 	return ucfirst(strtolower($this->apellido1)).' '.ucfirst(strtolower($this->apellido2));
-	// }
+	public function getApellidosUnidos()
+	{
+		return ucfirst(strtolower($this->apellido1)).' '.ucfirst(strtolower($this->apellido2));
+	}
 
 	public function getMail()
 	{
@@ -186,30 +188,30 @@ class General extends CActiveRecord
 		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
 		
 		$criteria->with = array('emails');
-		//$criteria->compare( 'emails.id', $this->id, true );
-		// if($this->mail){
 		$criteria->addSearchCondition('LOWER(direccion)', strtolower($this->correo), true);
 		$criteria->together = true;
-		// }
-		//$criteria->compare('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);  
 		
 		$sort = new CSort;
 		$sort->attributes = array(
-			'id_char'=>array('*', 'id_char'),
-			'nombres'=>array(
-                    'asc'=>'nombre1 ASC',
-                    'desc'=>'nombre1 DESC',
+			'id_char'   => array('*', 'id_char'),
+			'nombres'   => array(
+                    'asc'  => 'nombre1 ASC',
+                    'desc' => 'nombre1 DESC',
             ),
-            'apellidos'=>array(
-                    'asc'=>'apellido1 ASC',
-                    'desc'=>'apellido1 DESC',
-            )
+			'apellidos' => array(
+                    'asc'  => 'apellido1 ASC',
+                    'desc' => 'apellido1 DESC',
+            ),
+			'correo'    => array(
+                    'asc'  => 'direccion ASC',
+                    'desc' => 'direccion DESC',
+            ),
 		);
 		return new CActiveDataProvider('General', array(
-		   'criteria'=>$criteria,
-		   'sort'=>$sort,
-		    'pagination'=>array(
-		        'pageSize'=>20,
+		   	'criteria'   => $criteria,
+		   	'sort'       => $sort,
+		   	'pagination' => array(
+		        'pageSize' => 20,
 		    ),
 		 ));
 

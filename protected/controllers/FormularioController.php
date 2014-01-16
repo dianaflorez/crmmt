@@ -28,21 +28,21 @@ class FormularioController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'=>array('index'),
-				'users'=>array('?'),
+				'actions'    => array('index'),
+				'users'      => array('?'),
 			),
 			array('allow',// allow authenticated user to perform 'view' actions
-				'actions'=>array('view', 'exito'),
-				'users'=>array('@'),
+				'actions'    => array('view', 'exito'),
+				'users'      => array('@'),
 			),
 			array('allow',
-				'actions'=>array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson', 'usuariosencuesta'),
-				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
+				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson', 'usuariosencuesta'),
+				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
-				// 'roles'=>array('Admin'), 
+				// 'roles'   => array('Admin'),
 			),
 			array('deny',  // deny all users
-				'users'=>array('*'),
+				'users'      => array('*'),
 			),
 		);
 	}
@@ -76,7 +76,7 @@ class FormularioController extends Controller
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_for));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('create',array(
@@ -100,7 +100,7 @@ class FormularioController extends Controller
 		{
 			$model->attributes = $_POST['Formulario'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_for));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(
@@ -251,19 +251,20 @@ class FormularioController extends Controller
 		//header('Content-type: application/json');
 		$objeto = array();
 		foreach ($preguntas as $pregunta) {
-			$temporal = array();
-			$temporal['id_pre'] = $pregunta->id_pre;
+			$temporal             = array();
+			$temporal['id_pre']   = $pregunta->id_pre;
 			$temporal['pregunta'] = $pregunta->txtpre;
-			$temporal['tipo'] = $pregunta->tipo->nombre;
-			$respuestas = array();
+			$temporal['tipo']     = $pregunta->tipo->nombre;
 			
+			$respuestas = array();
 			$resultados = array();
+			
 			$numeroRespuestas = count($pregunta->formularioPregunta->respuestas);
 			foreach ($pregunta->opciones as $opcion)
 			{
-				$resultados['id_op'] = $opcion->id_op;
-				$resultados['txtop'] = $opcion->txtop;
-				$resultados['cantidad'] = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
+				$resultados['id_op']      = $opcion->id_op;
+				$resultados['txtop']      = $opcion->txtop;
+				$resultados['cantidad']   = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
 				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
 				array_push($respuestas, $resultados);
 			}
@@ -275,37 +276,13 @@ class FormularioController extends Controller
 
 		
 		$usuariosId = $this->usuariosRespondida($id);
-		//$usuarios = General::model()->findAllByPk($usuariosRespondieronId);
-
-		// $criteria = new CDbCriteria;
-		// $criteria->addInCondition('id',$usuariosRespondieronId);
-
-		// $sort = new CSort;
-		// $sort->attributes = array(
-		// 	'id_char'=>array('*', 'id_char'),
-		// 	'nombres'=>array(
-  //                   'asc'=>'nombre1 ASC',
-  //                   'desc'=>'nombre1 DESC',
-  //           ),
-  //           'apellidos'=>array(
-  //                   'asc'=>'apellido1 ASC',
-  //                   'desc'=>'apellido1 DESC',
-  //           )
-		// );
-		// $usuarios = new CActiveDataProvider('General', array(
-		//    'criteria'=>$criteria,
-		//    'sort'=>$sort,
-		//     'pagination'=>array(
-		//         'pageSize'=>20,
-		//     ),
-		//  ));
+		
 		$this->render('resultado', array(
-			'model'  => $model,
-			'preguntas' => $preguntas,
+			'model'         => $model,
+			'preguntas'     => $preguntas,
 			'datosReportes' => $objeto,
-			//'usuariosRespondieron' => count($usuariosId),
-			'usuariosId'=>$usuariosId,
-			'usuarios' => new General
+			'usuariosId'    => $usuariosId,
+			'usuarios'      => new General
 		));	
 	}
 
@@ -365,12 +342,14 @@ class FormularioController extends Controller
 	}
 
 	/**
-	 *	 Verifica si la encuesta ha sido respondida o no.
+	 *	Verifica si la encuesta ha sido respondida o no por determinado usuario.
+	 *	
 	 **/
 	protected function encuestaRespondida($id_for, $id_usur)
 	{
-		$criterio = new CDbCriteria;
-		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio       = new CDbCriteria;
+		$criterio->join = 'JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		
 		$criterio->addCondition('id_for =:id_for');
 		$criterio->params += array(':id_for' => $id_for);
 		$criterio->addCondition('id_usur =:id_usur');
@@ -384,13 +363,14 @@ class FormularioController extends Controller
 	}
 
 	/**
-	 *	 Verifica si la encuesta ha sido respondida o no.
+	 *	 Devuelve un array con loss IDs de los usuarios que han respondido la encuesta.
 	 **/
 	protected function usuariosRespondida($id_for)
 	{
 		$criterio = new CDbCriteria;
 		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
-		$criterio->distinct = true;
+		
+		//$criterio->distinct = true;
 		$criterio->addCondition('id_for=:id_for');
 		$criterio->params += array(':id_for' => $id_for);
 
@@ -462,34 +442,29 @@ class FormularioController extends Controller
 	 */
 	public function actionUsuariosEncuesta($id_for)
 	{
-		$model=new General('search');
+		$model = new General('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['General']))
-			$model->attributes=$_GET['General'];
+			$model->attributes = $_GET['General'];
 		
 		$usuariosId = $this->usuariosRespondida($id_for);;
 
 		$this->render('_usuariosEncuesta',array(
-			'model'=>$model,
-			'usuariosId'=> $usuariosId,
-			'id_for'=>$id_for
+			'model'      => $model,
+			'usuariosId' => $usuariosId,
+			'id_for'     => $id_for
 		));
-
-		// 	header('Content-type: application/json');
-
-		// echo CJSON::encode($model);
-		// Yii::app()->end();
 	}
 
 	public function actionAdmin()
 	{
-		$model=new Formulario('search');
+		$model = new Formulario('search');
 		$model->unsetAttributes();  // clear any default values
 		if(isset($_GET['Formulario']))
-			$model->attributes=$_GET['Formulario'];
+			$model->attributes = $_GET['Formulario'];
 
 		$this->render('admin',array(
-			'model'=>$model,
+			'model' => $model,
 		));
 	
 	}
@@ -503,8 +478,8 @@ class FormularioController extends Controller
 	 */
 	public function loadModel($id)
 	{
-		$model=Formulario::model()->findByPk($id);
-		if($model===null)
+		$model = Formulario::model()->findByPk($id);
+		if($model === null)
 			throw new CHttpException(404,'The requested page does not exist.');
 		return $model;
 	}

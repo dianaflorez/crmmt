@@ -200,10 +200,10 @@ class CampanaController extends Controller
 		
 		}
 
-		$this->render('enviar',array(
-			'model'               => $model,
-			'publicos'            => $publicos,
-			'error'               => $error,
+		$this->render('enviar', array(
+			'model'                => $model,
+			'publicos'             => $publicos,
+			'error'                => $error,
 			'errorPublicoObjetivo' => $errorPublicoObjetivo
 		));
 	}

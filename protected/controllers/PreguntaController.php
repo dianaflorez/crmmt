@@ -89,6 +89,23 @@ class PreguntaController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+		// $id_fp  = $model->formularioPregunta->id_fp;
+		// $conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
+		
+		$criterio = new CDbCriteria;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		
+		//$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $this->id_for);
+
+		$conteo = Respuesta::model()->count($criterio);
+		if($conteo > 0)
+		{
+			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
+		}
+
+
 		if(isset($_POST['Pregunta']))
 		{
 			$model->attributes  = $_POST['Pregunta'];
@@ -145,6 +162,7 @@ class PreguntaController extends Controller
 										}
 									}
 								}
+								//var_dump($this->id_for);
 								$transaccion->commit();
 								$this->redirect(array('formulario/'));
 							}
@@ -179,17 +197,13 @@ class PreguntaController extends Controller
 
 	// public function actionOpciones($id)
 	// {
-	// 	//if(isset($_POST['Consulta']))
-	// 	//{
-	// 		$model    = Pregunta::model()->findByPk($id);
-	// 		$opciones = array();
-	// 		if($model)
-	// 			$opciones = $model->opciones;
-	// 		//var_dump($opciones);
-	// 		echo CJSON::encode($opciones);
-	// 		Yii::app()->end();
-
-	// 	//}		
+	// 	$id_fp  = $model->formularioPregunta->id_fp;
+	// 	$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
+		
+	// 	if($conteo > 0)
+	// 	{
+	// 		throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
+	// 	}	
 	// }
 
 	/**
@@ -211,8 +225,7 @@ class PreguntaController extends Controller
 			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
 		}
 
-		$transaccion = $model->dbConnection->beginTransaction();
-		
+
 		try
 		{
 			if(isset($_POST['Pregunta']))
