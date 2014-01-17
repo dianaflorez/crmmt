@@ -152,15 +152,15 @@ class CampanaController extends Controller
 						$errorPublicoObjetivo = 'No ha seleccionado un público';
 					}
 
-					$correosSuscripcion = $this->obtenerCorreosSuscripcion($id_publico);
+					// $correosSuscripcion = $this->obtenerCorreosSuscripcion($id_publico);
 					
-					if(count($correosSuscripcion) > 0)
-					{
-						if($this->suscribirListaMailChimp($correosSuscripcion))
+					// if(count($correosSuscripcion) > 0)
+					// {
+						if(Yii::app()->utilmailchimp->suscribirListaMailChimp($id_publico))
 						{
 							//$mailChimp = new UtilidadesMailChimp;
-							$id_segmento      = $this->crearSegmentoMailChimp($id_publico);
-							$id_cam_mailchimp = $this->crearCampanaMailChimp($model,  $id_segmento);	
+							$id_segmento      = Yii::app()->utilmailchimp->crearSegmentoMailChimp($id_publico);//$this->crearSegmentoMailChimp($id_publico);
+							$id_cam_mailchimp = Yii::app()->utilmailchimp->crearCampanaMailChimp($model, $id_segmento);	
 							
 							if($id_cam_mailchimp != false)
 							{
@@ -185,7 +185,11 @@ class CampanaController extends Controller
 								
 							}
 						}
-					}
+						else
+						{
+							$errorPublicoObjetivo = 'El público objetivo no tiene correos válidos.';
+						}
+					//}
 				}
 				else
 				{
@@ -281,26 +285,26 @@ class CampanaController extends Controller
 
 
 
-	protected function suscribirListaMailChimp($emails)
-	{
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		$MailChimp = new Mailchimp($this->api_key);
+	// protected function suscribirListaMailChimp($emails)
+	// {
+	// 	Yii::import('application.extensions.mailchimp.Mailchimp');
+	// 	$MailChimp = new Mailchimp($this->api_key);
 
-		try
-		{
-			$suscripcion = $MailChimp->call('lists/batch-subscribe', array(
-			            'id'           => 'a61184ea34',
-			            'batch'        => $emails,
-			            'double_optin' => false,
-			            'update_existing' => true
-			));
-			return true;
-		}
-		catch(Exception $e)
-		{
-			throw new Exception('Oops, no se pudo suscribir');
-		}
-	}
+	// 	try
+	// 	{
+	// 		$suscripcion = $MailChimp->call('lists/batch-subscribe', array(
+	// 		            'id'           => 'a61184ea34',
+	// 		            'batch'        => $emails,
+	// 		            'double_optin' => false,
+	// 		            'update_existing' => true
+	// 		));
+	// 		return true;
+	// 	}
+	// 	catch(Exception $e)
+	// 	{
+	// 		throw new Exception('Oops, no se pudo suscribir');
+	// 	}
+	// }
 
 	protected function registrarUsuariosCampanaEnviada($id_cam, $id_po)
 	{
@@ -324,126 +328,126 @@ class CampanaController extends Controller
 		}
 	}
 
-	protected function obtenerCorreosSuscripcion($id_po, $esSegmento = false)
-	{
-		$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_po);
-		if(!$publicoObjetivo)
-			return array();
+	// protected function obtenerCorreosSuscripcion($id_po, $esSegmento = false)
+	// {
+	// 	$publicoObjetivo = PublicoObjetivo::model()->findByPk($id_po);
+	// 	if(!$publicoObjetivo)
+	// 		return array();
 		
-		$emails = array();
-		foreach ($publicoObjetivo->usuarios as $usuario)
-		{
-			$cantidadEmails = count($usuario->general->emails);
-			if($cantidadEmails > 0)
-			{
-				if($esSegmento)
-				{
-					array_push($emails, array('email'=>$usuario->general->emails[0]->direccion)); 
-				}
-				else
-				{
-					$merge_vars = array(
-					    'FNAME' => $usuario->general->nombre1,
-					    'LNAME' => $usuario->general->apellido1,
-					);
-					array_push($emails, array('email'=>array('email'=>$usuario->general->emails[0]->direccion), 'merge_vars'=>$merge_vars));
-				}
+	// 	$emails = array();
+	// 	foreach ($publicoObjetivo->usuarios as $usuario)
+	// 	{
+	// 		$cantidadEmails = count($usuario->general->emails);
+	// 		if($cantidadEmails > 0)
+	// 		{
+	// 			if($esSegmento)
+	// 			{
+	// 				array_push($emails, array('email'=>$usuario->general->emails[0]->direccion)); 
+	// 			}
+	// 			else
+	// 			{
+	// 				$merge_vars = array(
+	// 				    'FNAME' => $usuario->general->nombre1,
+	// 				    'LNAME' => $usuario->general->apellido1,
+	// 				);
+	// 				array_push($emails, array('email'=>array('email'=>$usuario->general->emails[0]->direccion), 'merge_vars'=>$merge_vars));
+	// 			}
 				
-			}
-		}
-		return $emails;
-	}
+	// 		}
+	// 	}
+	// 	return $emails;
+	// }
 
-	protected function crearSegmentoMailChimp($idPublico)
-	{
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		$MailChimp = new Mailchimp($this->api_key);
+	// protected function crearSegmentoMailChimp($idPublico)
+	// {
+	// 	Yii::import('application.extensions.mailchimp.Mailchimp');
+	// 	$MailChimp = new Mailchimp($this->api_key);
 
-		try
-		{
-			$segmento = $MailChimp->call('lists/static-segment-add', array(
-							           	'id'   => 'a61184ea34',
-							           	'name' => 'segmento_'.rand(1, 100000)
-			));
+	// 	try
+	// 	{
+	// 		$segmento = $MailChimp->call('lists/static-segment-add', array(
+	// 						           	'id'   => 'a61184ea34',
+	// 						           	'name' => 'segmento_'.rand(1, 100000)
+	// 		));
 			
-			$correosSegmento = $this->obtenerCorreosSuscripcion($idPublico, true);
+	// 		$correosSegmento = $this->obtenerCorreosSuscripcion($idPublico, true);
 
-			$agregarUsuariosSegmento = $MailChimp->call('lists/static-segment-members-add', array(
-			           	'id'     => 'a61184ea34',
-			           	'seg_id' => $segmento['id'],
-			           	'batch'  => $correosSegmento
-			));
+	// 		$agregarUsuariosSegmento = $MailChimp->call('lists/static-segment-members-add', array(
+	// 		           	'id'     => 'a61184ea34',
+	// 		           	'seg_id' => $segmento['id'],
+	// 		           	'batch'  => $correosSegmento
+	// 		));
 
-			return $segmento['id'];
-		}
-		catch(Exception $e)
-		{
-			throw new Exception('Oops, no se pudo crear segmento');
-		}
-	}
+	// 		return $segmento['id'];
+	// 	}
+	// 	catch(Exception $e)
+	// 	{
+	// 		throw new Exception('Oops, no se pudo crear segmento');
+	// 	}
+	// }
 
-	protected function eliminarSegmentoMailChimp($idSegmento)
-	{
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		$MailChimp = new Mailchimp($this->api_key);
+	// protected function eliminarSegmentoMailChimp($idSegmento)
+	// {
+	// 	Yii::import('application.extensions.mailchimp.Mailchimp');
+	// 	$MailChimp = new Mailchimp($this->api_key);
 
-		try
-		{
-			$segmentoEliminar = $MailChimp->call('lists/static-segment-del', array(
-		           	'id'     => 'a61184ea34',
-		           	'seg_id' => $idSegmento
-			));
+	// 	try
+	// 	{
+	// 		$segmentoEliminar = $MailChimp->call('lists/static-segment-del', array(
+	// 	           	'id'     => 'a61184ea34',
+	// 	           	'seg_id' => $idSegmento
+	// 		));
 			
-			return true;
-		}
-		catch(Exception $e)
-		{
-			throw new Exception('Oops, no se pudo eliminar segmento');
-		}
-	}
+	// 		return true;
+	// 	}
+	// 	catch(Exception $e)
+	// 	{
+	// 		throw new Exception('Oops, no se pudo eliminar segmento');
+	// 	}
+	// }
 
-	protected function crearCampanaMailChimp($campana, $idSegmento)
-	{
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		$MailChimp = new Mailchimp($this->api_key);
+	// protected function crearCampanaMailChimp($campana, $idSegmento)
+	// {
+	// 	Yii::import('application.extensions.mailchimp.Mailchimp');
+	// 	$MailChimp = new Mailchimp($this->api_key);
 		
-		try
-		{
-			$campanaMailChimp = $MailChimp->call('campaigns/create', array(
-							'type'    => 'regular',
-							'options' => array(
-								'list_id'     => 'a61184ea34', // Id de la lista a quien queremos enviar el correo.
-								'subject'     => $campana->asunto, //'Este es un correo de prueba desde Yii',
-								'from_email'  => 'ventas@marcasytendencias.com',
-								'from_name'   => 'Almacenes MT',
-								'to_name'     => 'No sé qué es exactamente', // Debería contener el nombre o algo que haga referencia a la persona que recibe el correo.
-								'template_id' => '47773', // Id de la plantilla a usar en este correo.
-								'title'       => 'Titulo desde el API',
-								'tracking'    => array(
-													'opens'       => true,
-													'html_clicks' => true,
-													'text_clicks' => true
-												),
-							),
-							'content'  => array(
-							'sections' => array(
-								// Secciones editables en la plantilla.
-								'std_preheader_content' => 'Estamos para ofrecerte los mejores articulos y promociones.',
-								'imagen_subida'         => $campana->urlimage ? '<img src="'.$campana->urlimage.'" style="max-width:600px;>' : '', // '<img src="http://localhost:8888/crmmt/images/descarga.jpg" style="max-width:600px;>',
-								'saludo'                => $campana->personalizada === true ? 'Hola *|TITLE:FNAME|*,' : '',
-								'contenido'             => $campana->contenido,
-								)
-							),
-							'segment_opts' => array('saved_segment_id' => $idSegmento, 'match'=> 'all', array('field' => 'static_segment', 'value' => $idSegmento,  'p' => 'eq'))
-					));
+	// 	try
+	// 	{
+	// 		$campanaMailChimp = $MailChimp->call('campaigns/create', array(
+	// 						'type'    => 'regular',
+	// 						'options' => array(
+	// 							'list_id'     => 'a61184ea34', // Id de la lista a quien queremos enviar el correo.
+	// 							'subject'     => $campana->asunto, //'Este es un correo de prueba desde Yii',
+	// 							'from_email'  => 'ventas@marcasytendencias.com',
+	// 							'from_name'   => 'Almacenes MT',
+	// 							'to_name'     => 'No sé qué es exactamente', // Debería contener el nombre o algo que haga referencia a la persona que recibe el correo.
+	// 							'template_id' => '47773', // Id de la plantilla a usar en este correo.
+	// 							'title'       => 'Titulo desde el API',
+	// 							'tracking'    => array(
+	// 												'opens'       => true,
+	// 												'html_clicks' => true,
+	// 												'text_clicks' => true
+	// 											),
+	// 						),
+	// 						'content'  => array(
+	// 						'sections' => array(
+	// 							// Secciones editables en la plantilla.
+	// 							'std_preheader_content' => 'Estamos para ofrecerte los mejores articulos y promociones.',
+	// 							'imagen_subida'         => $campana->urlimage ? '<img src="'.$campana->urlimage.'" style="max-width:600px;>' : '', // '<img src="http://localhost:8888/crmmt/images/descarga.jpg" style="max-width:600px;>',
+	// 							'saludo'                => $campana->personalizada === true ? 'Hola *|TITLE:FNAME|*,' : '',
+	// 							'contenido'             => $campana->contenido,
+	// 							)
+	// 						),
+	// 						'segment_opts' => array('saved_segment_id' => $idSegmento, 'match'=> 'all', array('field' => 'static_segment', 'value' => $idSegmento,  'p' => 'eq'))
+	// 				));
 
-			return $campanaMailChimp['id'];
-		}
-		catch(Exception $e)
-		{
-			throw new Exception('Oops, no se pudo crear la campaña');
-		}
-	}
+	// 		return $campanaMailChimp['id'];
+	// 	}
+	// 	catch(Exception $e)
+	// 	{
+	// 		throw new Exception('Oops, no se pudo crear la campaña');
+	// 	}
+	// }
 
 
 	public function actionDuplicar($id)

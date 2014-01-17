@@ -53,6 +53,7 @@ return array(
             'driver'=>'GD',
             // ImageMagick setup path
             'params'=>array('directory'=>'/opt/local/bin')),
+		'utilmailchimp'=>array('class'=>'UtilMailchimp'),
 		/*'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 		),*/
