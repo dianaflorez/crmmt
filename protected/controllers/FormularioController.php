@@ -36,7 +36,7 @@ class FormularioController extends Controller
 				'users'      => array('@'),
 			),
 			array('allow',
-				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'revisarencuesta', 'resultado', 'resultadojson', 'usuariosencuesta'),
+				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'   => array('Admin'),
@@ -64,15 +64,14 @@ class FormularioController extends Controller
 	 */
 	public function actionCreate()
 	{
-		$model = new Formulario;
-
+		$model     = new Formulario;
 		$preguntas = array();
 		// Uncomment the following line if AJAX validation is needed
 		//$this->performAjaxValidation($model);
 
 		if(isset($_POST['Formulario']))
 		{
-			$model->attributes=$_POST['Formulario'];
+			$model->attributes = $_POST['Formulario'];
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 
 			if($model->save())
@@ -311,21 +310,9 @@ class FormularioController extends Controller
 				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? (100 * $resultados['cantidad']) / $numeroRespuestas : null;
 				array_push($respuestas, $resultados);
 			}
-			// $opciones = CJSON::decode(CJSON::encode($pregunta->opciones));
-			// foreach ($pregunta->formularioPregunta->respuestas as $respuesta) {
-			// 	$array = CJSON::decode(CJSON::encode($respuesta));
-			// 	$array['opcion'] = $respuesta->opcion;
-			// 	array_push($respuestas, $array);
-			// }
-			//if($temporal['tipo'] === 'abierta')
 			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas) : $respuestas;
-			//$temporal['respuestas']['txtop'] = $pregunta->formularioPregunta->respuestas;
 			array_push($objeto, $temporal);
-			//var_dump($pregunta->respuestas);
-			// $criterio = new CDbCriteria;
-			// $criterio
-			// $criterio->addCondition('')
-			 //var_dump($pregunta->formularioPregunta->respuestas);
+			
 		}
 
 		$criterio = new CDbCriteria;
@@ -367,8 +354,8 @@ class FormularioController extends Controller
 	 **/
 	protected function usuariosRespondida($id_for)
 	{
-		$criterio = new CDbCriteria;
-		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		$criterio       = new CDbCriteria;
+		$criterio->join = 'JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
 		
 		//$criterio->distinct = true;
 		$criterio->addCondition('id_for=:id_for');
@@ -393,13 +380,56 @@ class FormularioController extends Controller
 	/**
 	 * 	Genera una vista previa no editable de la encuesta.
 	 **/
-	public function actionRevisarEncuesta($id)
+	public function actionEnviar($id)
 	{
-		$model = $this->loadModel($id);
-		
-		$this->render('revisar', array(
-			'model'  => $model,
-			'activa' => false
+		$model                = $this->loadModel($id);
+		$publicos             = PublicoObjetivo::model()->findAll();
+		$error                = null;
+		$errorPublicoObjetivo = null;
+
+		if(isset($_POST['Campana']))
+		{
+		try
+		{
+			if(isset($_POST['Campana']['PublicoObjetivo']) && $_POST['Campana']['PublicoObjetivo'])
+			{
+				$id_publico = (int) $_POST['Campana']['PublicoObjetivo'];
+				$correos    = Yii::app()->utilmailchimp->obtenerCorreosSuscripcion($id_publico);				
+				
+				if(count($correos['para_lista']) > 0)
+				{
+					$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?id_usur=*|IDUSUR|*';
+					$campana                = new Campana;
+					$campana->asunto        = 'Tienes un minuto? Ayudanos a conocerte tus gustos!';
+					$campana->personalizada = true;
+					$campana->contenido     = 'Nos interesa saber de tus gustos, responde nuestra encuesta '.CHtml::link('aquí', $url);
+					Yii::app()->utilmailchimp->enviarCampana($campana, $correos);
+	
+				}
+				else
+				{
+					$errorPublicoObjetivo = 'El público objetivo no tiene correos válidos.';
+				}
+			
+			}
+			else
+			{
+				$errorPublicoObjetivo = 'No ha seleccionado un público';
+			}
+			
+		}
+		catch(Exception $e)
+		{
+			$error = $e->getMessage();
+		}
+	}
+
+		$this->render('enviar', array(
+			'model'                => $model,
+			'activa'               => false,
+			'publicos'             => $publicos,
+			'error'                => $error,
+			'errorPublicoObjetivo' => $errorPublicoObjetivo
 		));	
 	}
 	
