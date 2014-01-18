@@ -161,16 +161,17 @@ class FormularioController extends Controller
 									{
 										if(''.$opcion->id_op === $opcion_post)
 										{
-											$respuesta          = new Respuesta;
-											$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-											$respuesta->id_op   = $opcion->id_op;
-											$respuesta->id_usur = $usuario->id;
-											$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+											// $respuesta          = new Respuesta;
+											// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+											// $respuesta->id_op   = $opcion->id_op;
+											// $respuesta->id_usur = $usuario->id;
+											// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
 											
-											if(!$respuesta->save())
-											{
-												throw new Exception('No se pudo guardar la respuesta.');
-											}
+											// if(!$respuesta->save())
+											// {
+											// 	throw new Exception('No se pudo guardar la respuesta.');
+											// }
+											$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
 										}
 									}
 								}
@@ -184,16 +185,17 @@ class FormularioController extends Controller
 										{	
 											if(''.$opcion->id_op === $op_p)
 											{
-												$respuesta          = new Respuesta;
-												$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-												$respuesta->id_op   = $opcion->id_op;
-												$respuesta->id_usur = $usuario->id;
-												$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+												// $respuesta          = new Respuesta;
+												// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+												// $respuesta->id_op   = $opcion->id_op;
+												// $respuesta->id_usur = $usuario->id;
+												// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
 												
-												if(!$respuesta->save())
-												{
-													throw new Exception('No se pudo guardar la respuesta.');
-												}
+												// if(!$respuesta->save())
+												// {
+												// 	throw new Exception('No se pudo guardar la respuesta.');
+												// }
+												$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
 											}
 											
 										}
@@ -203,16 +205,17 @@ class FormularioController extends Controller
 							}
 							elseif($pregunta->id_tp === 3) // Pregunta de repuesta abierta.
 							{
-								$respuesta          = new Respuesta;
-								$respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-								$respuesta->txtres  = $opcion_post;
-								$respuesta->id_usur = $usuario->id;
-								$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+								// $respuesta          = new Respuesta;
+								// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
+								// $respuesta->txtres  = $opcion_post;
+								// $respuesta->id_usur = $usuario->id;
+								// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
 								
-								if(!$respuesta->save())
-								{
-									throw new Exception('No se pudo guardar la respuesta.');
-								}
+								// if(!$respuesta->save())
+								// {
+								// 	throw new Exception('No se pudo guardar la respuesta.');
+								// }
+								$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion_post, $usuario->id);
 							}
 										
 						}
@@ -241,6 +244,20 @@ class FormularioController extends Controller
 		));	
 	}
 
+
+	protected function guardarRespuesta($id_fp, $texto, $id_usur)
+	{
+		$respuesta          = new Respuesta;
+		$respuesta->id_fp   = $id_fp;
+		$respuesta->txtres  = $texto;
+		$respuesta->id_usur = $id_usur;
+		$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+		
+		if(!$respuesta->save())
+		{
+			throw new Exception('No se pudo guardar la respuesta.');
+		}
+	}
 
 	public function actionResultado($id)
 	{
