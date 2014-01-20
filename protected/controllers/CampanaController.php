@@ -38,7 +38,7 @@ class CampanaController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar', 'enviarPrueba', 'duplicar'),
+				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar', 'enviarPrueba', 'duplicar', 'usuarioscampana'),
 				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'=>array('Admin'), 
@@ -98,8 +98,7 @@ class CampanaController extends Controller
 
 			if($model->save())
 			{
-				$this->redirect(array('index'));
-					
+				$this->redirect(array('index'));					
 			}	
 		}
 
@@ -243,7 +242,7 @@ class CampanaController extends Controller
 			foreach ($publicoObjetivo->usuarios as $usuario) {
 				$campanaUsuario = new CampanaUsuario;
 				$campanaUsuario->id_cam = $id_cam;
-				$campanaUsuario->id_usuc = $usuario->id_usu;
+				$campanaUsuario->id_usuc = $usuario->id_usupo;
 				$campanaUsuario->save();
 			}
 			$transaccion->commit();
@@ -363,6 +362,49 @@ class CampanaController extends Controller
 		));
 	}
 
+
+	/**
+	 * Consulta los usuarios que contestaron determinada encuesta.
+	 */
+	public function actionUsuariosCampana($id_cam)
+	{
+		$model = new General('search');
+		$model->unsetAttributes();  // clear any default values
+		if(isset($_GET['General']))
+			$model->attributes = $_GET['General'];
+
+		$criterio = new CDbCriteria;
+		$criterio->addCondition('id_cam=:id_cam');
+		$criterio->params += array(':id_cam' => $id_cam);
+		
+		$usuarios = CampanaUsuario::model()->findAll($criterio);
+		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usuc; }, $usuarios));
+		
+		$this->renderPartial('/formulario/_usuariosEncuesta',array(
+			'model'      => $model,
+			'usuariosId' => $usuariosId,
+			'ajaxUrl'     => $this->createUrl('/campana/usuarioscampana', array('id_cam' => $id_cam))
+		));
+	}
+
+
+	/**
+	 *	 Devuelve un array con loss IDs de los usuarios que han respondido la encuesta.
+	 **/
+	protected function usuariosRespondida($id_for)
+	{
+		$criterio       = new CDbCriteria;
+		$criterio->join = 'JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		
+		//$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $id_for);
+
+		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+		
+		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+	}
+
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
 	 * If the data model is not found, an HTTP exception will be raised.
@@ -392,69 +434,5 @@ class CampanaController extends Controller
 	}
 
 
-	public function actionVeamos()
-	{
-		// // Clase proporcionada por mailchimp para el uso de su API.
-		// Yii::import('application.extensions.mailchimp.Mailchimp');
-		// // Llave del API autorizada en el perfil.
-		// $api_key    = '515d5d909933946cd00c0473675cf6b7-us3';
-		// $MailChimp = new Mailchimp($api_key);
-		// $result = $MailChimp->call('lists/list', array(
-		//             // 'id'                => $listid,
-		//             // 'email'             => array('email'=>$email),
-		//             // 'merge_vars'        => $merge_vars,
-		//             // 'double_optin'      => false,
-		//             // 'update_existing'   => true,
-		//             // 'replace_interests' => false,
-		//             // 'send_welcome'      => false,
-		// ));
-
-		// $susc = $MailChimp->call('lists/batch-subscribe', array(
-		//             'id'                => 'a61184ea34',
-		//             'batch'             => array(
-		//             							//array('email'=> array('email'=> 'jaoi55@gmail.com')),
-		//             							//array('email'=> array('email'=> 'dianaflorezbravo@gmail.com')),
-		//             							array('email'=> array('email'=> 'nismbreath@gmail.com')),
-		//             						),
-		//              'double_optin' => false
-		// ));
-
-		// $usupres = $MailChimp->call('lists/members', array(
-		//              'id' => 'a61184ea34',
-		            
-		          
-		// ));
-		// //var_dump($result);
-		// var_dump($usupres);
-		// //var_dump($usupres);
-		Yii::import('application.extensions.mailchimp.Mailchimp');
-		$MailChimp = new Mailchimp($this->api_key);
-		// $emails = $this->obtenerCorreosDesuscripcion(2);//$this->obtenerCorreosSuscripcion(2);
-		// if(count($emails) > 0)
-		// {
-		// 	$suscripcion = $MailChimp->call('lists/batch-unsubscribe', array(
-		// 	            'id'                => 'a61184ea34',
-		// 	            'batch'             => $emails, 
-		// 	            //'double_optin' => false
-
-		// 	           'delete_member' => true
-		// 	));
-		// 	var_dump($suscripcion);
-				
-		// }
-
-		//$emails = $this->obtenerCorreosDesuscripcion(2);//$this->obtenerCorreosSuscripcion(2);
-		
-			$suscripcion = $MailChimp->call('lists/members', array(
-			            'id'                => 'a61184ea34',
-			            //'batch'             => $emails, 
-			            //'double_optin' => false
-
-			           //'delete_member' => true
-			));
-			var_dump($suscripcion);
-				
-		
-
-	}
+	
 }

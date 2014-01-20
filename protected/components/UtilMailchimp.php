@@ -74,7 +74,7 @@ class UtilMailchimp extends CApplicationComponent
         {
             $segmento = $MailChimp->call('lists/static-segment-add', array(
                                         'id'   => $this->LISTA_ID,
-                                        'name' => 'seg_'.rand(1, 100000).rand(1,10000) // Nombre aleatorio.
+                                        'name' => round(microtime(true) * 1000)//'seg_'.rand(1, 100000).rand(1,10000) // Nombre aleatorio.
             ));
             
             $MailChimp->call('lists/static-segment-members-add', array(

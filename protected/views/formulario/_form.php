@@ -1,13 +1,9 @@
 <?php
-/* @var $this FormularioController */
-/* @var $model Formulario */
-/* @var $form CActiveForm */
+	/* @var $this FormularioController */
+	/* @var $model Formulario */
+	/* @var $form CActiveForm */
 
-	//$baseUrl = Yii::app()->baseUrl; 
-	//$cs = Yii::app()->getClientScript();
-	//$cs->registerScriptFile($baseUrl.'/lib/backbone/underscore-min.js', CClientScript::POS_END);
-	//$cs->registerScriptFile($baseUrl.'/lib/backbone/backbone-min.js', CClientScript::POS_END);
-	//$cs->registerScriptFile($baseUrl.'/js/pagina.js', CClientScript::POS_END);
+	$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 ?>
 
 	<?php $form=$this->beginWidget('CActiveForm', array(
@@ -56,21 +52,20 @@
 			</div>
 		</div>
 
-
 		<div class="row">
-		<div class="col-md-6">
-			<div class="col-md-8">
-				<div class="form-group">
-					<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
+			<div class="col-md-6">
+				<div class="col-md-8">
+					<div class="form-group">
+						<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 
+					</div>
 				</div>
-			</div>
-			<div class="col-md-4">
-				<div class="form-group">
-				<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('formulario/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+				<div class="col-md-4">
+					<div class="form-group">
+					<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('formulario/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+					</div>
 				</div>
 			</div>
 		</div>
-	</div>
 		
 
 

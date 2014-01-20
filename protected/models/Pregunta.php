@@ -71,7 +71,7 @@ class Pregunta extends CActiveRecord
 		return array(
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'tipo' => array(self::BELONGS_TO, 'TipoPregunta', 'id_tp'),
-			'idTpr' => array(self::BELONGS_TO, 'Crmtipopreres', 'id_tpr'),
+			'tipoPreRes' => array(self::BELONGS_TO, 'TipoPreguntaRespuesta', 'id_tpr'),
 			'formularioPregunta' => array(self::HAS_ONE, 'FormularioPregunta', 'id_pre'),
 			'opciones' => array(self::HAS_MANY, 'OpcionPregunta', 'id_pre'),
 		);

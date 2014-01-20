@@ -2,7 +2,7 @@
 	    //'dataProvider'=>$usuarios->anotherDataProvider($usuariosRespondieronId),
 		'dataProvider'  => $model->filtradoPorUsuarios($usuariosId),
 		'filter'        => $model,
-		'ajaxUrl'       => $this->createUrl('/formulario/usuariosencuesta', array('id_for' => $id_for)),
+		'ajaxUrl'       => $ajaxUrl,
 		'itemsCssClass' => 'table table-condensed table-hover',
 		'htmlOptions'   => array('class' => 'table-responsive'),
 		'columns'       => array(

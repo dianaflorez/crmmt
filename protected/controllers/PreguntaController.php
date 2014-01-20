@@ -227,7 +227,6 @@ class PreguntaController extends Controller
 			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
 		}
 
-
 		try
 		{
 			if(isset($_POST['Pregunta']))

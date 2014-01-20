@@ -1,13 +1,10 @@
 <?php
-
-$baseUrl = Yii::app()->baseUrl; 
-$cs = Yii::app()->getClientScript();
-//$cs->registerScriptFile($baseUrl.'/lib/wysihtml5/parser_rules/advanced.js'); 
-//$cs->registerScriptFile($baseUrl.'/lib/wysihtml5/wysihtml5-0.3.0.min.js');
-$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/raphael-min.js');
-$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.raphael-min.js');
-$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.pie-min.js');
-$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
+	$baseUrl = Yii::app()->baseUrl; 
+	$cs = Yii::app()->getClientScript();
+	$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/raphael-min.js');
+	$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.raphael-min.js');
+	$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.pie-min.js');
+	$cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 ?>
 <div class="page-header">
 	<h2>Resultados <small>Encuesta</small></h2>
@@ -36,7 +33,7 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 						</div>
 					</div>
 					<div class="col-md-4">
-						<a class="btn btn-default btn-block"  data-toggle="modal" data-target="#myModal"><i class="fa fa-eye fa-fw"></i> Ver usuarios</a>
+						<a class="btn btn-default btn-block"  data-toggle="modal" data-target="#usuariosModal"><i class="fa fa-eye fa-fw"></i> Ver usuarios</a>
 					</div>
 				</fieldset>
 			</div>
@@ -49,20 +46,20 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 	</div>
 
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal fade" id="usuariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	  	<div class="modal-dialog">
 	    	<div class="modal-content">
-	      	<div class="modal-header">
-	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
-	        	<h4 class="modal-title" id="myModalLabel">Respondieron la encuesta</h4>
-	      	</div>
-	      	<div class="modal-body">
-	      		<?php $this->renderPartial('_usuariosEncuesta', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'id_for'=>$model->id_for)); ?>
-	        </div>
-	      	<div class="modal-footer">
-	        	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
-			</div>
-	    </div><!-- /.modal-content -->
+		      	<div class="modal-header">
+		        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+		        	<h4 class="modal-title" id="myModalLabel">Respondieron la encuesta</h4>
+		      	</div>
+		      	<div class="modal-body">
+		      		<?php $this->renderPartial('_usuariosEncuesta', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'ajaxUrl'=>$this->createUrl('/formulario/usuariosencuesta', array('id_for' => $model->id_for)))); ?>
+		        </div>
+		      	<div class="modal-footer">
+		        	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
+				</div>
+		    </div><!-- /.modal-content -->
 	  </div><!-- /.modal-dialog -->
 	</div><!-- /.modal -->
 
@@ -74,13 +71,23 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 			<div class="panel-heading">
 				<?php echo $pregunta->txtpre; ?>
 				<?php 
-					if($pregunta->tipo->nombre === 'unica')
-						echo '(Única)';
-					elseif($pregunta->tipo->nombre === 'multiple')
-						echo '(Múltiple)';
-					elseif($pregunta->tipo->nombre === 'abierta')
-						echo '(Abierta)';
-				 ?>
+					$tipo = '';
+					if($pregunta->tipo->nombre === 'unica'):
+						$tipo = $tipo.'(Única)';
+					elseif($pregunta->tipo->nombre === 'multiple'):
+						$tipo = $tipo.'(Múltiple)';
+					elseif($pregunta->tipo->nombre === 'abierta'):
+						$tipo = $tipo.'(Abierta - ';
+						if($pregunta->tipoPreRes->nombre === 'texto'):
+							$tipo = $tipo.'Texto)';
+						elseif($pregunta->tipoPreRes->nombre === 'numero'):
+							$tipo = $tipo.'Número)';
+						elseif($pregunta->tipoPreRes->nombre === 'fecha'):
+							$tipo = $tipo.'Fecha)';
+						endif;
+					endif;
+					echo $tipo;
+				?>
 			</div>
 				
 			<?php if($pregunta->tipo->nombre === 'abierta'): ?>
@@ -115,10 +122,10 @@ $cs->registerScriptFile($baseUrl.'/lib/raphaeljs/g.bar-min.js');
 
 				var entorno = Raphael('grafico_'+pregunta.id_pre, 350, 200);
 				entorno.piechart(
-					100, // pie center x coordinate
-				   	100, // pie center y coordinate
-				   	90,  // pie radius
-				    valores, // values
+					100, // centro x de la gráfica.
+				   	100, // centro y de la gráfica.
+				   	90,  // radio
+				    valores, // Vector de valores
 				    {
 				    	legend: etiquetas
 				    }

@@ -263,7 +263,6 @@ class FormularioController extends Controller
 			array_push($objeto, $temporal);
 			
 		}
-
 		
 		$usuariosId = $this->usuariosRespondida($id);
 		
@@ -470,7 +469,7 @@ class FormularioController extends Controller
 	}
 
 	/**
-	 * Manages all models.
+	 * Consulta los usuarios que contestaron determinada encuesta.
 	 */
 	public function actionUsuariosEncuesta($id_for)
 	{
@@ -484,7 +483,7 @@ class FormularioController extends Controller
 		$this->render('_usuariosEncuesta',array(
 			'model'      => $model,
 			'usuariosId' => $usuariosId,
-			'id_for'     => $id_for
+			'ajaxUrl'     => $this->createUrl('/formulario/usuariosencuesta', array('id_for' => $id_for))
 		));
 	}
 

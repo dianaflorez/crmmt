@@ -2,14 +2,6 @@
 /* @var $this CampanaController */
 /* @var $dataProvider CActiveDataProvider */
 
-// $this->breadcrumbs=array(
-// 	'Campanas',
-// );
-
-// $this->menu=array(
-// 	array('label'=>'Create Campana', 'url'=>array('create')),
-// 	array('label'=>'Manage Campana', 'url'=>array('admin')),
-// );
 ?>
 <div class="row">
 	<div class="container">
@@ -37,12 +29,14 @@
 				<td>
 					<p class="text-center">
 					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-border fa-lg"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-						<?php 
-							if($campana->tipoCampana->nombre === 'email'):
+						<?php if($campana->tipoCampana->nombre === 'email'): 
 								echo CHtml::link('<i class="fa fa-copy fa-border fa-lg"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); ?>
-						<?php	  	if(!$campana->estado)
-							  			echo CHtml::link('<i class="fa fa-rocket fa-border fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+						<?php	if(!$campana->estado): 
+							  		echo CHtml::link('<i class="fa fa-rocket fa-border fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+								else:
+									echo CHtml::link('<i class="fa fa-eye fa-border fa-lg"></i>', Yii::app()->createUrl('campana/usuarioscampana/', array('id_cam'=>$campana->id_cam)), array('data-idcam'=>$campana->id_cam, 'class'=>'usuarios_campana', 'data-toggle'=>'tooltip', 'title'=>"Enviar"));  
 
+							  	endif;
 							endif;	?>
 					</p>
 				</td>
@@ -52,49 +46,56 @@
 	</table>
 </div>
 
-<ul class="list-group">
-	<li class="list-group-item">
-		<div class="row">
-    	<div class="col-md-4">
-    	<strong>Asunto</strong>
-    	</div>
-    	<div class="col-md-1">
-		<strong>Tipo</strong>
-    	</div>
-    	<div class="col-md-offset-4 col-md-3">
-		</div>
-  		</div>
-	</li>
-	<?php foreach ($campanas as $campana): ?>
-  	<li class="list-group-item">
-  		<div class="row">
-    	<div class="col-xs-5 col-md-4">
-    	<?php  echo $campana->asunto; ?>
-    	</div>
-    	<div class="col-xs-1 col-md-1">
-			<?php  echo ucfirst($campana->tipoCampana->nombre); ?>
-    	</div>
-    	<div class="col-xs-6 col-md-offset-4 col-md-3">
-		<?php echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-		<?php echo CHtml::link('<i class="fa fa-plus-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar"));  ?>
-		<?php echo CHtml::link('<i class="fa fa-share-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar prueba"));  ?>
-		<?php echo CHtml::link('<i class="fa fa-mail-forward fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  ?>
-  		</div>
-  		</div>
-  	</li>
-  	<?php endforeach; ?>
-</ul>
 
-
-	<?php foreach ($campanas as $campana): ?>
-  	<div class="row">
-  		<div class="col-md-6"><?php  echo $campana->asunto; ?></div>
-    	<div class="col-md-6">
-			<div class="pull-right">
-    		<?php echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-			<?php echo CHtml::link('<i class="fa fa-plus-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar"));  ?>
-			<?php echo CHtml::link('<i class="fa fa-share-square fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar prueba"));  ?>
-			<?php echo CHtml::link('<i class="fa fa-mail-forward fa-lg fa-border"></i>', Yii::app()->createUrl('campana/usuarios/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  ?></div>
+<!-- Modal -->
+<div class="modal fade" id="usuariosModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	<div class="modal-dialog">
+	    <div class="modal-content">
+	      	<div class="modal-header">
+	        	<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+	        	<h4 class="modal-title" id="myModalLabel">Respondieron la encuesta</h4>
+	      	</div>
+	      	<div id="grilla_usuarios"class="modal-body">
+	      		<?php 
+	      			// Solo para que cargue el plugin de búsqueda de las CGridView.
+	      			$dummy = new General;
+	      			$this->widget('zii.widgets.grid.CGridView', array('dataProvider'  => $dummy->search(), 'filter' => $dummy)); 
+	      		?>
+	        </div>
+	      	<div class="modal-footer">
+	        	<button type="button" class="btn btn-default" data-dismiss="modal">Cerrar</button>
 			</div>
-  	</div>
-  	<?php endforeach; ?>
+	    </div><!-- /.modal-content -->
+	 </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
+
+<script type="text/javascript">
+	$(document).on('ready', inicio);
+
+	function inicio(){
+		$('.usuarios_campana').on('click', consultarUsuarios);
+	}
+
+	function consultarUsuarios(e){
+		e.preventDefault();
+		
+		var vinculo = $(e.target).parent().closest('a');
+		var url = vinculo.attr('href');
+		
+		var peticion = $.ajax({
+			url: url,
+			type: 'GET',
+			dataType: 'html'
+		});
+		 
+		peticion.done(function( msg ) {
+			$('#grilla_usuarios').empty();
+			$('#grilla_usuarios').html(msg);
+			$('#usuariosModal').modal();
+		});
+		 
+		peticion.fail(function( jqXHR, textStatus ) {
+			// TODO
+		});
+	}
+</script>

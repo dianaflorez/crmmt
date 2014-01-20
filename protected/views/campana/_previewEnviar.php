@@ -2,12 +2,6 @@
 /* @var $this CampanaController */
 /* @var $model Campana */
 /* @var $form CActiveForm */
-
-$baseUrl = Yii::app()->baseUrl; 
-$cs = Yii::app()->getClientScript();
-//$cs->registerScriptFile($baseUrl.'/lib/wysihtml5/parser_rules/advanced.js'); 
-//$cs->registerScriptFile($baseUrl.'/lib/wysihtml5/wysihtml5-0.3.0.min.js');
-//$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 ?>
 
 <div class="form">
@@ -88,8 +82,7 @@ $cs = Yii::app()->getClientScript();
 			  	<div class="panel-body">
 			  		<div class="row form-inline">
 			  			<fieldset>
-						   <?php //echo CHtml::label('Correo', 'correo_prueba'); ?>
-						   <div class="col-sm-8 col-md-8">
+						 	<div class="col-sm-8 col-md-8">
 								<div class="form-group">
 									<div class="input-group margin-bottom-sm">
 			  							<span class="input-group-addon"><i class="fa fa-envelope-o fa-fw"></i></span>
@@ -149,7 +142,6 @@ $cs = Yii::app()->getClientScript();
 	$(document).on('ready', inicio);
 
 	function inicio(){
-		//$('#Campana_contenido').jqte();
 		$('#enviarPrueba').on('click', enviarPrueba);
 		$('#correo_prueba').on('click', restablecer);
 	}
