@@ -101,7 +101,7 @@
 								</div>
 								<div class="col-md-6">
 									<button class="btn btn-primary form-control" id="agregar_opcion">
-										<span class="glyphicon glyphicon-plus-sign"></span> Opción
+										<i class="fa fa-plus-circle"></i> Opción
 									</button>
 								</div>
 							</p>

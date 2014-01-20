@@ -45,7 +45,7 @@ class Campana extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('asunto, id_usu', 'required', 'message' => 'No puede ser vacio.'),
+			array('asunto, id_usu, contenido', 'required', 'message' => 'No puede ser vacio.'),
 			array('id_tc', 'required', 'message' => 'Por favor seleccione un tipo de campaña.'),
 			//array('urlimage', 'required', 'message' => 'Debe seleccionar una imagen.'),
 			array('id_tc, precio', 'numerical', 'integerOnly'=>true),

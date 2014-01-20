@@ -203,6 +203,4 @@ $cs = Yii::app()->getClientScript();
 		verificar(this);
 	}
 
-
-
 </script>

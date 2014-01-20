@@ -161,16 +161,6 @@ class FormularioController extends Controller
 									{
 										if(''.$opcion->id_op === $opcion_post)
 										{
-											// $respuesta          = new Respuesta;
-											// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-											// $respuesta->id_op   = $opcion->id_op;
-											// $respuesta->id_usur = $usuario->id;
-											// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
-											
-											// if(!$respuesta->save())
-											// {
-											// 	throw new Exception('No se pudo guardar la respuesta.');
-											// }
 											$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
 										}
 									}
@@ -185,16 +175,6 @@ class FormularioController extends Controller
 										{	
 											if(''.$opcion->id_op === $op_p)
 											{
-												// $respuesta          = new Respuesta;
-												// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-												// $respuesta->id_op   = $opcion->id_op;
-												// $respuesta->id_usur = $usuario->id;
-												// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
-												
-												// if(!$respuesta->save())
-												// {
-												// 	throw new Exception('No se pudo guardar la respuesta.');
-												// }
 												$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
 											}
 											
@@ -205,17 +185,7 @@ class FormularioController extends Controller
 							}
 							elseif($pregunta->id_tp === 3) // Pregunta de repuesta abierta.
 							{
-								// $respuesta          = new Respuesta;
-								// $respuesta->id_fp   = $pregunta->formularioPregunta->id_fp;
-								// $respuesta->txtres  = $opcion_post;
-								// $respuesta->id_usur = $usuario->id;
-								// $respuesta->id_usu  = Yii::app()->user->getState('usuid');
-								
-								// if(!$respuesta->save())
-								// {
-								// 	throw new Exception('No se pudo guardar la respuesta.');
-								// }
-								$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion_post, $usuario->id);
+								$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, null, $usuario->id, $opcion_post);
 							}
 										
 						}
@@ -245,13 +215,17 @@ class FormularioController extends Controller
 	}
 
 
-	protected function guardarRespuesta($id_fp, $texto, $id_usur)
+	protected function guardarRespuesta($id_fp, $id_op, $id_usur, $texto = null)
 	{
 		$respuesta          = new Respuesta;
 		$respuesta->id_fp   = $id_fp;
-		$respuesta->txtres  = $texto;
 		$respuesta->id_usur = $id_usur;
 		$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+
+		if($id_op)
+			$respuesta->id_op   = $id_op;
+		if($texto)
+			$respuesta->txtres  = $texto;
 		
 		if(!$respuesta->save())
 		{
@@ -400,49 +374,60 @@ class FormularioController extends Controller
 	public function actionEnviar($id)
 	{
 		$model                = $this->loadModel($id);
+		$campana              = new Campana;
 		$publicos             = PublicoObjetivo::model()->findAll();
 		$error                = null;
 		$errorPublicoObjetivo = null;
+		$contenidoOriginal    = null; // Graba el contenido de la campaña sin el vínculo de la encuesta. Si hay una excepción puede ser restaurado para ser mostrado en la forma.
 
 		if(isset($_POST['Campana']))
 		{
-		try
-		{
-			if(isset($_POST['Campana']['PublicoObjetivo']) && $_POST['Campana']['PublicoObjetivo'])
+			try
 			{
-				$id_publico = (int) $_POST['Campana']['PublicoObjetivo'];
-				$correos    = Yii::app()->utilmailchimp->obtenerCorreosSuscripcion($id_publico);				
-				
-				if(count($correos['para_lista']) > 0)
+				$campana->attributes = $_POST['Campana'];
+				if($campana->asunto && $campana->contenido)
 				{
-					$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?id_usur=*|IDUSUR|*';
-					$campana                = new Campana;
-					$campana->asunto        = 'Tienes un minuto? Ayudanos a conocerte tus gustos!';
-					$campana->personalizada = true;
-					$campana->contenido     = 'Nos interesa saber de tus gustos, responde nuestra encuesta '.CHtml::link('aquí', $url);
-					Yii::app()->utilmailchimp->enviarCampana($campana, $correos);
-	
+
+					if(isset($_POST['Campana']['PublicoObjetivo']) && $_POST['Campana']['PublicoObjetivo'])
+					{
+						$id_publico = (int) $_POST['Campana']['PublicoObjetivo'];
+						$contenidoOriginal = $campana->contenido;
+						$correos    = Yii::app()->utilmailchimp->obtenerCorreosSuscripcion($id_publico);				
+						
+						if(count($correos['para_lista']) > 0)
+						{
+							$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?id_usur=*|IDUSUR|*';
+							$campana->personalizada = true;
+							$campana->contenido     = $campana->contenido.' Puedes responder '.CHtml::link('aquí', $url);
+							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);	
+						}
+						else
+						{
+							$errorPublicoObjetivo = 'El público objetivo no tiene correos válidos.';
+						}
+					
+					}
+					else
+					{
+						$errorPublicoObjetivo = 'No ha seleccionado un público';
+					}
 				}
 				else
 				{
-					$errorPublicoObjetivo = 'El público objetivo no tiene correos válidos.';
+					$campana->validate();
 				}
-			
+				
 			}
-			else
+			catch(Exception $e)
 			{
-				$errorPublicoObjetivo = 'No ha seleccionado un público';
+				$campana->contenido = $contenidoOriginal;
+				$error = $e->getMessage();
 			}
-			
 		}
-		catch(Exception $e)
-		{
-			$error = $e->getMessage();
-		}
-	}
 
 		$this->render('enviar', array(
 			'model'                => $model,
+			'campana'              => $campana,
 			'activa'               => false,
 			'publicos'             => $publicos,
 			'error'                => $error,
