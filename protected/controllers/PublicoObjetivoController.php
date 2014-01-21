@@ -37,7 +37,7 @@ class PublicoObjetivoController extends Controller
 			),
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos'),
+				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos', 'admin'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
@@ -356,15 +356,23 @@ class PublicoObjetivoController extends Controller
 	/**
 	 * Manages all models.
 	 */
-	public function actionAdmin()
+	public function actionAdmin($id_po)
 	{
-		$model=new PublicoObjetivo('search');
+		$model = new General('search');
 		$model->unsetAttributes();  // clear any default values
-		if(isset($_GET['PublicoObjetivo']))
-			$model->attributes=$_GET['PublicoObjetivo'];
+		if(isset($_GET['General']))
+			$model->attributes=$_GET['General'];
 
-		$this->render('admin',array(
+		// if (isset($_GET['pageSize'])) {
+		//     Yii::app()->user->setState('pageSize',(int)$_GET['pageSize']);
+		//     unset($_GET['pageSize']);
+		// }
+
+		$this->render('_usuariosPublico',array(
 			'model'=>$model,
+
+			'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$id_po)),
+			'id_po'=>$id_po
 		));
 	}
 

@@ -57,7 +57,7 @@
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'usuarios-form',
 		'htmlOptions' => array('role'=>'form'),
-		//'method'=>'GET',
+		'method'=>'GET',
 		// Please note: When you enable ajax validation, make sure the corresponding
 		// controller action is handling ajax validation correctly.
 		// There is a call to performAjaxValidation() commented in generated controller code.
@@ -65,6 +65,7 @@
 		'enableAjaxValidation'=>false,
 	)); ?>
 
+	<?php echo $form->hiddenField($model,'id_po', array('class'=>'form-control', 'type'=>'hidden')); ?>
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
@@ -178,7 +179,10 @@
 			</div>
 		</div>
 	</div>
-	
+<div id="hola">
+<?php $this->renderPartial('_usuariosPublico', array('model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
+
+</div>
 <div class="pull-right">Resultados <?php echo $total; ?></div>	
 
 <div class="table-responsive">
@@ -318,7 +322,8 @@ $this->widget('CLinkPager', array(
 	$(document).on('ready', iniciar());
 
 	function iniciar(){
-		$('#registrosUsuarios .activacion').on('click', activarUsuario);
+		//$('#registrosUsuarios .activacion').on('click', activarUsuario);
+		$('.activacion').live('click', activarUsuario);
 		$('#Usuario_pais').on('change', consultarDepartamentos);
 		$('#activarEdad').on('click', habilitarFechas);
 
@@ -379,9 +384,11 @@ $this->widget('CLinkPager', array(
 	}
 
 	function activarUsuario(e){
+		console.log('al menos');
 		var fila = $(e.target).parent().closest('tr');
 		//debugger;
-		var id_po = fila.data('idpo');
+		//var id_po = fila.data('idpo');
+		var id_po = $('#PublicoObjetivo_id_po').val();
 		var id_usupo = fila.attr('id');
 		
 		var peticion = $.ajax({

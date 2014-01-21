@@ -31,4 +31,4 @@
 			'htmlOptions'    => array('class'=>'pagination')
 		),
 		'pagerCssClass' => 'pagerClass',
-	)); ?>
+)); ?>
