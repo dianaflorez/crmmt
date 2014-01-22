@@ -1,12 +1,21 @@
 <?php $this->widget('zii.widgets.grid.CGridView', array(
 	    //'dataProvider'=>$usuarios->anotherDataProvider($usuariosRespondieronId),
-		'dataProvider'  => $model->filtradoPorUsuarios(),//$model->filtradoPorUsuarios($usuariosId),
+		'dataProvider'  => $proveedorDatos,//$model->filtradoPorUsuarios($usuariosId),
 		'filter'        => $model,
 		'ajaxUrl'       => $ajaxUrl,
 		'itemsCssClass' => 'table table-condensed table-hover',
-		'htmlOptions'   => array('id'=> 'todos', 'class' => 'table-responsive'),
+		'htmlOptions'   => array('class' => 'table-responsive'),
 		'rowHtmlOptionsExpression' => '["id" => $data->id, "class" => $data->presentepo('.$id_po.') ? "success" : ""]',
 		'columns'       => array(
+			array(
+				'id' => 'usuarios',
+				'class'=>'CCheckBoxColumn',
+				'selectableRows'=>2,
+				//'checked'=>'$data->mail != "No registra" && !$data->presentepo('.$id_po.') ? 1 : 0',
+				'disabled'=>'$data->mail != "No registra" && !$data->presentepo('.$id_po.') ? 0 : 1',
+				//'htmlOptions' =>array('data-id'=>'$data->id')
+				
+			),
 	        'id_char',         
 	        array(            
 	            'name'  => 'nombres',
@@ -35,7 +44,11 @@
 	            'name'  => 'ocupacion',
 	            'value' => '$data->ocupacionformateado' ,
 	        ),
-	          array(            
+	        array(            
+	            'name'  => 'pais',
+	            'value' => '$data->paisformateado' ,
+	        ),
+	        array(            
 	            'name'  => 'estadoCivil',
 	            'filter'=> CHtml::listData(EstadoCivil::model()->findAll(),'id_estado_civil','descripcion'),
 	            'value' => '$data->estadocivilformateado' ,

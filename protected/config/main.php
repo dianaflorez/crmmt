@@ -16,7 +16,8 @@ return array(
 	'import'=>array(
 		'application.models.*',
 		'application.components.*',
-		'application.helpers.*'
+		'application.helpers.*',
+		'application.extensions.yiichat.*',
 	),
 
 	'modules'=>array(
@@ -54,6 +55,7 @@ return array(
             // ImageMagick setup path
             'params'=>array('directory'=>'/opt/local/bin')),
 		'utilmailchimp'=>array('class'=>'UtilMailchimp'),
+
 		/*'db'=>array(
 			'connectionString' => 'sqlite:'.dirname(__FILE__).'/../data/testdrive.db',
 		),*/

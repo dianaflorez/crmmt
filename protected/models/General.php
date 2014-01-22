@@ -35,7 +35,7 @@
  */
 class General extends CActiveRecord
 {
-	public $nombres, $apellidos, $correo, $genero, $ocupacion, $estadoCivil;
+	public $nombres, $apellidos, $correo, $genero, $ocupacion, $estadoCivil, $pais;
 	protected $mensaje = 'No registra';
 
 	/**
@@ -63,7 +63,7 @@ class General extends CActiveRecord
 			array('razon_social', 'length', 'max'=>100),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, id_char, dv, nombre1, nombre2, apellido1, apellido2, razon_social, id_clase_tercero, nombres, apellidos, correo, genero, ocupacion, estadoCivil', 'safe', 'on'=>'search'),
+			array('id, id_char, dv, nombre1, nombre2, apellido1, apellido2, razon_social, id_clase_tercero, nombres, apellidos, correo, genero, ocupacion, estadoCivil, pais', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -213,6 +213,13 @@ class General extends CActiveRecord
 		return $this->mensaje;
 	}
 
+	public function getPaisFormateado()
+	{
+		if($this->direcciones && $this->direcciones[0]->pais->nombre)
+			return ucfirst(strtolower($this->direcciones[0]->pais->nombre));
+		return $this->mensaje;
+	}
+
 	public function presentePO($id_po)
 	{
 		$criterio = new CDbCriteria;
@@ -228,7 +235,7 @@ class General extends CActiveRecord
 
 
 
-	public function filtradoPorUsuarios($usuariosId = null)
+	public function filtradoPorUsuarios($usuariosId = null, $fechaInicio = null, $fechaFin = null)
 	{
 		$criteria = new CDbCriteria;
 		if($usuariosId)
@@ -251,31 +258,7 @@ class General extends CActiveRecord
 			$criteria->together = true;
 		}
 
-		if($this->ocupacion)
-		{
-			//$criteria->with = array('informacionPersonal');
-			//$criteria->join = 'JOIN informacion_personal ON t.id = informacion_personal.id';
-			//$criteria->join = 'JOIN crmocupacion ON t.id_ocupacion = crmocupacion.id_ocu';
-			// $criteria->addCondition('id_ocupacion =:id_ocupacion');
-			// $criteria->params += array(':id_ocupacion' => (int) $ocupacionCadena);
-
-			 $criteria->with = array(
-			 			'informacionPersonal'=>array(),
-			
-                        'informacionPersonal.ocupacion' => array(
-                                    'alias' => 'ocup',
-                        ),
-                        // 'rT.bs' => array(
-                        //                 'alias' => 's',
-                        //                 'joinType' => 'INNER JOIN',
-                        //                 'condition' => 's.cid = :cid',
-                        //                 'params' => array(':cid' => $_SESSION['cid']),
-                        // ),
-                );
-
-			$criteria->addSearchCondition('LOWER("ocup".nombre)', strtolower($this->ocupacion), true);
-			$criteria->together = true;
-		}
+		
 
 		if($this->estadoCivil)
 		{
@@ -289,6 +272,52 @@ class General extends CActiveRecord
 			$criteria->with = array('informacionPersonal');
 			$criteria->addCondition('id_estado_civil =:id_estado_civil');
 			$criteria->params += array(':id_estado_civil' => $this->estadoCivil);	
+			$criteria->together = true;
+		}
+
+		if($this->pais)
+		{
+			 $criteria->with = array(
+                        'direcciones.pais' => array(
+                                    'alias' => 'pais',
+                        ),
+            );
+
+			$criteria->addSearchCondition('LOWER(pais.nombre)', strtolower($this->pais), true);
+			//$criteria->with = array('direcciones');
+			//$criteria->addCondition('id_estado_civil =:id_estado_civil');
+			//$criteria->params += array(':id_estado_civil' => $this->estadoCivil);	
+			$criteria->together = true;
+		}
+
+		if($fechaInicio && $fechaFin)
+		{
+			//$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+			$criteria->with = array('informacionPersonal');
+			$criteria->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechaFin);
+		}
+
+		if($this->ocupacion)
+		{
+			//$criteria->with = array('informacionPersonal');
+			//$criteria->join = 'JOIN informacion_personal ON t.id = informacion_personal.id';
+			//$criteria->join = 'JOIN crmocupacion ON t.id_ocupacion = crmocupacion.id_ocu';
+			// $criteria->addCondition('id_ocupacion =:id_ocupacion');
+			// $criteria->params += array(':id_ocupacion' => (int) $ocupacionCadena);
+
+			 $criteria->with = array(
+                        'informacionPersonal.ocupacion' => array(
+                                    'alias' => 'ocup',
+                        ),
+                        // 'rT.bs' => array(
+                        //                 'alias' => 's',
+                        //                 'joinType' => 'INNER JOIN',
+                        //                 'condition' => 's.cid = :cid',
+                        //                 'params' => array(':cid' => $_SESSION['cid']),
+                        // ),
+                );
+
+			$criteria->addSearchCondition('LOWER("ocup".nombre)', strtolower($this->ocupacion), true);
 			$criteria->together = true;
 		}
 

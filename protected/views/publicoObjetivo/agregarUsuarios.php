@@ -50,14 +50,14 @@
 </div>
 
 <ul class="nav nav-tabs nav-justified navegacion">
-  <li><?php echo CHtml::link('<i class="fa fa-users fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?></li>
-  <li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
+  	<li><?php echo CHtml::link('<i class="fa fa-users fa-lg"> Ver usuarios</i>', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?></li>
+  	<li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
 </ul>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
 		'id'=>'usuarios-form',
 		'htmlOptions' => array('role'=>'form'),
-		'method'=>'GET',
+		'method'=>'POST',
 		// Please note: When you enable ajax validation, make sure the corresponding
 		// controller action is handling ajax validation correctly.
 		// There is a call to performAjaxValidation() commented in generated controller code.
@@ -66,11 +66,11 @@
 	)); ?>
 
 	<?php echo $form->hiddenField($model,'id_po', array('class'=>'form-control', 'type'=>'hidden')); ?>
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Identificación', 'usuario_identificacion'); ?>
-				<?php echo Chtml::textField('Usuario[identificacion]', null, array('class'=>'form-control', 'placeholder'=>'Identificación', 'id'=>'usuario_identificacion')); ?>
+				<?php //echo CHtml::label('Identificación', 'usuario_identificacion'); ?>
+				<?php //echo Chtml::textField('Usuario[identificacion]', null, array('class'=>'form-control', 'placeholder'=>'Identificación', 'id'=>'usuario_identificacion')); ?>
 			</div>
 		</div>
 	</div>
@@ -78,8 +78,8 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Nombres', 'Usuario_nombres'); ?>
-				<?php echo Chtml::textField('Usuario[nombre]', null, array('class'=>'form-control', 'placeholder'=>'Nombre', 'id'=>'Usuario_nombres')); ?>
+				<?php //echo CHtml::label('Nombres', 'Usuario_nombres'); ?>
+				<?php //echo Chtml::textField('Usuario[nombre]', null, array('class'=>'form-control', 'placeholder'=>'Nombre', 'id'=>'Usuario_nombres')); ?>
 			</div>
 		</div>
 	</div>
@@ -87,8 +87,8 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Apellidos', 'Usuario_apellidos'); ?>
-				<?php echo Chtml::textField('Usuario[apellido]', null, array('class'=>'form-control', 'placeholder'=>'Apellidos', 'id'=>'Usuario_apellidos')); ?>
+				<?php //echo CHtml::label('Apellidos', 'Usuario_apellidos'); ?>
+				<?php //echo Chtml::textField('Usuario[apellido]', null, array('class'=>'form-control', 'placeholder'=>'Apellidos', 'id'=>'Usuario_apellidos')); ?>
 			</div>
 		</div>
 	</div>
@@ -96,38 +96,53 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Género', 'Usuario_genero'); ?>
+				<?php //echo CHtml::label('Género', 'Usuario_genero'); ?>
 				<div class="form-group">
-					<?php echo CHtml::dropDownList('Usuario[genero]', null, $genero, array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+					<?php //echo CHtml::dropDownList('Usuario[genero]', null, $genero, array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
-	<div class="row">
+	<!-- <div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Fecha nacimiento', ''); ?>
+				<?php //echo CHtml::label('Fecha nacimiento', ''); ?>
 				<div class="form-group">
-				<?php echo CHtml::label('Mes', 'Usuario_mes_nacimiento]'); ?>
-				<?php echo CHtml::dropDownList('Usuario[mes_nacimiento]', '1', $meses, array('disabled'=>'disabled')); ?>
-				<?php echo CHtml::label('Año', 'Usuario_anho_nacimiento]'); ?>
-				<?php echo CHtml::dropDownList('Usuario[anho_nacimiento]', 2013, $anhos, array('disabled'=>'disabled')); ?>
+				<?php //echo CHtml::label('Mes', 'Usuario_mes_nacimiento]'); ?>
+				<?php //echo CHtml::dropDownList('Usuario[mes_nacimiento]', '1', $meses, array('disabled'=>'disabled')); ?>
+				<?php //echo CHtml::label('Año', 'Usuario_anho_nacimiento]'); ?>
+				<?php //echo CHtml::dropDownList('Usuario[anho_nacimiento]', 2013, $anhos, array('disabled'=>'disabled')); ?>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row">
 		<div class="col-md-12">
 			<div class="form-group">
 				<?php echo CHtml::label('Edad', ''); ?>
 				<?php echo CHtml::checkBox('', false, array('id' => 'activarEdad')); ?>
+				<div class="form-inline">
+					<div class="form-group">
+					<?php echo CHtml::label('Desde', 'Usuario_fecha_inicio'); ?>
+					<?php echo CHtml::dateField('Usuario[fecha_inicio]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
+					</div>
+					<div class="form-group">
+					<?php echo CHtml::label('Hasta', 'Usuario_fecha_fin'); ?>
+					<?php echo CHtml::dateField('Usuario[fecha_fin]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin', 'disabled'=>'disabled')); ?>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+<!-- 	<div class="row">
+		<div class="col-md-4">
+			<div class="form-group">
+				<?php //echo CHtml::label('Ocupación', 'Usuario_ocupacion'); ?>
 				<div class="form-group">
-				<?php echo CHtml::label('Desde', 'Usuario_fecha_inicio'); ?>
-				<?php echo CHtml::dateField('Usuario[fecha_inicio]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
-				<?php echo CHtml::label('Hasta', 'Usuario_fecha_fin'); ?>
-				<?php echo CHtml::dateField('Usuario[fecha_fin]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin', 'disabled'=>'disabled')); ?>
+				<?php //echo CHtml::dropDownList('Usuario[ocupacion]', null, CHtml::ListData($ocupacion, 'id_ocu', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
@@ -136,9 +151,9 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Ocupación', 'Usuario_ocupacion'); ?>
+				<?php //echo CHtml::label('Estado civil', 'Usuario_estado_civil'); ?>
 				<div class="form-group">
-				<?php echo CHtml::dropDownList('Usuario[ocupacion]', null, CHtml::ListData($ocupacion, 'id_ocu', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+					<?php //echo CHtml::dropDownList('Usuario[estado_civil]', null, CHtml::ListData($estadoCivil, 'id_estado_civil', 'descripcion'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
@@ -147,175 +162,77 @@
 	<div class="row">
 		<div class="col-md-4">
 			<div class="form-group">
-				<?php echo CHtml::label('Estado civil', 'Usuario_estado_civil'); ?>
-				<div class="form-group">
-					<?php echo CHtml::dropDownList('Usuario[estado_civil]', null, CHtml::ListData($estadoCivil, 'id_estado_civil', 'descripcion'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
-				</div>
-			</div>
-		</div>
-	</div>
-
-	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group">
-				<?php echo CHtml::label('Lugar donde vive', ''); ?>
+				<?php //echo CHtml::label('Lugar donde vive', ''); ?>
 				<div id= "departamentos" class="form-group">
-				<?php echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
-				<?php echo CHtml::dropDownList('Usuario[departamento]', null, array(), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
-				<?php //echo CHtml::dropDownList('Usuario[departamento]', null, CHtml::ListData($departamento, 'id_dep', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+				<?php //echo CHtml::label('Departamento', 'Usuario_departamento'); ?>
+				<?php //echo CHtml::dropDownList('Usuario[departamento]', null, array(), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 				<div class="form-group">
-				<?php echo CHtml::label('Pais', 'Usuario_pais'); ?>
-				<?php echo CHtml::dropDownList('Usuario[pais]', null, CHtml::ListData($pais, 'id_pais', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
+				<?php //echo CHtml::label('Pais', 'Usuario_pais'); ?>
+				<?php //echo CHtml::dropDownList('Usuario[pais]', null, CHtml::ListData($pais, 'id_pais', 'nombre'), array('prompt' => 'Seleccione', 'class'=> 'form-control')); ?>
 				</div>
 			</div>
 		</div>
-	</div>
+	</div> -->
 
 	<div class="row">
-		<div class="col-md-4">
-			<div class="form-group">
-			<?php echo Chtml::submitButton('Filtrar', array('class'=>'btn btn-primary')); //$form->textField(General::model(),'nombre', array('class'=>'form-control', 'placeholder'=>'Nombre')); ?>
+			<div class="col-md-offset-3 col-md-3">
+				<div class="form-group">
+					<?php echo Chtml::submitButton('Filtrar', array('class'=>'btn btn-primary btn-block')); ?>
+				</div>
 			</div>
-		</div>
 	</div>
-<div id="hola">
-<?php $this->renderPartial('_usuariosPublico', array('model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
 
-</div>
-<div class="pull-right">Resultados <?php echo $total; ?></div>	
 
-<div class="table-responsive">
-	<table id='registrosUsuarios' class="table table-bordered table-striped">
-		<thead>
-			<th></th>
-			<th>Identificación</th>
-			<th>Apellidos</th>
-			<th>Nombres</th>
-			<th>Email</th>
-			<th class="hidden-xs">Fecha de nacimiento</th>
-			<th>Género</th>
-			<th>Ocupación</th>
-			<th>Estado civil</th>
-			<th>Dirección</th>
-			<th>País</th>
-			<th></th>
-			</thead>	
-		<tbody>
-			<?php foreach ($usuariosGeneral as $usuario): ?>
-			<?php 
-					$activo = false;
-					foreach ($model->usuarios as $value)
-					{
-						if($value->id_usupo == $usuario->id)
-						{
-							$activo = true;
-							break;
-						}
-					}
-			?> 
-			<tr <?php echo 'id="'.$usuario->id.'"'; echo 'data-idpo="'.$model->id_po.'" '; if($activo){ echo 'class="success"'; } ?> >
-				<td>
-					<?php if(!$activo): ?>
-					<?php echo CHtml::checkBox('Usuarios[agregar]', $activo, array('class'=>'','data-idpo'=>$model->id_po, 'id'=>'chk_'.$usuario->id, 'value'=>$usuario->id)); ?>
-					<?php endif; ?>
-				</td>
-				<td><?php echo $usuario->id_char; ?></td>
-				<td><?php echo $usuario->apellido1.' '.$usuario->apellido2; ?></td>
-				<td><?php echo $usuario->nombre1.' '.$usuario->nombre2; ?></td>
-				<td>
-					<?php
-						$cantidadEmails = count($usuario->emails);
-						if($cantidadEmails > 0):
-							echo $usuario->emails[0]->direccion;
-							if($cantidadEmails > 1): 
-					?>
-							<span class="badge pull-right">
-								<?php echo $cantidadEmails; ?>
-							</span>
-					<?php
-							endif;			
-						else:
-							echo $noExiste;
-						endif;
-					?>
-				</td>
-				<td class="hidden-xs">
-					<?php 
-						//var_dump($usuario->informacionPersonal);
-						//if(property_exists('informacionPersonal', 'fecha_nacimiento')) 
-						if($usuario->informacionPersonal) 
-							echo $usuario->informacionPersonal->fecha_nacimiento; 
-						else echo $noExiste; 
-					?>
-				</td>
-				<td>
-					<?php 
-						if($usuario->informacionPersonal) 
-							if($usuario->informacionPersonal->genero) echo 'Masculino'; else echo 'Femenino'; 
-						else
-							echo $noExiste;
-					?>		
-				</td>
-				<td>
-					<?php 
-						if($usuario->informacionPersonal) 
-							echo $usuario->informacionPersonal->ocupacion->nombre; 
-						else echo $noExiste; 
-					?>
-				</td>
-				<td>
-					<?php 
-						if($usuario->informacionPersonal) 
-							echo $usuario->informacionPersonal->estadoCivil->descripcion; 
-						else echo $noExiste; 
-					?>
-				</td>
-				<td>
-					<?php
-						$cantidadDirecciones = count($usuario->direcciones);
-						if($cantidadDirecciones > 0):
-							echo $usuario->direcciones[0]->direccion;
-							if($cantidadDirecciones > 1): 
-					?>
-							<span class="badge pull-right">
-								<?php echo $cantidadDirecciones; ?>
-							</span>
-					<?php
-							endif;			
-						else:
-							echo $noExiste;
-						endif;
-					?>
-				</td>
-				<td><?php foreach ($usuario->direcciones as $direccion) {	echo $direccion->pais->nombre; }  ?></td>
-				<td>
-					<p class="text-center">
-					<?php if(!$activo && $cantidadEmails > 0): ?>
-					<?php echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', null ,array('class'=>'btn btn-primary activacion', 'id'=>'btn_'.$usuario->id, 'data-toggle'=>'tooltip', 'title'=>"Activar"));  ?>
-					 <?php endif; ?>
-					</p>
-				</td>
-			</tr>
-			<?php endforeach; ?>
-		</tbody>
-	</table>
-</div>
+<!-- <h1>Yii Chat Demo</h1>
+<div id='chat'></div> -->
+<?php 
+    // $this->widget('YiiChatWidget',array(
+    //     'chat_id'=>'123',                   // a chat identificator
+    //     'identity'=>1,                      // the user, Yii::app()->user->id ?
+    //     'selector'=>'#chat',                // were it will be inserted
+    //     'minPostLen'=>2,                    // min and
+    //     'maxPostLen'=>10,                   // max string size for post
+    //     'model'=> new ChatHandler(),    // the class handler. **** FOR DEMO, READ MORE LATER IN THIS DOC ****
+    //     'data'=>'any data',                 // data passed to the handler
+    //     // success and error handlers, both optionals.
+    //     'onSuccess'=>new CJavaScriptExpression(
+    //         "function(code, text, post_id){   }"),
+    //     'onError'=>new CJavaScriptExpression(
+    //         "function(errorcode, info){  }"),
+    // ));
+?>
+
 
 <?php
-$this->widget('CLinkPager', array(
-	'header' => '',
-	'firstPageLabel' => '&lt;&lt;',
-	'prevPageLabel' => '&lt;',
-	'nextPageLabel' => '&gt;',
-	'lastPageLabel' => '&gt;&gt;',
-	'pages' => $pages,
-	'htmlOptions' => array('class'=> 'pagination')
-));
+// $this->widget('CLinkPager', array(
+// 	'header' => '',
+// 	'firstPageLabel' => '&lt;&lt;',
+// 	'prevPageLabel' => '&lt;',
+// 	'nextPageLabel' => '&gt;',
+// 	'lastPageLabel' => '&gt;&gt;',
+// 	'pages' => $pages,
+// 	'htmlOptions' => array('class'=> 'pagination')
+// ));
 
 ?>
 
 <?php $this->endWidget(); ?>
+
+<div class="row">
+		<div class="container col-sm-12 col-md-2">
+			<!-- <div class="col-md-offset-6 col-md-6"> -->
+				<div class="form-group">
+				<?php echo CHtml::button('Agregar selección', array('id'=>'agregarSeleccion', 'class'=>'btn btn-default  btn-block'));  ?>
+				</div>
+			<!-- </div> -->
+		</div>
+	</div>
+<div class="row">
+<div class="container">
+<?php $this->renderPartial('_usuariosPublico', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
+</div>
+</div>
 
 
 <script>
@@ -323,9 +240,11 @@ $this->widget('CLinkPager', array(
 
 	function iniciar(){
 		//$('#registrosUsuarios .activacion').on('click', activarUsuario);
-		$('.activacion').live('click', activarUsuario);
+		//$('.activacion').on('click', activarUsuario);
+		$(document).on('click', '.activacion', clicUsuario);
 		$('#Usuario_pais').on('change', consultarDepartamentos);
 		$('#activarEdad').on('click', habilitarFechas);
+		$('#agregarSeleccion').on('click', usuariosSeleccionados);
 
 		$('#Usuario_departamento').prop('disabled', false);
 		$('#departamentos').hide();
@@ -383,13 +302,34 @@ $this->widget('CLinkPager', array(
 		});
 	}
 
-	function activarUsuario(e){
+	function usuariosSeleccionados(){
+		var checkboxes = $("input[name='usuarios[]']:checked");
+		$.each(checkboxes, function(index, checkbox) {
+		   console.log(checkbox);
+		    var fila = $(checkbox).parent().closest('tr');
+			var id_po = $('#PublicoObjetivo_id_po').val();
+			var id_usupo = fila.attr('id');
+			activarUsuario(fila, id_po, id_usupo);
+			console.log(id_po+' '+id_usupo);
+		});
+		
+		//return checkboxes;
+	}
+
+	function clicUsuario(e){
+		e.preventDefault();
 		console.log('al menos');
 		var fila = $(e.target).parent().closest('tr');
-		//debugger;
-		//var id_po = fila.data('idpo');
 		var id_po = $('#PublicoObjetivo_id_po').val();
 		var id_usupo = fila.attr('id');
+		activarUsuario(fila, id_po, id_usupo);
+	}
+
+	function activarUsuario(fila, id_po, id_usupo){
+		console.log('inicio activar');
+		// var fila = $(e.target).parent().closest('tr');
+		// var id_po = $('#PublicoObjetivo_id_po').val();
+		// var id_usupo = fila.attr('id');
 		
 		var peticion = $.ajax({
 			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar'); ?>",
@@ -405,8 +345,13 @@ $this->widget('CLinkPager', array(
 		peticion.done(function( msg ) {
 			console.log('exito '+msg);
 			fila.addClass('success');
+			var checkbox = fila.find("input:first");//.prop("disabled", true);
+			checkbox.prop("disabled", true);
+			checkbox.prop("checked", false);
+			//fila.children("input").prop("disabled", true);
+			//$("input.group1")
 			$('#btn_'+id_usupo).hide();
-			$('#chk_'+id_usupo).hide();
+			//$('#chk_'+id_usupo).hide();
 		});
 		 
 		peticion.fail(function( jqXHR, textStatus ) {
@@ -418,7 +363,7 @@ $this->widget('CLinkPager', array(
 			setTimeout(quitarFila, 1500);
 		});
 
-		e.preventDefault();
+		
 		console.log('El turbo activado');
 	}
 </script>

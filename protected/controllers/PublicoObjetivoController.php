@@ -124,7 +124,7 @@ class PublicoObjetivoController extends Controller
 	}
 
 
-	public function actionAgregarUsuarios($id)
+	public function actionAgregarUsuariosBackup($id)
 	{
 		$model = $this->loadModel($id);
 
@@ -273,6 +273,41 @@ class PublicoObjetivoController extends Controller
 		));
 	}
 
+	public function actionAgregarUsuarios($id)
+	{
+		$model = $this->loadModel($id);
+		$general = new General;
+		$fechaInicio = null;
+		$fechanFin = null;
+		
+		$criterio = new CDbCriteria();	
+
+		if(isset($_POST['Usuario']))
+		{
+			$fechaInicio = (isset($_POST['Usuario']['fecha_inicio'])) ? $_POST['Usuario']['fecha_inicio'] : '';
+			$fechanFin = (isset($_POST['Usuario']['fecha_fin'])) ? $_POST['Usuario']['fecha_fin'] : '';
+			if($fechaInicio != '' && $fechanFin !='')
+			{
+				//$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
+				//$criterio->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechanFin);
+			}
+		}
+
+		$this->render('agregarUsuarios', array(
+			'model'           => $model,
+			'proveedorDatos' => $general->filtradoPorUsuarios(null, $fechaInicio, $fechanFin),
+			// 'usuariosGeneral' => $usuariosGeneral,
+			// 'pages'           => $paginas,
+			// 'total'           => $total,
+			// 'ocupacion'       => $ocupacion,
+			// 'estadoCivil'     => $estadoCivil,
+			// 'departamento'    => $departamento,
+			// 'pais'            => $pais
+			//'nombres' => $nombresCadena,
+			//'apellidos' => $apellidosCadena
+		));
+	}
+
 	public function actionAgregar()
 	{	
 		if(isset($_POST['id_po']) && Yii::app()->user->getState('usuid') != null)
@@ -370,7 +405,7 @@ class PublicoObjetivoController extends Controller
 
 		$this->render('_usuariosPublico',array(
 			'model'=>$model,
-
+			'proveedorDatos'=>$model->filtradoPorUsuarios(),
 			'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$id_po)),
 			'id_po'=>$id_po
 		));
