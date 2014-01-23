@@ -126,11 +126,11 @@
 				<div class="form-inline">
 					<div class="form-group">
 					<?php echo CHtml::label('Desde', 'Usuario_fecha_inicio'); ?>
-					<?php echo CHtml::dateField('Usuario[fecha_inicio]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
+					<?php echo CHtml::dateField('Usuario[fecha_inicio]', $fechaInicio ? $fechaInicio : date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_inicio', 'disabled'=>'disabled')); ?>
 					</div>
 					<div class="form-group">
 					<?php echo CHtml::label('Hasta', 'Usuario_fecha_fin'); ?>
-					<?php echo CHtml::dateField('Usuario[fecha_fin]', date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin', 'disabled'=>'disabled')); ?>
+					<?php echo CHtml::dateField('Usuario[fecha_fin]', $fechaFin ? $fechaFin : date('Y-m-d'), array('class'=>"", 'name'=> 'fecha_fin', 'disabled'=>'disabled')); ?>
 					</div>
 				</div>
 			</div>
@@ -220,18 +220,18 @@
 <?php $this->endWidget(); ?>
 
 <div class="row">
-		<div class="container col-sm-12 col-md-2">
-			<!-- <div class="col-md-offset-6 col-md-6"> -->
-				<div class="form-group">
-				<?php echo CHtml::button('Agregar selección', array('id'=>'agregarSeleccion', 'class'=>'btn btn-default  btn-block'));  ?>
-				</div>
-			<!-- </div> -->
-		</div>
+	<div class="container col-sm-12 col-md-2">
+		<!-- <div class="col-md-offset-6 col-md-6"> -->
+			<div class="form-group">
+			<?php echo CHtml::button('Agregar selección', array('id'=>'agregarSeleccion', 'class'=>'btn btn-default  btn-block'));  ?>
+			</div>
+		<!-- </div> -->
 	</div>
-<div class="row">
-<div class="container">
-<?php $this->renderPartial('_usuariosPublico', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
 </div>
+<div class="row">
+	<div class="container">
+	<?php $this->renderPartial('_usuariosAgregar', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
+	</div>
 </div>
 
 

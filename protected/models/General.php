@@ -219,6 +219,12 @@ class General extends CActiveRecord
 			return ucfirst(strtolower($this->direcciones[0]->pais->nombre));
 		return $this->mensaje;
 	}
+	public function getDireccionFormateado()
+	{
+		if($this->direcciones && $this->direcciones[0])
+			return ucfirst(strtolower($this->direcciones[0]->direccion));
+		return $this->mensaje;
+	}
 
 	public function presentePO($id_po)
 	{
@@ -245,31 +251,48 @@ class General extends CActiveRecord
 		$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
 		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
 		
-		$criteria->with = array('emails');
-		$criteria->addSearchCondition('LOWER(direccion)', strtolower($this->correo), true);
-		$criteria->together = true;
+		if($this->correo)
+		{
+			if($criteria->with)
+			{
+				if(!array_key_exists('emails', $criteria->with))
+					$criteria->with['emails'] = array('alias' => 'correos');//array('informacionPersonal');
+			}
+			else
+			{
+				$criteria->with = array(
+                        'emails' => array(
+                                    'alias' => 'correos',
+                        ),
+            	);
+			}
+			$criteria->addSearchCondition('LOWER(correos.direccion)', strtolower($this->correo), true);
+			$criteria->together = true;
+		}
 
-		//$genero = null;
+
+		if($this->genero != null || $this->estadoCivil || ($fechaInicio && $fechaFin))
+		{
+			 if($criteria->with)
+			{
+				if(!array_key_exists('informacionPersonal', $criteria->with))
+					array_push($criteria->with, 'informacionPersonal');//$criteria->with['informacionPersonal'] = array('alias' => 'infoPer');//array('informacionPersonal');
+			}
+			else
+			{
+				$criteria->with = array();
+				array_push($criteria->with, 'informacionPersonal');
+			}
+		}
+
 		if($this->genero != null)
 		{
-			//$genero = $this->genero == 'Masculino' ? 1 : 0;
-			$criteria->with = array('informacionPersonal');
 			$criteria->compare('genero', (int) $this->genero === 1 ? 1 : 0);
 			$criteria->together = true;
 		}
 
-		
-
 		if($this->estadoCivil)
 		{
-			 // $criteria->with = array(
-    //                     'informacionPersonal.estadoCivil' => array(
-    //                                 'alias' => 'est',
-    //                     ),
-    //         );
-
-			//$criteria->addSearchCondition('LOWER(est.descripcion)', strtolower($this->estadoCivil), true);
-			$criteria->with = array('informacionPersonal');
 			$criteria->addCondition('id_estado_civil =:id_estado_civil');
 			$criteria->params += array(':id_estado_civil' => $this->estadoCivil);	
 			$criteria->together = true;
@@ -277,51 +300,47 @@ class General extends CActiveRecord
 
 		if($this->pais)
 		{
-			 $criteria->with = array(
+            if($criteria->with)
+			{
+				if(!array_key_exists('direcciones.pais', $criteria->with))
+					$criteria->with['direcciones.pais'] = array('alias' => 'pais');//array('informacionPersonal');
+			}
+			else
+			{
+				$criteria->with = array(
                         'direcciones.pais' => array(
                                     'alias' => 'pais',
                         ),
-            );
-
+            	);
+			}
 			$criteria->addSearchCondition('LOWER(pais.nombre)', strtolower($this->pais), true);
-			//$criteria->with = array('direcciones');
-			//$criteria->addCondition('id_estado_civil =:id_estado_civil');
-			//$criteria->params += array(':id_estado_civil' => $this->estadoCivil);	
 			$criteria->together = true;
 		}
 
 		if($fechaInicio && $fechaFin)
 		{
-			//$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
-			$criteria->with = array('informacionPersonal');
 			$criteria->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechaFin);
+			$criteria->together = true;
 		}
 
 		if($this->ocupacion)
 		{
-			//$criteria->with = array('informacionPersonal');
-			//$criteria->join = 'JOIN informacion_personal ON t.id = informacion_personal.id';
-			//$criteria->join = 'JOIN crmocupacion ON t.id_ocupacion = crmocupacion.id_ocu';
-			// $criteria->addCondition('id_ocupacion =:id_ocupacion');
-			// $criteria->params += array(':id_ocupacion' => (int) $ocupacionCadena);
-
-			 $criteria->with = array(
+			if($criteria->with)
+			{
+				if(!array_key_exists('informacionPersonal.ocupacion', $criteria->with))
+					$criteria->with['informacionPersonal.ocupacion'] = array('alias' => 'ocup');//array('informacionPersonal');
+			}
+			else
+			{
+				$criteria->with = array(
                         'informacionPersonal.ocupacion' => array(
                                     'alias' => 'ocup',
                         ),
-                        // 'rT.bs' => array(
-                        //                 'alias' => 's',
-                        //                 'joinType' => 'INNER JOIN',
-                        //                 'condition' => 's.cid = :cid',
-                        //                 'params' => array(':cid' => $_SESSION['cid']),
-                        // ),
-                );
-
+            	);
+			}
 			$criteria->addSearchCondition('LOWER("ocup".nombre)', strtolower($this->ocupacion), true);
 			$criteria->together = true;
 		}
-
-		//$criteria->order  = 'apellido1';
 
 		$sort = new CSort;
 		$sort->attributes = array(
@@ -339,6 +358,7 @@ class General extends CActiveRecord
                     'desc' => 'direccion DESC',
             ),
 		);
+
 		return new CActiveDataProvider('General', array(
 			// 'pagination'=>array(
    //                              'pageSize'=> Yii::app()->user->getState('pageSize',Yii::app()->params['defaultPageSize']),

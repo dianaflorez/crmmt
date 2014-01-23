@@ -119,7 +119,7 @@ return array(
 	                'js'=>array('js/bootstrap.min.js'),
 	                'css'=>array(                        // and css
 	                   	//'css/bootstrap.min.flat.css',
-	                   	'css/bootstrap.min.css',
+	                   	'css/bootstrap.css',
 	                    //'css/custom.css',
 	                    //'css/bootstrap-responsive.min.css',
 	                ),

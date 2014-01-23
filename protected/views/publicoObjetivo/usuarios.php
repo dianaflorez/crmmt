@@ -20,7 +20,11 @@
 </li>
   <li><?php echo CHtml::link('<i class="fa fa-plus-circle fa-lg"> Agregar usuarios</i>', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
 </ul>
-
+<div class="row">
+	<div class="container">
+		<?php $this->renderPartial('_usuariosPublico', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/usuarios', array('id' => $model->id_po)))); ?>
+	</div>
+</div>
 <div class="table-responsive">
 	<table class="table table-bordered table-striped">
 		<thead>

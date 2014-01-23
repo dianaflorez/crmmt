@@ -118,11 +118,39 @@ class PublicoObjetivoController extends Controller
 	{
 		$model = $this->loadModel($id);
 
+		$usuarios = new General('search');
+		$usuarios->unsetAttributes();  // clear any default values
+		if(isset($_GET['General']))
+			$usuarios->attributes = $_GET['General'];
+		
+		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usupo; }, $model->usuarios));
+
 		$this->render('usuarios', array(
-			'model' => $model
+			'model' => $model,
+			'usuarios' => $usuarios,
+			'usuariosId' => $usuariosId
 		));
 	}
 
+	/**
+	 * Consulta los usuarios que contestaron determinada encuesta.
+	 */
+	// public function actionUsuariosGrilla($id)
+	// {
+	// 	$model = new General('search');
+	// 	$model->unsetAttributes();  // clear any default values
+	// 	if(isset($_GET['General']))
+	// 		$model->attributes = $_GET['General'];
+		
+	// 	$usuariosId = array_unique(array_map(function ($obj) { return $model->usuarios; }, $usuarios));
+
+
+	// 	$this->render('_usuariosEncuesta',array(
+	// 		'model'      => $model,
+	// 		'usuariosId' => $usuariosId,
+	// 		'ajaxUrl'     => $this->createUrl('/formulario/usuariosencuesta', array('id_for' => $id_for))
+	// 	));
+	// }
 
 	public function actionAgregarUsuariosBackup($id)
 	{
@@ -278,15 +306,15 @@ class PublicoObjetivoController extends Controller
 		$model = $this->loadModel($id);
 		$general = new General;
 		$fechaInicio = null;
-		$fechanFin = null;
+		$fechaFin = null;
 		
 		$criterio = new CDbCriteria();	
 
 		if(isset($_POST['Usuario']))
 		{
 			$fechaInicio = (isset($_POST['Usuario']['fecha_inicio'])) ? $_POST['Usuario']['fecha_inicio'] : '';
-			$fechanFin = (isset($_POST['Usuario']['fecha_fin'])) ? $_POST['Usuario']['fecha_fin'] : '';
-			if($fechaInicio != '' && $fechanFin !='')
+			$fechaFin = (isset($_POST['Usuario']['fecha_fin'])) ? $_POST['Usuario']['fecha_fin'] : '';
+			if($fechaInicio != '' && $fechaFin !='')
 			{
 				//$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
 				//$criterio->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechanFin);
@@ -295,7 +323,10 @@ class PublicoObjetivoController extends Controller
 
 		$this->render('agregarUsuarios', array(
 			'model'           => $model,
-			'proveedorDatos' => $general->filtradoPorUsuarios(null, $fechaInicio, $fechanFin),
+			'proveedorDatos' => $general->filtradoPorUsuarios(null, $fechaInicio, $fechaFin),
+			'fechaInicio' => $fechaInicio,
+			'fechaFin' => $fechaFin,
+			
 			// 'usuariosGeneral' => $usuariosGeneral,
 			// 'pages'           => $paginas,
 			// 'total'           => $total,
@@ -403,7 +434,7 @@ class PublicoObjetivoController extends Controller
 		//     unset($_GET['pageSize']);
 		// }
 
-		$this->render('_usuariosPublico',array(
+		$this->render('_usuariosAgregar',array(
 			'model'=>$model,
 			'proveedorDatos'=>$model->filtradoPorUsuarios(),
 			'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$id_po)),
