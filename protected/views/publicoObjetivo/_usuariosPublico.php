@@ -5,6 +5,7 @@
 		'ajaxUrl'       => $ajaxUrl,
 		'itemsCssClass' => 'table table-condensed table-hover',
 		'htmlOptions'   => array('class' => 'table-responsive'),
+		'rowHtmlOptionsExpression' => '["id" => $data->id, "data-idpo"=>"'.$id_po.'"]',
 		'columns'       => array(
 	        'id_char',         
 	        array(            
@@ -31,6 +32,11 @@
 	        array(            
 	            'name'  => 'pais',
 	            'value' => '$data->paisformateado' ,
+	        ),
+	        array(
+	        	'header' => 'Quitar',
+	        	'value' => 'CHtml::link("<i class=\"fa fa-times fa-lg\"></i>", null ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar"))',
+	        	'type' => 'raw'
 	        ),
 	        // array(          
 	        //     'name'  => 'estadoCivil',

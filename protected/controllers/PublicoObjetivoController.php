@@ -124,7 +124,8 @@ class PublicoObjetivoController extends Controller
 			$usuarios->attributes = $_GET['General'];
 		
 		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usupo; }, $model->usuarios));
-
+		//$usuariosId = null;
+		//var_dump($usuariosId);
 		$this->render('usuarios', array(
 			'model' => $model,
 			'usuarios' => $usuarios,
@@ -314,11 +315,6 @@ class PublicoObjetivoController extends Controller
 		{
 			$fechaInicio = (isset($_POST['Usuario']['fecha_inicio'])) ? $_POST['Usuario']['fecha_inicio'] : '';
 			$fechaFin = (isset($_POST['Usuario']['fecha_fin'])) ? $_POST['Usuario']['fecha_fin'] : '';
-			if($fechaInicio != '' && $fechaFin !='')
-			{
-				//$criterio->join ='JOIN informacion_personal ON t.id = informacion_personal.id';
-				//$criterio->addBetweenCondition('fecha_nacimiento', $fechaInicio, $fechanFin);
-			}
 		}
 
 		$this->render('agregarUsuarios', array(

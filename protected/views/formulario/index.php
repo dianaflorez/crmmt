@@ -29,7 +29,7 @@
 
 
 <div class="table-responsive">
-	<table id='publico_objetivo' class="table table-bordered table-striped">
+	<table id='publico_objetivo' class="table table-condensed table-hover">
 		<thead>
 			<th>Título</th>
 			<th></th>

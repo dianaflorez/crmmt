@@ -37,7 +37,9 @@ class UsuarioPublicoObjetivoController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
+				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
+				
+				//'users'=>array('admin'),
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),
@@ -93,7 +95,7 @@ class UsuarioPublicoObjetivoController extends Controller
 
 		if(isset($_POST['UsuarioPublicoObjetivo']))
 		{
-			$model->attributes=$_POST['UsuarioPublicoObjetivo'];
+			$model->attributes = $_POST['UsuarioPublicoObjetivo'];
 			if($model->save())
 				$this->redirect(array('view','id'=>$model->id_upo));
 		}
@@ -108,13 +110,22 @@ class UsuarioPublicoObjetivoController extends Controller
 	 * If deletion is successful, the browser will be redirected to the 'admin' page.
 	 * @param integer $id the ID of the model to be deleted
 	 */
-	public function actionDelete($id)
+	public function actionDelete()
 	{
-		$this->loadModel($id)->delete();
-
+		//$this->loadModel($id)->delete();
+		$id_po = isset($_POST['id_po']) ? $_POST['id_po'] : null;
+		$id_usupo = isset($_POST['id_usupo']) ? $_POST['id_usupo'] : null;
+		
+		if($id_po && $id_usupo){
+			$usuario = UsuarioPublicoObjetivo::model()->findByAttributes(array('id_po'=>$id_po,'id_usupo'=>$id_usupo));
+			if($usuario && !$usuario->delete())
+				throw new CHttpException(500, 'No se pudo borrar.');
+		}else{
+			throw new CHttpException(400, 'Petición fallida.');
+		}
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		// if(!isset($_GET['ajax']))
+		// 	$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**

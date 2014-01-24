@@ -13,7 +13,8 @@
 				'selectableRows'=>2,
 				//'checked'=>'$data->mail != "No registra" && !$data->presentepo('.$id_po.') ? 1 : 0',
 				'disabled'=>'$data->mail != "No registra" && !$data->presentepo('.$id_po.') ? 0 : 1',
-				//'htmlOptions' =>array('data-id'=>'$data->id')
+				//'type'=>'$data->mail != "No registra" && !$data->presentepo('.$id_po.') ? "hidden" : "checkbox" ',
+				//'htmlOptions' =>array('class'=>'{$data->id}')
 				//'cssClassExpression'=>
 			),
 	        array(

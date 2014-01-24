@@ -230,6 +230,11 @@
 </div>
 <div class="row">
 	<div class="container">
+		<div class="alert alert-warning fade in" style="display: none;">
+        	Selecciones un usuario como mínimo.
+      </div>
+	</div>
+	<div class="container">
 	<?php $this->renderPartial('_usuariosAgregar', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
 	</div>
 </div>
@@ -251,7 +256,7 @@
 	}
 
 	function habilitarFechas(){
-		console.log('habilitar');
+		//console.log('habilitar');
 		if($('#activarEdad').prop('checked')){
 			$('#Usuario_fecha_inicio').prop('disabled', false);
 			$('#Usuario_fecha_fin').prop('disabled', false);
@@ -263,7 +268,7 @@
 	
 
 	function consultarDepartamentos(e){
-		console.log('Cambio '+e.target.value);
+		//console.log('Cambio '+e.target.value);
 
 		var peticion = $.ajax({
 			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/departamentos'); ?>",
@@ -304,6 +309,15 @@
 
 	function usuariosSeleccionados(){
 		var checkboxes = $("input[name='usuarios[]']:checked");
+		if(checkboxes.length === 0 ){
+			//$(".alert").alert();
+			$(".alert").slideDown();
+			var quitarAlerta = function (){
+				$(".alert").slideUp();
+			};
+			setTimeout(quitarAlerta, 2000);
+			return false;
+		}
 		$.each(checkboxes, function(index, checkbox) {
 		   console.log(checkbox);
 		    var fila = $(checkbox).parent().closest('tr');
@@ -318,7 +332,7 @@
 
 	function clicUsuario(e){
 		e.preventDefault();
-		console.log('al menos');
+		//console.log('al menos');
 		var fila = $(e.target).parent().closest('tr');
 		var id_po = $('#PublicoObjetivo_id_po').val();
 		var id_usupo = fila.attr('id');
@@ -343,7 +357,7 @@
 		});
 		 
 		peticion.done(function( msg ) {
-			console.log('exito '+msg);
+			//console.log('exito '+msg);
 			fila.addClass('success');
 			var checkbox = fila.find("input:first");//.prop("disabled", true);
 			checkbox.prop("disabled", true);
@@ -355,7 +369,7 @@
 		});
 		 
 		peticion.fail(function( jqXHR, textStatus ) {
-			console.log('fallo '+textStatus);
+			//console.log('fallo '+textStatus);
 			fila.addClass('warning');
 			var quitarFila = function (){
 				fila.removeClass('warning');

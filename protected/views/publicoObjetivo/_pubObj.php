@@ -8,7 +8,7 @@ $('#publico_objetivo').tooltip();
 </script>
 
 <div class="table-responsive">
-	<table id='publico_objetivo' class="table table-bordered table-striped">
+	<table id='publico_objetivo' class="table table-condensed table-hover">
 		<thead>
 			<th>Nombre</th>
 			<th class="hidden-xs">Descripción</th>

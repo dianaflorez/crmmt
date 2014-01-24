@@ -244,9 +244,11 @@ class General extends CActiveRecord
 	public function filtradoPorUsuarios($usuariosId = null, $fechaInicio = null, $fechaFin = null)
 	{
 		$criteria = new CDbCriteria;
-		if($usuariosId)
+		if($usuariosId !== null){
+			if(count($usuariosId) === 0)
+				return new CActiveDataProvider('General', array('data'=>array()));
 			$criteria->addInCondition('t.id',$usuariosId);
-		
+		}
 		$criteria->addSearchCondition('id_char',$this->id_char,true);
 		$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
 		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);

@@ -300,6 +300,20 @@ class CampanaController extends Controller
 
 			if(isset($_POST['Campana']))
 			{
+				// Almacenar la imagen.
+				$model->image = CUploadedFile::getInstance($model, 'image');
+				if($model->image != null)
+				{
+					$nombre = rand(1, 10000).$model->image;
+					$directorio = Yii::app()->basePath.'/../images/'.$nombre;
+					$model->image -> saveAs($directorio);
+					$image = Yii::app()->image->load($directorio);   
+				   	$image->resize(560, 100, Image::WIDTH);    
+				   	$image->save();
+
+				   	$model->urlimage = Yii::app()->getBaseUrl(true).'/images/'.$nombre;
+				}
+
 				$model->attributes = $_POST['Campana'];
 				if($model->save())
 					$this->redirect(array('index'));
