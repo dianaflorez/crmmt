@@ -21,14 +21,15 @@
 	        ),
 	    ),
 		'summaryText' => 'Mostrando {start} - {end} de {count} resultados',
-		'emptyText' => 'No se encontraron registros.',
+		'emptyText'   => 'No se encontraron registros.',
 		'pager'       => array(
-			'header'         => '',
-			'firstPageLabel' => 'Primera &lt;&lt;',
-			'prevPageLabel'  => '&lt;',
-			'nextPageLabel'  => '&gt;',
-			'lastPageLabel'  => 'Última &gt;&gt;',
-			'htmlOptions'    => array('class'=>'pagination')
+			'header'               => '',
+			'firstPageLabel'       => 'Primera &lt;&lt;',
+			'prevPageLabel'        => '&lt;',
+			'nextPageLabel'        => '&gt;',
+			'lastPageLabel'        => 'Última &gt;&gt;',
+			'selectedPageCssClass' => 'active',
+			'htmlOptions'          => array('class' => 'pagination')
 		),
-		'pagerCssClass' => 'pagerClass',
+		'pagerCssClass' => 'paginacion',
 )); ?>

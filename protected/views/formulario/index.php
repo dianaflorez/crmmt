@@ -42,7 +42,7 @@
 					<p class="text-center">
 					   	<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-edit fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/update/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
 						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle fa-lg fa-border"></i>', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Agregar pregunta"));  ?>
-						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle-o fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'id_usur'=> 1)), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
+						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-plus-circle-o fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
 						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-rocket fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?>
 						<?php if($formulario->estado) echo CHtml::link('<i class="fa fa-book fa-lg fa-border"></i>', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?>
 						

@@ -36,6 +36,7 @@
 class General extends CActiveRecord
 {
 	public $nombres, $apellidos, $correo, $genero, $ocupacion, $estadoCivil, $pais;
+	protected $numCar = 20;
 	protected $mensaje = 'No registra';
 
 	/**
@@ -81,7 +82,7 @@ class General extends CActiveRecord
 			'crmcampanas'           => array(self::HAS_MANY, 'Crmcampana', 'id_usu'),
 			'crmcampanausus'        => array(self::HAS_MANY, 'Crmcampanausu', 'id_usuc'),
 			'direcciones'           => array(self::HAS_MANY, 'Direcciones', 'id'),
-			'usuarioweb'            => array(self::HAS_ONE, 'Usuarioweb', 'id_usuario'),
+			'usuarioWeb'            => array(self::HAS_ONE, 'Usuweb', 'id_usuario'),
 			'crmusuariopos'         => array(self::HAS_MANY, 'Crmusuariopo', 'id_usupo'),
 			'crmusuariopos1'        => array(self::HAS_MANY, 'Crmusuariopo', 'id_usu'),
 			'crmpreferencias'       => array(self::HAS_MANY, 'Crmpreferencia', 'id_usup'),
@@ -114,9 +115,9 @@ class General extends CActiveRecord
 			'nombres'          => 'Nombres',
 			'apellidos'        => 'Apellidos',
 			'correo'           => 'Correo',
-			'genero' => 'Género',
-			'ocupacion' => 'Ocupación',
-			'estadoCivil' => 'Estado civil',
+			'genero'           => 'Género',
+			'ocupacion'        => 'Ocupación',
+			'estadoCivil'      => 'Estado civil',
 		);
 	}
 
@@ -166,20 +167,23 @@ class General extends CActiveRecord
 		return parent::model($className);
 	}
 
+
+	// Campos virtuales que retornan valores con mejor formato o para presentar campos relacionados de otras tablas.
 	public function getNombresUnidos()
 	{
-
-		return ucfirst(strtolower($this->nombre1)).' '.ucfirst(strtolower($this->nombre2));
+		$nombres = ucfirst(strtolower($this->nombre1)).' '.ucfirst(strtolower($this->nombre2));
+		return $this->maximoCaracter($nombres);
 	}
 
 	public function getApellidosUnidos()
 	{
-		return ucfirst(strtolower($this->apellido1)).' '.ucfirst(strtolower($this->apellido2));
+		$apellidos = ucfirst(strtolower($this->apellido1)).' '.ucfirst(strtolower($this->apellido2));
+		return $this->maximoCaracter($apellidos);
 	}
 
 	public function getMail()
 	{
-		return $this->emails ? strtolower($this->emails[0]->direccion) : $this->mensaje;
+		return $this->emails ? $this->maximoCaracter(strtolower($this->emails[count($this->emails) - 1]->direccion)) : $this->mensaje;
 	}
 
 	public function getGeneroFormateado()
@@ -187,13 +191,11 @@ class General extends CActiveRecord
 		$genero = $this->mensaje;
 		if($this->informacionPersonal)
 			$genero = $this->informacionPersonal->genero === true ? 'Masculino' : 'Femenino';
-		
 		return $genero;
 	}
 
 	public function getFechaNacimientoFormateado()
 	{
-		//$fecha = $this->mensaje;
 		if($this->informacionPersonal && $this->informacionPersonal->fecha_nacimiento)
 			return $this->informacionPersonal->fecha_nacimiento;
 		return $this->mensaje;
@@ -219,6 +221,7 @@ class General extends CActiveRecord
 			return ucfirst(strtolower($this->direcciones[0]->pais->nombre));
 		return $this->mensaje;
 	}
+
 	public function getDireccionFormateado()
 	{
 		if($this->direcciones && $this->direcciones[0])
@@ -237,6 +240,17 @@ class General extends CActiveRecord
 		if($contar === 1)
 			return true;
 		return false;
+	}
+
+	public function getDisponible()
+	{
+		$validador = new CEmailValidator;
+		return $validador->validateValue($this->getMail()) && $this->usuarioWeb && $this->usuarioWeb->login  ? true : false;
+	}
+
+	protected function maximoCaracter($cadena)
+	{
+		return strlen($cadena) > $this->numCar ? substr($cadena, 0, $this->numCar).'...' : $cadena;
 	}
 
 
@@ -344,6 +358,7 @@ class General extends CActiveRecord
 			$criteria->together = true;
 		}
 
+
 		$sort = new CSort;
 		$sort->attributes = array(
 			'id_char'   => array('*', 'id_char'),
@@ -367,6 +382,7 @@ class General extends CActiveRecord
    //                      ),
 		   	'criteria'   => $criteria,
 		   	'sort'       => $sort,
+		   
 		   	'pagination' => array(
 		        'pageSize' => 20,
 		    ),

@@ -350,9 +350,13 @@ class PublicoObjetivoController extends Controller
 		
 			try
 			{
-				if($usuario_po->save())
-				{
-					echo 'true';
+				$validador = new CEmailValidator;
+				$usuarioGen = General::model()->findByPk($id_usupo);
+				$cantidadEmails = count($usuarioGen->emails);
+				$correo = $usuarioGen->emails[$cantidadEmails-1]->direccion;
+	            if($cantidadEmails > 0 && $validador->validateValue($correo) && $usuarioGen->usuarioWeb && $usuario_po->save())
+	            {
+	            	echo 'true';
 				}
 				else
 				{

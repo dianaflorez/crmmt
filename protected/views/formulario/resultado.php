@@ -104,7 +104,15 @@
 			<?php endif; ?>
 		</div>
 	<?php endforeach; ?>
+	<div class="row">
+		<div class="col-md-offset-2 col-md-8">
+			<div class="form-group">
+			<?php echo CHtml::link('Volver', Yii::app()->createUrl('formulario/'), array('class'=>'btn btn-default  btn-block','role'=>'button'));  ?>
+			</div>
+		</div>
+	</div>
 </div>
+
 <script>
 	var datos = <?php echo  CJSON::encode($datosReportes).';'; ?> 
 	$(document).on('ready', inicio);
@@ -132,10 +140,10 @@
 			  	);
 			}else if(pregunta.tipo === 'multiple'){
 
-				var valores = $.map( pregunta.respuestas, function( n ) {
+				var valores = $.map(pregunta.respuestas, function( n ) {
 		    		return n.cantidad;
 				});
-				var etiquetas = $.map( pregunta.respuestas, function( n ) {
+				var etiquetas = $.map(pregunta.respuestas, function( n ) {
 				    return n.txtop+' ('+n.cantidad+')';
 				});
 				console.log(valores);

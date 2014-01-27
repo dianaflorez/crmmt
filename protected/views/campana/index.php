@@ -15,8 +15,9 @@
 
 
 <div class="table-responsive">
-	<table id='publico_objetivo' class="table table-condensed table-hover">
+	<table id="publico_objetivo" class="table table-condensed table-hover">
 		<thead>
+			<th class="col-md-1">Enviada</th>
 			<th>Asunto</th>
 			<th>Tipo</th>
 			<th></th>
@@ -24,6 +25,13 @@
 		<tbody>
 			<?php foreach ($campanas as $campana): ?>
 			<tr class="<?php if($campana->estado) echo 'success'; ?>">
+				<td  style="text-align: center; vertical-align: middle;">
+					<?php  if($campana->estado): ?>
+						<i class="fa fa-check-circle fa-lg"></i>
+					<?php else: ?>
+					<!-- <i class="fa fa-circle-o fa-lg"></i> -->
+					<?php endif; ?>
+				</td>
 				<td><?php  echo $campana->asunto; ?></td>
 				<td><?php  echo ucfirst($campana->tipoCampana->nombre); ?></td>
 				<td>

@@ -37,12 +37,12 @@ class Respuesta extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('id_usur, id_fp, id_usu', 'required'),
+			array('id_usur, id_fp', 'required'),
 			array('id_fp, id_op', 'numerical', 'integerOnly'=>true),
 			array('txtres, feccre, fecmod', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id_res, id_usur, id_fp, id_op, txtres, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),
+			array('id_res, id_usur, id_fp, id_op, txtres, feccre, fecmod', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -54,7 +54,7 @@ class Respuesta extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
+			//'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'idUsur' => array(self::BELONGS_TO, 'General', 'id_usur'),
 			'idFp' => array(self::BELONGS_TO, 'Crmforpre', 'id_fp'),
 			'opcion' => array(self::BELONGS_TO, 'OpcionPregunta', 'id_op'),
@@ -74,7 +74,7 @@ class Respuesta extends CActiveRecord
 			'txtres' => 'Txtres',
 			'feccre' => 'Feccre',
 			'fecmod' => 'Fecmod',
-			'id_usu' => 'Id Usu',
+			//'id_usu' => 'Id Usu',
 		);
 	}
 
@@ -103,7 +103,7 @@ class Respuesta extends CActiveRecord
 		$criteria->compare('txtres',$this->txtres,true);
 		$criteria->compare('feccre',$this->feccre,true);
 		$criteria->compare('fecmod',$this->fecmod,true);
-		$criteria->compare('id_usu',$this->id_usu,true);
+		//$criteria->compare('id_usu',$this->id_usu,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

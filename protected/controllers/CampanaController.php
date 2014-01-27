@@ -199,8 +199,8 @@ class CampanaController extends Controller
 				try
 				{
 
-					$validator = new CEmailValidator;
-					if(!$validator->validateValue($correoPrueba))
+					$validador = new CEmailValidator;
+					if(!$validador->validateValue($correoPrueba))
 						throw new Exception("Error Processing Request");
 					
 					$correos = array();
@@ -394,7 +394,7 @@ class CampanaController extends Controller
 		$usuarios = CampanaUsuario::model()->findAll($criterio);
 		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usuc; }, $usuarios));
 		
-		$this->renderPartial('/formulario/_usuariosEncuesta',array(
+		$this->render('/formulario/_usuariosEncuesta',array(
 			'model'      => $model,
 			'usuariosId' => $usuariosId,
 			'ajaxUrl'     => $this->createUrl('/campana/usuarioscampana', array('id_cam' => $id_cam))

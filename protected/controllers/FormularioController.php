@@ -113,7 +113,8 @@ class FormularioController extends Controller
 	 * Genera la encuesta para ser diligenciada por el usuario.
 	 * 
 	*/
-	public function actionEncuesta($id, $id_usur)
+	//public function actionEncuesta($id, $id_usur)
+	public function actionEncuesta($id, $username)
 	{
 		$model = $this->loadModel($id);
 		$error = null;
@@ -129,7 +130,8 @@ class FormularioController extends Controller
 		// 	}
 		// }
 
-		$usuario = General::model()->findByPk($id_usur);
+		//$usuario = General::model()->findByPk($id_usur);
+		$usuario = Usuweb::model()->findByAttributes(array('login'=>$username));
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
@@ -161,7 +163,7 @@ class FormularioController extends Controller
 									{
 										if(''.$opcion->id_op === $opcion_post)
 										{
-											$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
+											$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->general->id);
 										}
 									}
 								}
@@ -175,7 +177,7 @@ class FormularioController extends Controller
 										{	
 											if(''.$opcion->id_op === $op_p)
 											{
-												$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->id);
+												$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, $opcion->id_op, $usuario->general->id);
 											}
 											
 										}
@@ -185,7 +187,7 @@ class FormularioController extends Controller
 							}
 							elseif($pregunta->id_tp === 3) // Pregunta de repuesta abierta.
 							{
-								$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, null, $usuario->id, $opcion_post);
+								$this->guardarRespuesta($pregunta->formularioPregunta->id_fp, null, $usuario->general->id, $opcion_post);
 							}
 										
 						}
@@ -208,7 +210,7 @@ class FormularioController extends Controller
 		}
 		$this->layout = 'column1';
 		
-		$this->render('encuesta', array(
+		$this->render('_encuesta', array(
 			'model'  => $model,
 			'activa' => true
 		));	
@@ -220,7 +222,7 @@ class FormularioController extends Controller
 		$respuesta          = new Respuesta;
 		$respuesta->id_fp   = $id_fp;
 		$respuesta->id_usur = $id_usur;
-		$respuesta->id_usu  = Yii::app()->user->getState('usuid');
+		//$respuesta->id_usu  = Yii::app()->user->getState('usuid');
 
 		if($id_op)
 			$respuesta->id_op   = $id_op;
@@ -395,7 +397,7 @@ class FormularioController extends Controller
 						
 						if(count($correos['para_lista']) > 0)
 						{
-							$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?id_usur=*|IDUSUR|*';
+							$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?username=*|LOGIN|*';
 							$campana->personalizada = true;
 							$campana->contenido     = $campana->contenido.' Puedes responder '.CHtml::link('aquí', $url);
 							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);	

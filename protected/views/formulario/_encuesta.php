@@ -50,7 +50,7 @@
 
 	<?php if($activa): ?>
 	<div class="row">
-		<div class="col-md-12">
+		<div class="col-md-offset-3 col-md-6">
 			<div class="form-group">
 				<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-primary btn-block')); ?> 
 			</div>

@@ -55,7 +55,7 @@ class UtilMailchimp extends CApplicationComponent
         }
         catch(Exception $e)
         {
-            throw new Exception('Oops, no se pudo suscribir.');
+            throw new Exception('Oops, no se pudo suscribir. '.$e->getMessage());
         }
     }
 
@@ -197,22 +197,27 @@ class UtilMailchimp extends CApplicationComponent
         if(!$publicoObjetivo)
             return array();
         
-        $emails = array();
+        $emails                  = array();
         $emails['para_segmento'] = array();
-        $emails['para_lista'] = array();
+        $emails['para_lista']    = array();
+        
+        $validador = new CEmailValidator;
+
         foreach ($publicoObjetivo->usuarios as $usuario)
         {
             $cantidadEmails = count($usuario->general->emails);
-            if($cantidadEmails > 0)
+            if($cantidadEmails > 0 && $usuario->general->usuarioWeb)
             {
-                $correo = $usuario->general->emails[0]->direccion;
-                $merge_vars = array(
+                $correo = $usuario->general->emails[$cantidadEmails-1]->direccion; // Último correo agregado si el ID es serial.
+                if($validador->validateValue($correo))
+                    $merge_vars = array(
                         'FNAME' => $usuario->general->nombre1,
                         'LNAME' => $usuario->general->apellido1,
-                        'IDUSUR' => $usuario->general->id
+                        'LOGIN' => $usuario->general->usuarioWeb->login
                     );
-                array_push($emails['para_segmento'], array('email' => $correo)); 
-                array_push($emails['para_lista'], array('email'=>array('email'=>$correo), 'merge_vars'=>$merge_vars));
+                    array_push($emails['para_segmento'], array('email' => $correo)); 
+                    array_push($emails['para_lista'], array('email'=>array('email'=>$correo), 'merge_vars'=>$merge_vars));
+                }
             }
         }
         return $emails;

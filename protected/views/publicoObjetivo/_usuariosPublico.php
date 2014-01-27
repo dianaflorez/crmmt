@@ -9,35 +9,36 @@
 		'columns'       => array(
 	        'id_char',         
 	        array(            
-	            'name'  => 'nombres',
-	            'value' => '$data->nombresUnidos' ,
+	        	'name'   => 'nombres',
+	        	'value'  => '$data->nombresUnidos' ,
 	        ),
 	        array(            
-	            'name'  => 'apellidos',
-	            'value' => '$data->apellidosUnidos' ,
+	        	'name'   => 'apellidos',
+	        	'value'  => '$data->apellidosUnidos' ,
 	        ),
 	        array(            
-	            'name'  => 'correo',
-	            'value' => '$data->mail' ,
+	        	'name'   => 'correo',
+	        	'value'  => '$data->mail' ,
 	        ),
 	        array(            
-	            'name'  => 'genero',
-	            'filter'=> array(0 => 'Femenino', 1 => 'Masculino'),
-	            'value' => '$data->generoformateado' ,
+	        	'name'   => 'genero',
+	        	'filter' => array(0 => 'Femenino', 1 => 'Masculino'),
+	        	'value'  => '$data->generoformateado' ,
 	        ),
 	        // array(            
 	        //     'name'  => 'ocupacion',
 	        //     'value' => '$data->ocupacionformateado' ,
 	        // ),
 	        array(            
-	            'name'  => 'pais',
-	            'value' => '$data->paisformateado' ,
+	        	'name'   => 'pais',
+	        	'value'  => '$data->paisformateado' ,
 	        ),
 	        array(
 	        	'header' => 'Quitar',
-	        	'value' => 'CHtml::link("<i class=\"fa fa-times fa-lg\"></i>", null ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar"))',
-	        	'type' => 'raw'
+	        	'value'  => 'CHtml::link("<i class=\"fa fa-times\"></i>", null ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar"))',
+	        	'type'   => 'raw'
 	        ),
+
 	        // array(          
 	        //     'name'  => 'estadoCivil',
 	        //     'filter'=> CHtml::listData(EstadoCivil::model()->findAll(),'id_estado_civil','descripcion'),
@@ -47,15 +48,16 @@
 	        //     'value' => '$data->estadocivilformateado' ,
 	        // ),
 	    ),
-		'summaryText' => 'Mostrando {start} - {end} de {count} resultados',
-		'emptyText' => 'No se encontraron registros.',
-		'pager'       => array(
-			'header'         => '',
-			'firstPageLabel' => 'Primera &lt;&lt;',
-			'prevPageLabel'  => '&lt;',
-			'nextPageLabel'  => '&gt;',
-			'lastPageLabel'  => 'Última &gt;&gt;',
-			'htmlOptions'    => array('class'=>'pagination')
+		'summaryText'   => 'Mostrando {start} - {end} de {count} resultados',
+		'emptyText'     => 'No se encontraron registros.',
+		'pager'         => array(
+			'header'               => '',
+			'firstPageLabel'       => 'Primera &lt;&lt;',
+			'prevPageLabel'        => '&lt;',
+			'nextPageLabel'        => '&gt;',
+			'lastPageLabel'        => 'Última &gt;&gt;',
+			'selectedPageCssClass' => 'active',
+			'htmlOptions'          => array('class' => 'pagination')
 		),
-		'pagerCssClass' => 'pagerClass',
+		'pagerCssClass' => 'paginacion',
 )); ?>

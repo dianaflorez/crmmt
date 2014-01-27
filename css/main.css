@@ -13,11 +13,15 @@ body {
 	margin-bottom: 2em;
 }
 
-.modal-dialog
-{
+.modal-dialog {
   	width: 80%;
 }
 
+.paginacion{
+	text-align: center; 
+	vertical-align: middle;
+
+}
 /*.container {
 	-webkit-transition: all 1s ease-in-out;
   	-moz-transition: all 1s ease-in-out;
