@@ -31,15 +31,7 @@
 	$(document).on('ready', iniciar());
 
 	function iniciar(){
-		//$('#registrosUsuarios .activacion').on('click', activarUsuario);
-		//$('.activacion').on('click', activarUsuario);
 		$(document).on('click', '.activacion', clicUsuario);
-		// $('#Usuario_pais').on('change', consultarDepartamentos);
-		// $('#activarEdad').on('click', habilitarFechas);
-		// $('#agregarSeleccion').on('click', usuariosSeleccionados);
-
-		// $('#Usuario_departamento').prop('disabled', false);
-		// $('#departamentos').hide();
 	}
 
 
@@ -67,16 +59,7 @@
 		});
 		 
 		peticion.done(function( msg ) {
-			//console.log('exito '+msg);
-			//fila.addClass('success');
 			fila.slideUp('slow');
-			//var checkbox = fila.find("input:first");//.prop("disabled", true);
-			//checkbox.prop("disabled", true);
-			//checkbox.prop("checked", false);
-			//fila.children("input").prop("disabled", true);
-			//$("input.group1")
-			//$('#btn_'+id_usupo).hide();
-			//$('#chk_'+id_usupo).hide();
 		});
 		 
 		peticion.fail(function( jqXHR, textStatus ) {

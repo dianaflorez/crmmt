@@ -419,6 +419,14 @@ class PublicoObjetivoController extends Controller
 		));
 	}
 
+	// public function actionChat()
+	// {
+	// 	$usuario = Usuweb::model()->findByPk(Yii::app()->user->getState('usuid'));
+	// 	$this->render('chat', array(
+	// 		'usuario'=>$usuario
+	// 	));
+	// }
+
 	/**
 	 * Manages all models.
 	 */

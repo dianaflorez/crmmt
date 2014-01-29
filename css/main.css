@@ -8,6 +8,14 @@ body {
 	min-height: 720px;
 }*/
 
+.resumen_chat{
+
+ /*overflow: scroll;*/
+ overflow-y: scroll !important;
+max-height: 200px;
+/*height: 101%;*/
+}
+
 .navegacion {
 	margin-top: 1em;
 	margin-bottom: 2em;

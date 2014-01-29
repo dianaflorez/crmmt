@@ -2,7 +2,10 @@
 	/* @var $this FormularioController */
 	/* @var $model Formulario */
 	/* @var $form CActiveForm */
-
+	
+	$baseUrl = Yii::app()->baseUrl; 
+	$cs = Yii::app()->getClientScript();
+	$cs->registerCssFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.css');
 	$cs->registerScriptFile($baseUrl.'/lib/jquery-te/jquery-te-1.4.0.min.js');
 ?>
 
