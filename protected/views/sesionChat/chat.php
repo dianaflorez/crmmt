@@ -42,19 +42,33 @@
  23:125
 ["-JETxZf6x2zd_njJy3dx", "yeeeep"] 23:126
 -->
-<div id="firechat-wrapper"></div>
+
+
+<div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-8 col-md-4">
+    <div class="cabecera"><p>Chat<i id="desplegar" class="fa fa-plus-square white pull-right"></i></p></div>
+
+    <div id="firechat-wrapper" ></div>
+</div>
 <script type='text/javascript'>
-    var sesion            = <?php echo  CJSON::encode($model).';'; ?>
+    var sesion = <?php echo  CJSON::encode($model).';'; ?>
+
+    $('#desplegar').on('click', desplegar);
+
+    function desplegar(e){
+        console.log('ops');
+        $('#firechat-wrapper').slideToggle('slow');
+        $(e.target).toggleClass('fa-plus-square');
+        $(e.target).toggleClass('fa-minus-square');
+    }
 
     function guardarMensaje(username, mensaje){
         var peticion = $.ajax({
                 url: "<?php echo Yii::app()->createUrl('sesionchat/guardarMensaje'); ?>",
                 type: 'POST',
                 data: { 
-                  id: sesion.id,
-                  nombre_usuario: username,
-                  mensaje: mensaje,
-                  //fecha: 
+                    id: sesion.id,
+                    nombre_usuario: username,
+                    mensaje: mensaje
                 },
                 dataType: 'html'
         });
@@ -102,9 +116,14 @@
                 var autenticacion_simple = new FirebaseSimpleLogin(conexion_firebase, 
                         function(err, usuario) {
                             if (usuario) {
-                              chat_ui.setUser(usuario.id, sesion.nombreusuario);
-                              setTimeout(function() {
-                                    chat_ui._chat.enterRoom(sala_id);
+                                setTimeout(function() {
+                                    chat_ui.setUser(usuario.id, sesion.nombreusuario);
+                                    setTimeout(function() {
+                                        chat_ui._chat.enterRoom(sala_id);
+                                        chat_ui._chat.resumeSession();
+                                    }, 1000);  
+
+                                    
                                     sesion.id_user = usuario.id;
                                     sesion.id_room = sala_id;
                                     
@@ -127,7 +146,7 @@
                                         //console.log('fallo '+textStatus);
                                     });
                                       
-                              }, 1000);
+                              }, 2000);
                             } 
                             else {
                                 autenticacion_simple.login('anonymous');    

@@ -40,8 +40,10 @@
  -->
 
 <div id="firechat-wrapper"></div>
+<button id="limpiarFirebase" class="btn btn-primary">Terminar</button>
 <script type='text/javascript'>
-    var sesion            = <?php echo  CJSON::encode($model).';'; ?>
+    var sesion = <?php echo  CJSON::encode($model).';'; ?>
+    var url_firebase = 'https://chatejemplo.firebaseio.com';
 
     function guardarMensaje(username, mensaje){
         var peticion = $.ajax({
@@ -76,7 +78,7 @@
     })(Firechat.prototype.sendMessage);
 
     
-    var conexion_firebase = new Firebase('https://chatejemplo.firebaseio.com');
+    var conexion_firebase = new Firebase(url_firebase);
     var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById("firechat-wrapper"));
     
     var autenticacion_simple = new FirebaseSimpleLogin(conexion_firebase, 
@@ -99,5 +101,31 @@
         }
     );
 
-    
+
+    function removerDatos(e){
+        console.log('clic');
+        if(sesion.id_room){
+            var conexion_firebase = new Firebase(url_firebase);
+            var firebase          = new Firechat(conexion_firebase);
+            firebase.getUsersByRoom(sesion.id_room, null, 
+                function(resultados){
+                    var usu_firebase       = new Firebase(url_firebase + '/users/' + sesion.id_user);
+                    var mensaje_firebase   = new Firebase(url_firebase + '/room-messages/' + sesion.id_room);
+                    var room_meta_firebase = new Firebase(url_firebase + '/room-metadata/' + sesion.id_room);
+                    var usuarios           = $.map(resultados, function (value, key) { return value; });
+                    usuarios.forEach(function(usuario){
+                        var usu_firebase = new Firebase(url_firebase + '/users/' + usuario.id);
+                        usu_firebase.remove();
+                    });
+                    
+                    mensaje_firebase.remove();
+                    room_meta_firebase.remove();
+                    usu_firebase.remove();
+
+                });    
+        }
+    }
+
+    $('#limpiarFirebase').on('click', removerDatos);
+
   </script>
