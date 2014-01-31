@@ -158,7 +158,13 @@ class SesionChatController extends Controller
 
 		$model=$this->loadModel($id);
 
-		$this->render('chat',array(
+		// $cookie = new CHttpCookie('id_sesion', $id);
+		// $cookie->expire = time()+60*60*24*180; 
+		// Yii::app()->request->cookies['id_sesion'] = $id;
+
+		Yii::app()->request->cookies['id_sesion'] = new CHttpCookie('id_sesion', $id);
+
+		$this->renderPartial('chat',array(
 			'model'=>$model,
 		));
 	}

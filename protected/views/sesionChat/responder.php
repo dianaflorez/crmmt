@@ -4,8 +4,8 @@
 <script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
 <!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
 <!-- Download from https://github.com/firebase/Firechat -->
-<link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.min.css" />
-<script src="/crmmt/lib/firechat/firechat-default.min.js"></script>
+<link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
+<script src="/crmmt/lib/firechat/firechat-default.js"></script>
 <style>
     #firechat-wrapper {
       height: 475px;
@@ -39,7 +39,7 @@
     4. Update the room id for auto-entry with a public room you have created
  -->
 
-<div id="firechat-wrapper"></div>
+<div id="firechat-responder"></div>
 <button id="limpiarFirebase" class="btn btn-primary">Terminar</button>
 <script type='text/javascript'>
     var sesion = <?php echo  CJSON::encode($model).';'; ?>
@@ -79,11 +79,12 @@
 
     
     var conexion_firebase = new Firebase(url_firebase);
-    var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById("firechat-wrapper"));
+    var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById("firechat-responder"));
     
     var autenticacion_simple = new FirebaseSimpleLogin(conexion_firebase, 
         function(err, usuario) {
             if (usuario) {
+                //chat_ui._chat.userIsModerator();
                 chat_ui.setUser(usuario.id, "<?php echo $nombre; ?>");
                 setTimeout(function() {
                     chat_ui._chat.enterRoom(sesion.id_room);

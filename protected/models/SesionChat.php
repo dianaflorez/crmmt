@@ -5,7 +5,7 @@
  *
  * The followings are the available columns in table 'sesion_chat':
  * @property integer $id
- * @property string $nombreusuario
+ * @property string $nombre_usuario
  * @property boolean $atendida
  * @property string $id_room
  * @property string $id_user
@@ -28,12 +28,12 @@ class SesionChat extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombreusuario', 'required'),
-			array('nombreusuario, id_room, id_user', 'length', 'max'=>30),
+			array('nombre_usuario', 'required'),
+			array('nombre_usuario, id_room, id_user', 'length', 'max'=>30),
 			array('atendida', 'safe'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombreusuario, atendida, id_room, id_user', 'safe', 'on'=>'search'),
+			array('id, nombre_usuario, atendida, id_room, id_user', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -56,7 +56,7 @@ class SesionChat extends CActiveRecord
 	{
 		return array(
 			'id' => 'ID',
-			'nombreusuario' => 'Nombreusuario',
+			'nombre_usuario' => 'Nombres',
 			'atendida' => 'Atendida',
 			'id_room' => 'Id Room',
 			'id_user' => 'Id User',
@@ -82,7 +82,7 @@ class SesionChat extends CActiveRecord
 		$criteria=new CDbCriteria;
 
 		$criteria->compare('id',$this->id);
-		$criteria->compare('nombreusuario',$this->nombreusuario,true);
+		$criteria->compare('nombre_usuario',$this->nombre_usuario,true);
 		$criteria->compare('atendida',$this->atendida);
 		$criteria->compare('id_room',$this->id_room,true);
 		$criteria->compare('id_user',$this->id_user,true);

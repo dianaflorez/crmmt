@@ -62,6 +62,7 @@ max-height: 200px;
 
 }
 
-#firechat-wrapper {
+#firechat-contenedor {
     display:none;
+    height: 360px;
 }
