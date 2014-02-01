@@ -20,14 +20,18 @@
   <script src="/crmmt/lib/firechat/firechat-default.js"></script> 
 
 <!-- <h1>Create SesionChat</h1> -->
-
+<?php $id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : ''; ?>
 
 <div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-8 col-md-4">
     <div class="cabecera">
         <p>Chat<i id="desplegar" class="fa fa-plus-square white pull-right"></i></p>
     </div>
-    <div id="firechat-contenedor">
-    	<?php $id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : ''; ?>
+    <?php if($id_sesion): ?>   
+        <div class="pull-right" style="padding: 0.2em 0 0.2em 0;">
+        <?php echo CHtml::link("<i class=\"fa fa-times fa-lg fa-fw\"></i>", Yii::app()->createUrl('sesionchat/salir')); //,array("class"=>"btn btn-default activacion", "id"=>"btn_", "data-toggle"=>"tooltip", "title"=>"Activar")); ?>
+        </div>
+    <?php endif; ?>
+    <div id="firechat-contenedor">   	
 		<?php if(!$id_sesion): ?>
     		<?php $this->renderPartial('_form', array('model'=>$model)); ?>
     	<?php else: ?>

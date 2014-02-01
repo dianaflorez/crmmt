@@ -25,6 +25,8 @@
   </style>
 
 
+<!-- Yii::app()->createUrl('sesionchat/salir') -->
+<!-- <i class=\"fa fa-times\"></i> -->
 <!-- <div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-8 col-md-4">
     <div class="cabecera">
         <p>Chat<i id="desplegar" class="fa fa-plus-square white pull-right"></i></p>
@@ -77,11 +79,10 @@
         };
     })(Firechat.prototype.sendMessage);
 
-    //(function(){
+    (function(){
         var conexion_firebase = new Firebase('https://chatejemplo.firebaseio.com');
-            var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById('firechat-contenedor'));
-            
-
+        var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById('firechat-contenedor'));
+        
         chat_ui._chat.on('message-add', 
             function(sala_id, msg){
                 //console.log(msg);
@@ -90,7 +91,6 @@
                 }      
             }
         );
-
 
 
         // Primera vez que ingresa. No ha habido recargas a la página.
@@ -109,7 +109,7 @@
                                             chat_ui._chat.enterRoom(sala_id);
                                         }, 500);  
 
-                                         if(!sesion.id_room){
+                                        if(!sesion.id_room){
                                             sesion.id_user = usuario.id;
                                             sesion.id_room = sala_id;
                                         }
@@ -146,15 +146,11 @@
                     function(err, usuario) {
                         if (usuario) {
                             setTimeout(function() {
-                                chat_ui.setUser(usuario.id, sesion.nombre_usuario, 
-                                    function(res){ 
-                                        console.log(res);
-                                        chat_ui._chat.enterRoom(sesion.id_room);
-                                });       
+                                chat_ui.setUser(sesion.id_user, sesion.nombre_usuario);    
                                 setTimeout(function() {
-                                    
+                                    chat_ui._chat.enterRoom(sesion.id_room);
                                     $('#firechat-messages'+sesion.id_room).scrollTop($('#firechat-messages'+sesion.id_room)[0].scrollHeight);
-                              }, 2000);  
+                              }, 500);  
                             
                             }, 500);
                         } else {
@@ -163,6 +159,6 @@
                 });
        } 
 
-   // })();
+    })();
     
 </script>

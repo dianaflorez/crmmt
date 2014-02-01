@@ -86,18 +86,30 @@ class SesionChatController extends Controller
 		$model=new SesionChat;
 
 		// Uncomment the following line if AJAX validation is needed
-		// $this->performAjaxValidation($model);
+		$this->performAjaxValidation($model);
 
 		if(isset($_POST['SesionChat']))
 		{
+			$id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : '';
+			if(!$id_sesion)
+				$model->id = null;
 			$model->attributes=$_POST['SesionChat'];
 			if($model->save())
 				$this->redirect(array('chat','id'=>$model->id));
 		}
 
-		$this->render('create',array(
-			'model'=>$model,
-		));
+
+		if(isset($_POST['peticion']) && $_POST['peticion']==='sesion-chat-form')
+		{
+			$this->renderPartial('_form',array(
+				'model'=>$model,
+			));	
+		}
+		else{	
+			$this->render('create',array(
+				'model'=>$model,
+			));
+		}
 	}
 
 	/**
@@ -158,11 +170,12 @@ class SesionChatController extends Controller
 
 		$model=$this->loadModel($id);
 
-		// $cookie = new CHttpCookie('id_sesion', $id);
-		// $cookie->expire = time()+60*60*24*180; 
-		// Yii::app()->request->cookies['id_sesion'] = $id;
+		$cookie = new CHttpCookie('id_sesion', $id);
+		$cookie->expire = time()+60*30; 
+		$cookie->httpOnly = true;
+		Yii::app()->request->cookies['id_sesion'] = $cookie;
 
-		Yii::app()->request->cookies['id_sesion'] = new CHttpCookie('id_sesion', $id);
+		//Yii::app()->request->cookies['id_sesion'] = new CHttpCookie('id_sesion', $id);
 
 		$this->renderPartial('chat',array(
 			'model'=>$model,

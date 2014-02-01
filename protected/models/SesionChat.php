@@ -28,12 +28,14 @@ class SesionChat extends CActiveRecord
 		// NOTE: you should only define rules for those attributes that
 		// will receive user inputs.
 		return array(
-			array('nombre_usuario', 'required'),
+			array('nombre_usuario', 'required', 'message' => 'Ingrese un nombre por favor.'),
+			array('correo', 'required', 'message' => 'Ingrese un correo por favor.'),
 			array('nombre_usuario, id_room, id_user', 'length', 'max'=>30),
-			array('atendida', 'safe'),
+			array('atendida, terminada', 'safe'),
+			array('correo', 'email', 'message' => 'Revise que su dirección sea correcta.'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre_usuario, atendida, id_room, id_user', 'safe', 'on'=>'search'),
+			array('id, nombre_usuario, atendida, id_room, id_user, terminada, correo', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -60,6 +62,9 @@ class SesionChat extends CActiveRecord
 			'atendida' => 'Atendida',
 			'id_room' => 'Id Room',
 			'id_user' => 'Id User',
+			'terminada' => 'Terminada',
+			'correo' => 'Correo',
+		
 		);
 	}
 
@@ -86,6 +91,8 @@ class SesionChat extends CActiveRecord
 		$criteria->compare('atendida',$this->atendida);
 		$criteria->compare('id_room',$this->id_room,true);
 		$criteria->compare('id_user',$this->id_user,true);
+		$criteria->compare('terminada',$this->terminada);
+		$criteria->compare('correo',$this->correo,true);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
