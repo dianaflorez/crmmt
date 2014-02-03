@@ -6,7 +6,7 @@
  * The followings are the available columns in table 'sesion_chat':
  * @property integer $id
  * @property string $nombre_usuario
- * @property boolean $atendida
+ * @property boolean $contestada
  * @property string $id_room
  * @property string $id_user
  */
@@ -30,12 +30,13 @@ class SesionChat extends CActiveRecord
 		return array(
 			array('nombre_usuario', 'required', 'message' => 'Ingrese un nombre por favor.'),
 			array('correo', 'required', 'message' => 'Ingrese un correo por favor.'),
+			array('usuario_atendio', 'numerical', 'integerOnly'=>true),
 			array('nombre_usuario, id_room, id_user', 'length', 'max'=>30),
-			array('atendida, terminada', 'safe'),
+			array('contestada, terminada', 'safe'),
 			array('correo', 'email', 'message' => 'Revise que su dirección sea correcta.'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre_usuario, atendida, id_room, id_user, terminada, correo', 'safe', 'on'=>'search'),
+			array('id, nombre_usuario, contestada, id_room, id_user, terminada, correo, usuario_atendio', 'safe', 'on'=>'search'),
 		);
 	}
 
@@ -48,6 +49,7 @@ class SesionChat extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'mensajes' => array(self::HAS_MANY, 'MensajeChat', 'id_sesion'),
+			'usuarioAtendio' => array(self::BELONGS_TO, 'General', 'usuario_atendio'),
 		);
 	}
 
@@ -59,12 +61,12 @@ class SesionChat extends CActiveRecord
 		return array(
 			'id' => 'ID',
 			'nombre_usuario' => 'Nombres',
-			'atendida' => 'Atendida',
+			'contestada' => 'Atendida',
 			'id_room' => 'Id Room',
 			'id_user' => 'Id User',
 			'terminada' => 'Terminada',
 			'correo' => 'Correo',
-		
+			'usuario_atendio' => 'Usuario Atendio'
 		);
 	}
 
@@ -88,11 +90,12 @@ class SesionChat extends CActiveRecord
 
 		$criteria->compare('id',$this->id);
 		$criteria->compare('nombre_usuario',$this->nombre_usuario,true);
-		$criteria->compare('atendida',$this->atendida);
+		$criteria->compare('contestada',$this->contestada);
 		$criteria->compare('id_room',$this->id_room,true);
 		$criteria->compare('id_user',$this->id_user,true);
 		$criteria->compare('terminada',$this->terminada);
 		$criteria->compare('correo',$this->correo,true);
+		$criteria->compare('usuario_atendio',$this->usuario_atendio);
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,

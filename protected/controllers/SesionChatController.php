@@ -36,7 +36,7 @@ class SesionChatController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete', 'responder'),
+				'actions'=>array('admin','delete', 'responder', 'terminarsesion'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 			),
 			array('deny',  // deny all users
@@ -171,7 +171,7 @@ class SesionChatController extends Controller
 		$model=$this->loadModel($id);
 
 		$cookie = new CHttpCookie('id_sesion', $id);
-		$cookie->expire = time()+60*30; 
+		$cookie->expire = time() + 60 * 30; 
 		$cookie->httpOnly = true;
 		Yii::app()->request->cookies['id_sesion'] = $cookie;
 
@@ -184,13 +184,27 @@ class SesionChatController extends Controller
 
 	public function actionResponder($id)
 	{
-		$model=$this->loadModel($id);
+		$model = $this->loadModel($id);
+		if($model->terminada)
+			$this->redirect(array('admin'));
 		$atiende = General::model()->findByPk(Yii::app()->user->getState('usuid'));
 
-		$this->render('responder',array(
-			'model'=>$model,
-			'nombre'=> $atiende->nombre1
-		));
+		$model->contestada = true;
+		$model->usuario_atendio = $atiende->id;
+
+		if($model->save())
+		{
+			$this->render('responder',array(
+				'model'=>$model,
+				'nombre'=> ucfirst(strtolower($atiende->nombre1))
+			));
+		}
+		else
+		{
+			$this->redirect(array('admin'));
+		}
+		
+		
 	}
 
 
@@ -201,7 +215,7 @@ class SesionChatController extends Controller
 		{
 			$id = (int) $_POST['id'];	
 			$model=$this->loadModel($id);
-			if(!$model->atendida)
+			if(!$model->terminada)
 			{
 				$mensaje = new MensajeChat;
 				$mensaje->id_sesion = $model->id;
@@ -231,6 +245,20 @@ class SesionChatController extends Controller
 				throw new CHttpException(500,'No se pudo asignar la sala.');
 
 		}	
+	}
+
+	public function actionTerminarSesion($id)
+	{
+		// if(isset($_POST['id']))
+		// {
+			//$id = (int) $_POST['id'];	
+			$model = $this->loadModel($id);
+			$model->terminada = true;
+			if(!$model->save())
+			{
+				throw new CHttpException(500, 'Error.');
+			}
+		// }		
 	}
 
 	/**

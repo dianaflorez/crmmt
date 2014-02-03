@@ -5,7 +5,7 @@
 		'ajaxUrl'       => $ajaxUrl,
 		'itemsCssClass' => 'table table-condensed table-hover',
 		'htmlOptions'   => array('class' => 'table-responsive'),
-		'rowHtmlOptionsExpression' => 'array("id" => $data->id, "class" => $data->presentepo('.$id_po.') ? "success" : "")',
+		'rowHtmlOptionsExpression' => 'array("id" => $data->id, "class" => $data->presentepo('.$id_po.') ? "info" : "")',
 		'columns'       => array(
 			array(
 				'id'             => 'usuarios',

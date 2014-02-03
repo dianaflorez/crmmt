@@ -18,9 +18,9 @@
 
 
 <div class="row">
-	<div class="container">
+	<!-- <div class="container"> -->
 	<?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Crear encuesta', Yii::app()->createUrl('formulario/create'), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
-	</div>
+	<!-- </div> -->
 </div>
 
 <div class="page-header">

@@ -267,8 +267,8 @@ class General extends CActiveRecord
 		$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
 		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
 		
-		if($this->correo)
-		{
+		// if($this->correo)
+		// {
 			if($criteria->with)
 			{
 				if(!array_key_exists('emails', $criteria->with))
@@ -284,7 +284,7 @@ class General extends CActiveRecord
 			}
 			$criteria->addSearchCondition('LOWER(correos.direccion)', strtolower($this->correo), true);
 			$criteria->together = true;
-		}
+		// }
 
 
 		if($this->genero != null || $this->estadoCivil || ($fechaInicio && $fechaFin))
@@ -371,8 +371,8 @@ class General extends CActiveRecord
                     'desc' => 'apellido1 DESC',
             ),
 			'correo'    => array(
-                    'asc'  => 'direccion ASC',
-                    'desc' => 'direccion DESC',
+                    'asc'  => 'correos.direccion ASC',
+                    'desc' => 'correos.direccion DESC',
             ),
 		);
 

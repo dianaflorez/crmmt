@@ -398,7 +398,7 @@ class CampanaController extends Controller
 			'model'      => $model,
 			'usuariosId' => $usuariosId,
 			'ajaxUrl'     => $this->createUrl('/campana/usuarioscampana', array('id_cam' => $id_cam))
-		));
+		), false, true);
 	}
 
 

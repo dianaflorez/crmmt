@@ -68,14 +68,24 @@ or <b>=</b>) at the beginning of each of your search values to specify how the c
 	        'nombre_usuario',
 	        //'atendida',        
 	        array(            
-	        	'name'   => 'atendida',
+	        	'name'   => 'contestada',
 	        	'filter' => array(0 => 'No', 1 => 'Sí'),
-	        	'value'  => '$data->atendida ? "Sí" : "No"',
+	        	'value'  => '$data->contestada ? "Sí" : "No"',
+	        ),
+			array(            
+	        	'name'   => 'terminada',
+	        	'filter' => array(0 => 'No', 1 => 'Sí'),
+	        	'value'  => '$data->terminada ? "Sí" : "No"',
 	        ),
 
 	        array(
-	        	'header' => 'Atender',
-	        	'value'  => 'CHtml::link("<i class=\"fa fa-phone\"></i>", Yii::app()->createUrl("sesionchat/responder/", array("id"=>$data->id)) ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar"))',
+	        	'header' => 'Responder',
+	        	'value'  => '$data->terminada ? "" : CHtml::link("<i class=\"fa fa-phone\"></i>", Yii::app()->createUrl("sesionchat/responder/", array("id"=>$data->id)) ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Responder"))',
+	        	'type'   => 'raw'
+	        ),
+	        array(
+	        	'header' => 'Terminar',
+	        	'value'  => '$data->terminada ? "" : CHtml::link("<i class=\"fa fa-phone\"></i>", Yii::app()->createUrl("sesionchat/terminarsesion/", array("id"=>$data->id)) ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Finalizar"))',
 	        	'type'   => 'raw'
 	        ),
 

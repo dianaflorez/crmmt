@@ -32,6 +32,7 @@
     <?php }else { ?>
 
     
+    <!-- <div class="navbar navbar-inverse navbar-fixed-top hidden-lg hidden-md hidden-sm" role="navigation"> -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
@@ -97,20 +98,20 @@
     
     <?php   } ?>   
 
-    <div class="row">
-        <div class="menu-lateral col-sm-3 col-md-2">
+  <!--   <div class="row">
+        <div class="menu-lateral col-sm-3 col-md-2 hidden-xs">
            <div id='cssmenu'>
             <ul>
-               <li class='active'><a href='index.html'><span>Home</span></a></li>
-               <li><a href='#'><span>Products</span></a></li>
-               <li><a href='#'><span>About</span></a></li>
-               <li class='last'><a href='#'><span>Contact</span></a></li>
+               <li class='active'><a href="#"><span>Clientes</span></a></li>
+               <li><?php echo CHtml::link('<span>Campaña</span>', Yii::app()->createUrl('campana/')); ?></li>
+               <li><?php echo CHtml::link('<span>Público Objetivo</span>', Yii::app()->createUrl('publicoobjetivo/')); ?></li>
+               <li class='last'><?php echo CHtml::link('<span>Encuesta</span>', Yii::app()->createUrl('formulario/index')); ?></li>
             </ul>
             </div>
-        </div>
-        <div id="principal" class="col-sm-9 col-md-10">
+        </div> -->
+        <div id="principal" class="container">
             <?php echo $content; ?>
         </div>    
-    </div>
+<!--     </div> -->
 
 <?php $this->endContent(); ?>

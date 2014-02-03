@@ -69,16 +69,28 @@ max-height: 200px;
     padding-top: 2em;
 }
 
-/*.menu-lateral {
+.menu-lateral {
     background-color: #FF44f5;
-    
-}*/
+    float: left;
+    position: fixed;
+    height: 720px;
+    width: 12em;
+    bottom: 0;
+    /*right: auto;*/
+    margin: 0px;
+    left: 0px
+    top: 0;
+    display: none;
+}
 
-#principal {
-    max-height: 500px;
+/*#principal {
+    height: 100%;
     overflow-y: scroll !important;
     position: relative;
-}
+    padding: 0em 3em;
+    top: 0;
+    right:0 ;
+}*/
 
 
 #cssmenu {

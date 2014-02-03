@@ -4,9 +4,9 @@
 
 ?>
 <div class="row">
-	<div class="container">
+	<!-- <div class="container"> -->
 	<?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Crear campaña', Yii::app()->createUrl('campana/create'), array('class'=>"btn btn-primary pull-right",'role'=>"button"));  ?>
-	</div>
+	<!-- </div> -->
 </div>
 
 <div class="page-header">
@@ -24,7 +24,7 @@
 		</thead>
 		<tbody>
 			<?php foreach ($campanas as $campana): ?>
-			<tr class="<?php if($campana->estado) echo 'success'; ?>">
+			<tr class="<?php if($campana->estado) echo 'info'; ?>">
 				<td  style="text-align: center; vertical-align: middle;">
 					<?php  if($campana->estado): ?>
 						<i class="fa fa-check-circle fa-lg"></i>
@@ -36,13 +36,13 @@
 				<td><?php  echo ucfirst($campana->tipoCampana->nombre); ?></td>
 				<td>
 					<p class="text-center">
-					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-border fa-lg"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
+					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-lg"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
 						<?php if($campana->tipoCampana->nombre === 'email'): 
-								echo CHtml::link('<i class="fa fa-copy fa-border fa-lg"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); ?>
+								echo CHtml::link('<i class="fa fa-copy fa-lg"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); ?>
 						<?php	if(!$campana->estado): 
-							  		echo CHtml::link('<i class="fa fa-rocket fa-border fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+							  		echo CHtml::link('<i class="fa fa-rocket fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
 								else:
-									echo CHtml::link('<i class="fa fa-eye fa-border fa-lg"></i>', Yii::app()->createUrl('campana/usuarioscampana/', array('id_cam'=>$campana->id_cam)), array('data-idcam'=>$campana->id_cam, 'class'=>'usuarios_campana', 'data-toggle'=>'tooltip', 'title'=>"Enviar"));  
+									echo CHtml::link('<i class="fa fa-eye fa-lg"></i>', Yii::app()->createUrl('campana/usuarioscampana/', array('id_cam'=>$campana->id_cam)), array('data-idcam'=>$campana->id_cam, 'class'=>'usuarios_campana', 'data-toggle'=>'tooltip', 'title'=>"Usuarios"));  
 
 							  	endif;
 							endif;	?>
@@ -97,7 +97,7 @@
 		});
 		 
 		peticion.done(function( msg ) {
-			$('#grilla_usuarios').empty();
+			//$('#grilla_usuarios').empty();
 			$('#grilla_usuarios').html(msg);
 			$('#usuariosModal').modal();
 		});

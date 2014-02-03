@@ -102,33 +102,35 @@ return array(
 				
 			),
 		),
+
+		// Manejo de carga de scripts. Se cargan en cada página automaticamente.
 		'clientScript' => array(
 	        'scriptMap' => array(
-	            //'jquery.js'=>false,  //disable default implementation of jquery
-	           // 'jquery.min.js'=>false,  //desable any others default implementation
-	            'core.css'=>false, //disable
-	            'styles.css'=>false,  //disable
-	            'pager.css'=>false,   //disable
-	            'default.css'=>false,  //disable
+	           	//'jquery.js'      => false,  // desactivar jquery por defecto de Yii.
+	           	// 'jquery.min.js' => false,  //  desactivar jquery por defecto de Yii.
+	           	'core.css'         => false, // desactivar
+	           	'styles.css'       => false,  // desactivar
+	           	'pager.css'        => false,   // desactivar
+	           	'default.css'      => false,  // desactivar
 	        ),
 	        'packages'=>array(
-	            'jquery'=>array(                             // set the new jquery
-	                'baseUrl'=>'lib/jquery/',
-	                'js'=>array('jquery.js'),
+	            'jquery'=>array(                             // JQuery personal.
+	                'baseUrl' => 'lib/jquery/',
+	                'js'      => array('jquery.js'),
 	            ),
-	            'bootstrap'=>array(                       //set others js libraries
-	                'baseUrl'=>'lib/bootstrap/',
-	                'js'=>array('js/bootstrap.min.js'),
-	                'css'=>array(                        // and css
+	            'bootstrap'=>array(                       // Otras librerías. Bootstrap 3.
+	                'baseUrl' => 'lib/bootstrap/',
+	                'js'      => array('js/bootstrap.min.js'),
+	                'css'     => array(                        // CSS de Bootstrap.
 	                   	//'css/bootstrap.min.flat.css',
 	                   	'css/bootstrap.css',
 	                    //'css/custom.css',
 	                    //'css/bootstrap-responsive.min.css',
 	                ),
-	                'depends'=>array('jquery'),         // cause load jquery before load this.
+	                'depends'=>array('jquery'),         // haace que se cargue JQuery antes que Bootstrap ya que es una dependencia.
 	            ),
 	        ),
-    ),
+    	),
 
 	),
 

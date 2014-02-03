@@ -7,7 +7,7 @@
 <link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
 <script src="/crmmt/lib/firechat/firechat-default.js"></script>
 <style>
-    #firechat-wrapper {
+   /* #firechat-wrapper {
       height: 475px;
       max-width: 325px;
       padding: 10px;
@@ -21,7 +21,7 @@
       -webkit-box-shadow: 0 5px 25px #666;
       -moz-box-shadow: 0 5px 25px #666;
       box-shadow: 0 5px 25px #666;
-    }
+    }*/
 </style>
 
 
@@ -38,9 +38,23 @@
     3. Update the URL below to reference your Firebase
     4. Update the room id for auto-entry with a public room you have created
  -->
+ <div class="col-md-6">
+    <div class="row">
+        <strong>Usuario del chat: </strong><div class="pull-right"><?php echo $model->nombre_usuario ?></div>
+    </div>
+    <div class="row">
+        <strong>Correo: </strong><div class="pull-right"><?php echo $model->correo ?></div>
+    </div>
+    <div class="row" style="margin-top: 1em">
+            <div id="firechat-responder"></div>
+    </div>
+    <div class="row">
+        <!-- <div class="col-md-4"> -->
+            <?php echo CHtml::button('Terminar sesión', array('id' => 'limpiar-firebase','class' => 'btn btn-primary btn-block')); ?>
+        <!-- </div> -->
+    </div>
+</div>
 
-<div id="firechat-responder"></div>
-<button id="limpiarFirebase" class="btn btn-primary">Terminar</button>
 <script type='text/javascript'>
     var sesion = <?php echo  CJSON::encode($model).';'; ?>
     var url_firebase = 'https://chatejemplo.firebaseio.com';
@@ -67,6 +81,27 @@
         });
     }
 
+    function terminarSesion(){
+        if(sesion.id_room){
+            var peticion = $.ajax({
+                    url: "<?php echo Yii::app()->createUrl('sesionchat/terminarsesion'); ?>",
+                    type: 'GET',
+                    data: { 
+                      id: sesion.id,
+                    },
+                    dataType: 'html'
+            });
+                   
+            peticion.done(function( msg ) {
+                //console.log('exito '+msg);
+                window.location.replace('<?php echo Yii::app()->createUrl("sesionchat/admin"); ?>');
+            });
+               
+            peticion.fail(function( jqXHR, textStatus ) {
+                //console.log('fallo '+textStatus);
+            });
+        }
+    }
 
     Firechat.prototype.sendMessage = (function(_super) {
         return function() {
@@ -123,10 +158,12 @@
                     room_meta_firebase.remove();
                     usu_firebase.remove();
 
-                });    
+                });
+            terminarSesion();
+    
         }
     }
 
-    $('#limpiarFirebase').on('click', removerDatos);
+    $('#limpiar-firebase').on('click', removerDatos);
 
-  </script>
+</script>
