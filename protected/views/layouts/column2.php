@@ -1,33 +1,33 @@
 <?php /* @var $this Controller */ ?>
 <?php $this->beginContent('//layouts/main'); ?>
 
- 	<?php if (Yii::app()->user->checkAccess("SuperAdmin")) {  ?>
+    <?php if (Yii::app()->user->checkAccess("SuperAdmin")) {  ?>
        
-        <?php	if(Yii::app()->user->name=="Guest") { ?>
-            <a href="index.php?r=site/login">Login</a>	
-        <?php	}else{ ?>
-            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a>	
-    <?php	} ?>
+        <?php   if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>  
+        <?php   }else{ ?>
+            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a> 
+    <?php   } ?>
 
 
 <!--Menu Admin -->    
     <?php }elseif (Yii::app()->user->checkAccess("Admin")) {  ?>
 
        
-        <?php	if(Yii::app()->user->name=="Guest") { ?>
-            <a href="index.php?r=site/login">Login</a>	
-        <?php	}else{ ?>
-            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a>	
-        <?php	} ?>
+        <?php   if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>  
+        <?php   }else{ ?>
+            <a href="index.php?r=site/logout">Logout <?php echo Yii::app()->user->name;  ?></a> 
+        <?php   } ?>
 
     <?php }elseif (Yii::app()->user->checkAccess("usuario")) {  ?>
     
        
-        <?php	if(Yii::app()->user->name=="Guest") { ?>
-            <a href="index.php?r=site/login">Login</a>	
-        <?php	}else{ ?>
-            <a style="text-decoration:underline" href="index.php?r=site/logout">Logout </a>	
-        <?php	} ?>
+        <?php   if(Yii::app()->user->name=="Guest") { ?>
+            <a href="index.php?r=site/login">Login</a>  
+        <?php   }else{ ?>
+            <a style="text-decoration:underline" href="index.php?r=site/logout">Logout </a> 
+        <?php   } ?>
         
     <?php }else { ?>
 
@@ -70,7 +70,7 @@
                 <li><?php echo CHtml::link('Nueva encuesta', Yii::app()->createUrl('formulario/create')); ?></li>
                 <li><?php echo CHtml::link('Ver todas', Yii::app()->createUrl('formulario/index')); ?></li>
                 <li><a href="#">Enviar Email Encuesta</a></li>
-            	  <li class="divider"></li>
+                  <li class="divider"></li>
                 <li><a href="#">Reportes Encuestas</a></li>
               </ul>
             </li>
@@ -95,12 +95,22 @@
     </div>
         
     
-    <?php	} ?>   
+    <?php   } ?>   
 
-
-  <div id="principal" class="container">
-  	<?php echo $content; ?>
-  </div>	
-
+    <div class="row">
+        <div class="menu-lateral col-sm-3 col-md-2">
+           <div id='cssmenu'>
+            <ul>
+               <li class='active'><a href='index.html'><span>Home</span></a></li>
+               <li><a href='#'><span>Products</span></a></li>
+               <li><a href='#'><span>About</span></a></li>
+               <li class='last'><a href='#'><span>Contact</span></a></li>
+            </ul>
+            </div>
+        </div>
+        <div id="principal" class="col-sm-9 col-md-10">
+            <?php echo $content; ?>
+        </div>    
+    </div>
 
 <?php $this->endContent(); ?>

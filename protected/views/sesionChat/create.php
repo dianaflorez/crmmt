@@ -22,7 +22,7 @@
 <!-- <h1>Create SesionChat</h1> -->
 <?php $id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : ''; ?>
 
-<div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-8 col-md-4">
+<div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-6 col-md-4">
     <div class="cabecera">
         <p>Chat<i id="desplegar" class="fa fa-plus-square white pull-right"></i></p>
     </div>

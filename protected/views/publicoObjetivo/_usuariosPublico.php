@@ -5,7 +5,7 @@
 		'ajaxUrl'       => $ajaxUrl,
 		'itemsCssClass' => 'table table-condensed table-hover',
 		'htmlOptions'   => array('class' => 'table-responsive'),
-		'rowHtmlOptionsExpression' => '["id" => $data->id, "data-idpo"=>"'.$id_po.'"]',
+		'rowHtmlOptionsExpression' => 'array("id" => $data->id, "data-idpo"=>"'.$id_po.'")',
 		'columns'       => array(
 	        'id_char',         
 	        array(            
