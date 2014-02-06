@@ -34,7 +34,7 @@
     
     <!-- <div class="navbar navbar-inverse navbar-fixed-top hidden-lg hidden-md hidden-sm" role="navigation"> -->
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -84,8 +84,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li>
               <?php if(Yii::app()->user->name=="Guest"): ?>
-             
-                <?php echo CHtml::link('<i class="fa fa-sign-in"></i> Iniciar sesión', Yii::app()->createUrl('site/login')); ?>
+                  <?php echo CHtml::link('<i class="fa fa-sign-in"></i> Iniciar sesión', Yii::app()->createUrl('site/login')); ?>
               <?php else: ?>
               <?php echo CHtml::link(Yii::app()->user->name.' <i class="fa fa-sign-out"></i>', Yii::app()->createUrl('site/logout')); ?>
               <?php endif; ?>

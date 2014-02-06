@@ -130,14 +130,11 @@
 
 	<div class="row">
 		<div class="col-md-6">
-			<div class="form-group <?php if($form->error($model,'urlimage') != ''){ echo 'has-error'; } ?>">
+			<div class="form-group <?php if($form->error($model,'urlimage') != '' || $form->error($model,'image')){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model, 'image'); ?>
 				<?php echo $form->fileField($model, 'image', array('class'=>'form-control')); ?>
-				<?php if($form->error($model,'urlimage') != ''): ?>
-						<p class="text-danger">					
-							<?php echo $model->getError('urlimage'); ?>		
-						</p>
-				<?php endif; ?>
+				<?php echo $form->error($model,'image', array('class' => 'text-danger')); ?>
+				<?php echo $form->error($model,'urlimage', array('class' => 'text-danger')); ?>
 			</div>
 		</div>
 	</div>
@@ -147,7 +144,7 @@
 			<div class="form-group">
 				<?php echo $form->labelEx($model,'contenido'); ?>
 				<?php echo $form->textArea($model,'contenido', array('class'=>'form-control','rows'=>6, 'cols'=>50, 'placeholder'=>'Mensaje de la campaña')); ?>
-				<?php echo $form->error($model,'contenido'); ?>
+				<?php echo $form->error($model,'contenido', array('class' => 'text-danger')); ?>
 			</div>
 		</div>
 	</div>

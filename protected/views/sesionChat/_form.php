@@ -6,7 +6,7 @@
 
 
 <div id="contenedor-form-ingreso">	
-<div class="col-xs-offset-3 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
+<div class="col-xs-offset-1 col-xs-10 col-sm-offset-2 col-sm-8 col-md-offset-2 col-md-8">
     <?php $form=$this->beginWidget('CActiveForm', array(
       'id'=>'sesion-chat-form',
       'htmlOptions' => array('enctype'=>'multipart/form-data', 'role'=>'form'),

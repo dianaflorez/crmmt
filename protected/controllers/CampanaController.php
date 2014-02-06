@@ -84,7 +84,7 @@ class CampanaController extends Controller
 			 
 			// Almacenar la imagen.
 			$model->image = CUploadedFile::getInstance($model, 'image');
-			if($model->image != null)
+			if($model->image != null && $model->validate())
 			{
 				$nombre = rand(1, 10000).$model->image;
 				$directorio = Yii::app()->basePath.'/../images/'.$nombre;

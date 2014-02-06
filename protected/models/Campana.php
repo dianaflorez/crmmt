@@ -54,7 +54,7 @@ class Campana extends CActiveRecord
 			array('almacen', 'length', 'max'=>3),
 			array('contenido, fecini, fecfin, fecenvio, estado, personalizada, feccre, fecmod', 'safe'),
 			// Atributo para subir la imagen al servidor.
-			//array('image', 'file', 'types'=>'jpg, gif, png'),
+			array('image', 'file', 'types'=>'jpg, gif, png', 'allowEmpty' => true, 'wrongType' => 'El archivo no es de un formato soportado'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
 			array('id_cam, id_tc, asunto, contenido, urlimage, fecini, fecfin, precio, fecenvio, estado, personalizada, almacen, feccre, fecmod, id_usu', 'safe', 'on'=>'search'),

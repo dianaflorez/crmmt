@@ -46,34 +46,57 @@
 
 	<div class="row">
 		<div class="col-md-6">
-			<div class="form-group">
-				<?php echo $form->labelEx($model,'asunto'); ?>
-				<div class="well well-sm">
-					<?php echo $model->asunto; ?>
-				</div>
+			<div class="panel panel-info">
+			  	<div class="panel-heading">
+			  		<div class="row">
+			  		<p>
+				  		<div class="col-md-6">
+							<span class="hidden-xs hidden-sm"><strong>Vista previa</strong></span> 
+						</div>
+						<div class="col-md-6">
+							<button class="btn btn-primary form-control" id="mostrar_preview">
+								<i class="fa fa-arrow-down"></i> Mostrar
+							</button>
+						</div>
+					</p>
+					</div>
+			  	</div>
+			  	<div id="preview_campana" class="panel-body" style='display:none;'>
+			  		<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<?php echo $form->labelEx($model,'asunto'); ?>
+								<div class="well well-sm">
+									<?php echo $model->asunto; ?>
+								</div>
+							</div>
+						</div>
+					</div>
+					
+					<div class="row">
+						<div class="col-md-12">
+							<div class="form-group">
+								<?php echo $form->labelEx($model,'contenido'); ?>
+								<div class="well well-sm">
+									<?php if($model->urlimage): ?>
+									<div class="row">
+										<div class="col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
+										    <div class="thumbnail">
+										      <img src="<?php echo $model->urlimage; ?>" alt="..." class="img-responsive">
+										    </div>
+									  	</div>
+									</div>
+									<?php endif; ?>
+								<?php echo $model->contenido; ?>
+								</div>
+							</div>
+						</div>
+					</div>
+			  	</div>
 			</div>
 		</div>
 	</div>
 	
-	<div class="row">
-		<div class="col-md-6">
-			<div class="form-group">
-				<?php echo $form->labelEx($model,'contenido'); ?>
-				<div class="well well-sm">
-					<?php if($model->urlimage): ?>
-					<div class="row">
-						<div class="col-sm-offset-3 col-sm-6 col-md-offset-3 col-md-6">
-						    <div class="thumbnail">
-						      <img src="<?php echo $model->urlimage; ?>" alt="..." class="img-responsive">
-						    </div>
-					  	</div>
-					</div>
-					<?php endif; ?>
-				<?php echo $model->contenido; ?>
-				</div>
-			</div>
-		</div>
-	</div>
 
 	<div class="row">
 		<div class="col-md-6">
@@ -144,6 +167,7 @@
 	function inicio(){
 		$('#enviarPrueba').on('click', enviarPrueba);
 		$('#correo_prueba').on('click', restablecer);
+		$('#mostrar_preview').on('click', mostrar);
 	}
 
 	function restablecer(e){
@@ -186,6 +210,14 @@
 	function esEmail(email) {
 	  	var regex = /^([a-zA-Z0-9_.+-])+\@(([a-zA-Z0-9-])+\.)+([a-zA-Z0-9]{2,4})+$/;
 	  	return regex.test(email);
+	}
+
+	function mostrar(e){
+		var icono = $(e.target).children(":first");
+		icono.toggleClass('fa-arrow-down');
+		icono.toggleClass('fa-arrow-up');
+		$('#preview_campana').slideToggle();
+		e.preventDefault();
 	}
 	
 </script>
