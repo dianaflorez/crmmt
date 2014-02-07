@@ -126,6 +126,24 @@ class Formulario extends CActiveRecord
 	}
 
 	/**
+	 *	 Devuelve un array con loss IDs de los usuarios que han respondido la encuesta.
+	 **/
+	public function usuariosRespondida()
+	{
+		$criterio       = new CDbCriteria;
+		$criterio->join = 'JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
+		
+		//$criterio->distinct = true;
+		$criterio->addCondition('id_for=:id_for');
+		$criterio->params += array(':id_for' => $this->id_for);
+
+		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+		
+		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+	}
+
+
+	/**
 	 * Returns the static model of the specified AR class.
 	 * Please note that you should have this exact method in all your CActiveRecord descendants!
 	 * @param string $className active record class name.

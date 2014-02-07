@@ -210,7 +210,7 @@ class UtilMailchimp extends CApplicationComponent
             {
                 $correo = $usuario->general->emails[$cantidadEmails-1]->direccion; // Último correo agregado si el ID es serial.
                 if($validador->validateValue($correo))
-                    $merge_vars = array(
+                {    $merge_vars = array(
                         'FNAME' => $usuario->general->nombre1,
                         'LNAME' => $usuario->general->apellido1,
                         'LOGIN' => $usuario->general->usuarioWeb->login

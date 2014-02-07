@@ -152,7 +152,7 @@ class CampanaController extends Controller
 
 						if($model->save())
 						{
-							//$this->redirect(array('index'));
+							$this->redirect(array('index'));
 						}
 						else
 						{
@@ -394,11 +394,11 @@ class CampanaController extends Controller
 		$usuarios = CampanaUsuario::model()->findAll($criterio);
 		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usuc; }, $usuarios));
 		
-		$this->render('/formulario/_usuariosEncuesta',array(
+		$this->renderPartial('/formulario/_usuariosEncuesta',array(
 			'model'      => $model,
 			'usuariosId' => $usuariosId,
 			'ajaxUrl'     => $this->createUrl('/campana/usuarioscampana', array('id_cam' => $id_cam))
-		), false, true);
+		), false, false);
 	}
 
 

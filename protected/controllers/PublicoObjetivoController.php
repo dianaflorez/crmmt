@@ -77,7 +77,7 @@ class PublicoObjetivoController extends Controller
 			$model->attributes = $_POST['PublicoObjetivo'];
 			$model->id_usu     = Yii::app()->user->getState('usuid');
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_po));
+				$this->redirect(array('index'));
 		}
 
 		$publicos = PublicoObjetivo::model()->findAll();
@@ -105,7 +105,7 @@ class PublicoObjetivoController extends Controller
 		{
 			$model->attributes=$_POST['PublicoObjetivo'];
 			if($model->save())
-				$this->redirect(array('view','id'=>$model->id_po));
+				$this->redirect(array('index'));
 		}
 
 		$this->render('update',array(

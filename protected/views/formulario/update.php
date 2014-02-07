@@ -16,6 +16,8 @@
 // );
 ?>
 
-<h1>Update Formulario <?php echo $model->id_for; ?></h1>
+<div class="page-header">
+	<h2>Editar <small>Encuesta</small></h2>
+</div>
 
 <?php $this->renderPartial('_form', array('model'=>$model)); ?>

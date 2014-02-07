@@ -36,7 +36,7 @@ class FormularioController extends Controller
 				'users'      => array('@'),
 			),
 			array('allow',
-				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta'),
+				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta', 'desactivar'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
 				// or
 				// 'roles'   => array('Admin'),
@@ -95,6 +95,9 @@ class FormularioController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
+		if(count($model->usuariosRespondida()))
+			$this->redirect(array('index'));
+
 		if(isset($_POST['Formulario']))
 		{
 			$model->attributes = $_POST['Formulario'];
@@ -135,8 +138,8 @@ class FormularioController extends Controller
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
-		// if($this->encuestaRespondida($id, $id_usur))
-		// 	$this->redirect(array('exito'));
+		if($this->encuestaRespondida($id, $usuario->id_usuario))
+			$this->redirect(array('exito'));
 		
 		if(isset($_POST['Pregunta']))
 		{
@@ -233,6 +236,14 @@ class FormularioController extends Controller
 		{
 			throw new Exception('No se pudo guardar la respuesta.');
 		}
+	}
+
+	public function actionDesactivar($id)
+	{
+		$model = $this->loadModel($id);
+		$model->estado = false;
+		if($model->save())
+			$this->redirect(array('index'));
 	}
 
 	public function actionResultado($id)
@@ -400,7 +411,7 @@ class FormularioController extends Controller
 							$url                    = Yii::app()->getBaseUrl(true).'/formulario/encuesta/'.$id.'?username=*|LOGIN|*';
 							$campana->personalizada = true;
 							$campana->contenido     = $campana->contenido.' Puedes responder '.CHtml::link('aquí', $url);
-							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);	
+							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);
 						}
 						else
 						{
