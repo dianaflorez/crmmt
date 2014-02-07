@@ -128,7 +128,7 @@ class Formulario extends CActiveRecord
 	/**
 	 *	 Devuelve un array con loss IDs de los usuarios que han respondido la encuesta.
 	 **/
-	public function usuariosRespondida()
+	public function usuariosRespondidaFormulario()
 	{
 		$criterio       = new CDbCriteria;
 		$criterio->join = 'JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
@@ -139,7 +139,14 @@ class Formulario extends CActiveRecord
 
 		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
 		
-		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		if (!function_exists('devolverIdRespuesta'))
+		{
+			function devolverIdRespuesta($obj)
+			{
+				return $obj->id_usur;
+			};
+		}
+		return array_unique(array_map('devolverIdRespuesta', $respuestasEncuesta));
 	}
 
 

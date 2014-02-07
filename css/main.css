@@ -3,15 +3,11 @@ body {
     padding-bottom: 30px;
 }
 
-
-
-
 .resumen_chat{
-
- /*overflow: scroll;*/
- overflow-y: scroll !important;
-max-height: 200px;
-/*height: 101%;*/
+    /*overflow: scroll;*/
+    overflow-y: scroll !important;
+    max-height: 200px;
+    /*height: 101%;*/
 }
 
 .navegacion {

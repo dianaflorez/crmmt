@@ -27,18 +27,18 @@ class PublicoObjetivoController extends Controller
 	public function accessRules()
 	{
 		return array(
-			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('view'),
+			array('deny',  // allow all users to perform 'index' and 'view' actions
+				'actions'=>array('*'),
 				'users'=>array('*'),
 			),
-			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('create','update'),
+			array('deny', // allow authenticated user to perform 'create' and 'update' actions
+				'actions'=>array('*'),
 				'users'=>array('@'),
 			),
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos', 'admin'),
-				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
+				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos', 'admin', 'view', 'create', 'update'),
+				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete'),
@@ -123,7 +123,12 @@ class PublicoObjetivoController extends Controller
 		if(isset($_GET['General']))
 			$usuarios->attributes = $_GET['General'];
 		
-		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usupo; }, $model->usuarios));
+		function devolverId($obj)
+		{
+			return $obj->id_usupo;
+		};
+
+		$usuariosId = array_unique(array_map('devolverId', $model->usuarios));
 		//$usuariosId = null;
 		//var_dump($usuariosId);
 		$this->render('usuarios', array(
@@ -133,25 +138,7 @@ class PublicoObjetivoController extends Controller
 		));
 	}
 
-	/**
-	 * Consulta los usuarios que contestaron determinada encuesta.
-	 */
-	// public function actionUsuariosGrilla($id)
-	// {
-	// 	$model = new General('search');
-	// 	$model->unsetAttributes();  // clear any default values
-	// 	if(isset($_GET['General']))
-	// 		$model->attributes = $_GET['General'];
-		
-	// 	$usuariosId = array_unique(array_map(function ($obj) { return $model->usuarios; }, $usuarios));
-
-
-	// 	$this->render('_usuariosEncuesta',array(
-	// 		'model'      => $model,
-	// 		'usuariosId' => $usuariosId,
-	// 		'ajaxUrl'     => $this->createUrl('/formulario/usuariosencuesta', array('id_for' => $id_for))
-	// 	));
-	// }
+	
 
 	public function actionAgregarUsuariosBackup($id)
 	{

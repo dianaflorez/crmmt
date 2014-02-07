@@ -28,16 +28,16 @@ class FormularioController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'    => array('index'),
-				'users'      => array('?'),
+				'actions'    => array('encuesta', 'exito'),
+				'users'      => array('*'),
 			),
-			array('allow',// allow authenticated user to perform 'view' actions
-				'actions'    => array('view', 'exito'),
+			array('deny',// allow authenticated user to perform 'view' actions
+				'actions'    => array('*'),
 				'users'      => array('@'),
 			),
 			array('allow',
-				'actions'    => array('update','admin','delete','view','index', 'create', 'encuesta', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta', 'desactivar'),
-				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
+				'actions'    => array('update','admin','delete','view','index', 'create', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta', 'desactivar'),
+				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 				// or
 				// 'roles'   => array('Admin'),
 			),
@@ -95,7 +95,7 @@ class FormularioController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(count($model->usuariosRespondida()))
+		if(count($model->usuariosRespondidaFormulario()))
 			$this->redirect(array('index'));
 
 		if(isset($_POST['Formulario']))
@@ -313,7 +313,8 @@ class FormularioController extends Controller
 				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? (100 * $resultados['cantidad']) / $numeroRespuestas : null;
 				array_push($respuestas, $resultados);
 			}
-			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas) : $respuestas;
+			function devolverTxt($obj) { return $obj->txtres; };
+			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? array_map('devolverTxt', $pregunta->formularioPregunta->respuestas) : $respuestas;
 			array_push($objeto, $temporal);
 			
 		}
@@ -325,8 +326,13 @@ class FormularioController extends Controller
 		$criterio->params += array(':id_for' => $id);
 
 		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+
+		function devolverId($obj)
+		{
+			return $obj->id_usur;
+		};
 		
-		$usuariosRespondieronId = array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		$usuariosRespondieronId = array_unique(array_map('devolverId', $respuestasEncuesta));
 		echo CJSON::encode($usuariosRespondieronId);
 		Yii::app()->end();
 	}
@@ -366,7 +372,12 @@ class FormularioController extends Controller
 
 		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
 		
-		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		function devolverId($obj)
+		{
+			return $obj->id_usur;
+		};
+
+		return array_unique(array_map('devolverId', $respuestasEncuesta));
 	}
 
 

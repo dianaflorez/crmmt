@@ -37,7 +37,7 @@ class SesionChatController extends Controller
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
 				'actions'=>array('admin','delete', 'responder', 'terminarsesion'),
-				'expression' => 'Yii::app()->user->checkAccess("CRMAdmin")',
+				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 			),
 			array('deny',  // deny all users
 				'users'=>array('*'),

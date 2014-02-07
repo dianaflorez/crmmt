@@ -29,17 +29,17 @@ class CampanaController extends Controller
 	public function accessRules()
 	{
     	return array(
-			array('allow',
-				'actions'=>array('index'),
-				'users'=>array('?'),
+			array('deny',
+				'actions'=>array('*'),
+				'users'=>array('*'),
 			),
-			array('allow',// allow authenticated user to perform 'view' actions
-				'actions'=>array('view'),
+			array('deny',// allow authenticated user to perform 'view' actions
+				'actions'=>array('*'),
 				'users'=>array('@'),
 			),
 			array('allow',
-				'actions'=>array('update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar', 'enviarPrueba', 'duplicar', 'usuarioscampana'),
-				'expression'=>'Yii::app()->user->checkAccess("CRMAdmin")',
+				'actions'=>array('view', 'index', 'update', 'admin', 'delete', 'view', 'index', 'create', 'veamos', 'obtenerCorreos', 'enviar', 'enviarPrueba', 'duplicar', 'usuarioscampana'),
+				'expression'=>'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 				// or
 				// 'roles'=>array('Admin'), 
 			),
@@ -392,7 +392,14 @@ class CampanaController extends Controller
 		$criterio->params += array(':id_cam' => $id_cam);
 		
 		$usuarios = CampanaUsuario::model()->findAll($criterio);
-		$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usuc; }, $usuarios));
+		//$usuariosId = array_unique(array_map(function ($obj) { return $obj->id_usuc; }, $usuarios));
+
+		function devolverId($obj)
+		{
+			return $obj->id_usuc;
+		};
+
+		$usuariosId = array_unique(array_map('devolverId', $usuarios));
 		
 		$this->renderPartial('/formulario/_usuariosEncuesta',array(
 			'model'      => $model,
@@ -400,6 +407,12 @@ class CampanaController extends Controller
 			'ajaxUrl'     => $this->createUrl('/campana/usuarioscampana', array('id_cam' => $id_cam))
 		), false, false);
 	}
+
+
+	 protected function usua($obj)
+		{
+			return $obj->id_usuc;
+		}
 
 
 	/**
@@ -415,9 +428,16 @@ class CampanaController extends Controller
 		$criterio->params += array(':id_for' => $id_for);
 
 		$respuestasEncuesta = Respuesta::model()->findAll($criterio);
+
+		function devolverId($obj)
+		{
+			return $obj->id_usur;
+		};
 		
-		return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		//return array_unique(array_map(function ($obj) { return $obj->id_usur; }, $respuestasEncuesta));
+		return array_unique(array_map('devolverId', $respuestasEncuesta));
 	}
+
 
 	/**
 	 * Returns the data model based on the primary key given in the GET variable.
