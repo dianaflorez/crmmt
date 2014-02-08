@@ -52,7 +52,7 @@
 			</div>
 			<div class="col-md-4">
 				<div class="form-group">
-					<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('publicoobjetivo/'), array('class'=>'btn btn-default btn-block','role'=>'button'));  ?>
+					<?php echo CHtml::link('Cancelar', Yii::app()->createUrl('publicoObjetivo/'), array('class'=>'btn btn-default btn-block','role'=>'button'));  ?>
 				</div>
 			</div>
 		</div>

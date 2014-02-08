@@ -25,7 +25,7 @@
 		</thead>
 		<tbody>
 			<?php foreach ($formularios as $formulario): ?>
-			<tr class="<?php if($formulario->estado) echo 'info'; ?>">
+			<tr class="<?php //if(!$formulario->estado) echo 'info'; ?>">
 				<td><?php  echo $formulario->titulo; ?></td>
 				<td><?php $numUsuRespondieron = count($formulario->usuariosRespondidaFormulario()); ?> 
 					<?php echo $numUsuRespondieron; ?></td>

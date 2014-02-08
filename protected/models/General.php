@@ -181,9 +181,16 @@ class General extends CActiveRecord
 		return $this->maximoCaracter($apellidos);
 	}
 
+	protected function devuelveUltimoMail()
+	{
+		if($this->emails && count($this->emails) > 0)
+			return strtolower($this->emails[count($this->emails) - 1]->direccion);
+		return $this->mensaje;
+	}
+
 	public function getMail()
 	{
-		return $this->emails ? $this->maximoCaracter(strtolower($this->emails[count($this->emails) - 1]->direccion)) : $this->mensaje;
+		return $this->emails ? $this->maximoCaracter($this->devuelveUltimoMail()) : $this->mensaje;
 	}
 
 	public function getGeneroFormateado()
@@ -245,7 +252,7 @@ class General extends CActiveRecord
 	public function getDisponible()
 	{
 		$validador = new CEmailValidator;
-		return $validador->validateValue($this->getMail()) && $this->usuarioWeb && $this->usuarioWeb->login  ? true : false;
+		return $validador->validateValue($this->devuelveUltimoMail()) && $this->usuarioWeb && $this->usuarioWeb->login  ? true : false;
 	}
 
 	protected function maximoCaracter($cadena)
@@ -264,9 +271,13 @@ class General extends CActiveRecord
 			$criteria->addInCondition('t.id',$usuariosId);
 		}
 		$criteria->addSearchCondition('id_char',$this->id_char,true);
-		$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
-		$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
-		
+		// PostgreSQL > 9
+		//$criteria->addSearchCondition('CONCAT(LOWER(nombre1), \' \', LOWER(nombre2))', strtolower($this->nombres), true);
+		//$criteria->addSearchCondition('CONCAT(LOWER(apellido1), \' \', LOWER(apellido2))', strtolower($this->apellidos), true);
+		$criteria->addSearchCondition('LOWER(nombre1) || LOWER(nombre2)', strtolower($this->nombres), true);
+		$criteria->addSearchCondition('LOWER(apellido1) || LOWER(apellido2)', strtolower($this->apellidos), true);
+
+
 		// if($this->correo)
 		// {
 			if($criteria->with)

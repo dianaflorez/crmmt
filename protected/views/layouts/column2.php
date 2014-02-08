@@ -37,7 +37,7 @@
       			   <li><a href="#">Enviar Email Campania</a></li>
                 <li class="divider"></li>
                 <li><?php echo CHtml::link('Lista Público Objetivo', Yii::app()->createUrl('publicoObjetivo/')); ?></li>
-                <li><?php echo CHtml::link('Nuevo Público Objetivo', Yii::app()->createUrl('publicoOjetivo/')); ?></li>
+                <li><?php echo CHtml::link('Nuevo Público Objetivo', Yii::app()->createUrl('publicoObjetivo/create')); ?></li>
                 <li class="divider"></li>
                 <li><?php echo CHtml::link('Lista Encuesta', Yii::app()->createUrl('formulario/index')); ?></li>
                 <li><?php echo CHtml::link('Nueva Encuesta', Yii::app()->createUrl('formulario/create')); ?></li>
@@ -135,8 +135,8 @@
                 <li><a href="<?php echo Yii::app()->createUrl('campana/create'); ?>">Nueva Campaña</a></li>                
       			   <li><a href="#">Enviar Email Campania</a></li>
                 <li class="divider"></li>
-                <li><?php echo CHtml::link('Lista Público Objetivo', Yii::app()->createUrl('publicoobjetivo/')); ?></li>
-                <li><?php echo CHtml::link('Nuevo Público Objetivo', Yii::app()->createUrl('publicoobjetivo/')); ?></li>
+                <li><?php echo CHtml::link('Lista Público Objetivo', Yii::app()->createUrl('publicoObjetivo/')); ?></li>
+                <li><?php echo CHtml::link('Nuevo Público Objetivo', Yii::app()->createUrl('publicoObjetivo/')); ?></li>
                 <li class="divider"></li>
                 <li><?php echo CHtml::link('Lista Encuesta', Yii::app()->createUrl('formulario/index')); ?></li>
                 <li><?php echo CHtml::link('Nueva Encuesta', Yii::app()->createUrl('formulario/create')); ?></li>
@@ -231,7 +231,7 @@
                 <li><a href="#">Enviar Email Campania</a></li>
               </ul>
             </li>
-            <li><?php echo CHtml::link('Público Objetivo', Yii::app()->createUrl('publicoobjetivo/')); ?></li>
+            <li><?php echo CHtml::link('Público Objetivo', Yii::app()->createUrl('publicoObjetivo/')); ?></li>
             <li class="dropdown">
               <a href="formulario" class="dropdown-toggle" data-toggle="dropdown">Encuesta <b class="caret"></b></a>
               <ul class="dropdown-menu">

@@ -50,8 +50,8 @@
 </div>
 
 <ul class="nav nav-tabs nav-justified navegacion">
-  	<li><?php echo CHtml::link('<i class="fa fa-users"></i> Ver usuarios', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?></li>
-  	<li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Agregar usuarios', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
+  	<li><?php echo CHtml::link('<i class="fa fa-users"></i> Ver usuarios', Yii::app()->createUrl('publicoObjetivo/usuarios/', array('id'=>$model->id_po))); ?></li>
+  	<li class="active"><?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Agregar usuarios', Yii::app()->createUrl('publicoObjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
 </ul>
 
 <?php $form=$this->beginWidget('CActiveForm', array(
@@ -235,7 +235,7 @@
       </div>
 	</div>
 	<div class="container">
-	<?php $this->renderPartial('_usuariosAgregar', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
+	<?php $this->renderPartial('_usuariosAgregar', array('proveedorDatos'=>$proveedorDatos, 'model'=>General::model(), 'ajaxUrl'=>$this->createUrl('/publicoObjetivo/admin', array('id_po'=>$model->id_po)), 'id_po'=>$model->id_po)); ?>
 	</div>
 </div>
 
@@ -271,7 +271,7 @@
 		//console.log('Cambio '+e.target.value);
 
 		var peticion = $.ajax({
-			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/departamentos'); ?>",
+			url: "<?php echo Yii::app()->createUrl('publicoObjetivo/departamentos'); ?>",
 			type: "GET",
 			data: 
 			{ 
@@ -346,7 +346,7 @@
 		// var id_usupo = fila.attr('id');
 		
 		var peticion = $.ajax({
-			url: "<?php echo Yii::app()->createUrl('publicoobjetivo/agregar'); ?>",
+			url: "<?php echo Yii::app()->createUrl('publicoObjetivo/agregar'); ?>",
 			type: "POST",
 			data: 
 			{ 

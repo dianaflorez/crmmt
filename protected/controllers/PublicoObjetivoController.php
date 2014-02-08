@@ -432,7 +432,7 @@ class PublicoObjetivoController extends Controller
 		$this->render('_usuariosAgregar',array(
 			'model'=>$model,
 			'proveedorDatos'=>$model->filtradoPorUsuarios(),
-			'ajaxUrl'=>$this->createUrl('/publicoobjetivo/admin', array('id_po'=>$id_po)),
+			'ajaxUrl'=>$this->createUrl('/publicoObjetivo/admin', array('id_po'=>$id_po)),
 			'id_po'=>$id_po
 		));
 	}

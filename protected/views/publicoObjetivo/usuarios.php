@@ -16,13 +16,13 @@
 </div>
 
 <ul class="nav nav-tabs nav-justified navegacion">
-  <li class="active"><?php echo CHtml::link('<i class="fa fa-users"></i>  Ver usuarios', Yii::app()->createUrl('publicoobjetivo/usuarios/', array('id'=>$model->id_po))); ?>
+  <li class="active"><?php echo CHtml::link('<i class="fa fa-users"></i>  Ver usuarios', Yii::app()->createUrl('publicoObjetivo/usuarios/', array('id'=>$model->id_po))); ?>
 </li>
-  <li><?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Agregar usuarios', Yii::app()->createUrl('publicoobjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
+  <li><?php echo CHtml::link('<i class="fa fa-plus-circle"></i> Agregar usuarios', Yii::app()->createUrl('publicoObjetivo/agregarUsuarios/', array('id'=>$model->id_po))); ?></li>
 </ul>
 <div class="row">
 	<div class="container">
-		<?php $this->renderPartial('_usuariosPublico', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'ajaxUrl'=>$this->createUrl('/publicoobjetivo/usuarios', array('id' => $model->id_po)), 'id_po'=>$model->id_po)); ?>
+		<?php $this->renderPartial('_usuariosPublico', array('model'=>$usuarios,'usuariosId'=>$usuariosId, 'ajaxUrl'=>$this->createUrl('/publicoObjetivo/usuarios', array('id' => $model->id_po)), 'id_po'=>$model->id_po)); ?>
 	</div>
 </div>
 
@@ -48,7 +48,7 @@
 		console.log('inicio activar'+id_po+' '+id_usupo);
 	
 		var peticion = $.ajax({
-			url: "<?php echo Yii::app()->createUrl('usuariopublicoobjetivo/delete'); ?>",
+			url: "<?php echo Yii::app()->createUrl('usuariopublicoObjetivo/delete'); ?>",
 			type: "POST",
 			data: 
 			{ 
