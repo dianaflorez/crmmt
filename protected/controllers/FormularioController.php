@@ -138,7 +138,7 @@ class FormularioController extends Controller
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
-		if($this->encuestaRespondida($id, $usuario->id_usuario))
+		if($this->encuestaRespondida($id, $usuario->id_usuario) || !$model->estado)
 			$this->redirect(array('exito'));
 		
 		if(isset($_POST['Pregunta']))
@@ -221,7 +221,7 @@ class FormularioController extends Controller
 
 
 	protected function guardarRespuesta($id_fp, $id_op, $id_usur, $texto = null)
-	{
+	{		
 		$respuesta          = new Respuesta;
 		$respuesta->id_fp   = $id_fp;
 		$respuesta->id_usur = $id_usur;

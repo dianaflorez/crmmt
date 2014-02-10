@@ -99,7 +99,7 @@
 	</div>
 
 	<div class="row">
-		<div id="personalizada no-email" class="col-md-4">
+		<div id="personalizada" class="col-md-4">
 			<div class="form-group <?php if($form->error($model,'personalizada') != ''){ echo 'has-error'; } ?>">
 				<?php echo $form->labelEx($model,'personalizada'); ?>
 				<?php echo  $form->checkBox($model,'personalizada'); ?>
@@ -187,6 +187,7 @@
 			$('.no-email').each(function(){
 				$(this).slideUp();
 			});
+			$('#personalizada').slideDown();
 			
 		}else{
 			$('.no-email').each(function(){

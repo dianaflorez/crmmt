@@ -19,8 +19,9 @@
 		<thead>
 			<th class="col-md-1">Enviada</th>
 			<th>Asunto</th>
-			<th>Tipo</th>
-			<th></th>
+			<!-- <th>Fecha de envio</th> -->
+			<th class="col-md-1">Tipo</th>
+			<th class="col-md-1"></th>
 		</thead>
 		<tbody>
 			<?php foreach ($campanas as $campana): ?>
@@ -33,20 +34,28 @@
 					<?php endif; ?>
 				</td>
 				<td><?php  echo $campana->asunto; ?></td>
+				<!-- <td><?php //echo $campana->tipoCampana->nombre === 'email' ? date("Y-m-d g:i a", strtotime($campana->fecenvio)) : 'No aplica'; ?></td> -->
 				<td><?php  echo ucfirst($campana->tipoCampana->nombre); ?></td>
 				<td>
-					<p class="text-center">
-					   	<?php if(!$campana->estado) echo CHtml::link('<i class="fa fa-edit fa-lg"></i>', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-						<?php if($campana->tipoCampana->nombre === 'email'): 
-								echo CHtml::link('<i class="fa fa-copy fa-lg"></i>', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Duplicar")); ?>
-						<?php	if(!$campana->estado): 
-							  		echo CHtml::link('<i class="fa fa-rocket fa-lg"></i>', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Enviar"));  
-								else:
-									echo CHtml::link('<i class="fa fa-eye fa-lg"></i>', Yii::app()->createUrl('campana/usuarioscampana/', array('id_cam'=>$campana->id_cam)), array('data-idcam'=>$campana->id_cam, 'class'=>'usuarios_campana', 'data-toggle'=>'tooltip', 'title'=>"Usuarios"));  
-
-							  	endif;
-							endif;	?>
-					</p>
+					<div class="btn-group">
+						<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+						   <span class="fa fa-caret-down"></span>
+						</a>
+						<ul class="dropdown-menu">
+						  	<?php if(!$campana->estado): ?>
+							    <li><?php echo CHtml::link('<i class="fa fa-edit fa-fw"></i> Editar', Yii::app()->createUrl('campana/update/', array('id'=>$campana->id_cam)));  ?></li>
+							<?php endif; ?>
+							<?php if($campana->tipoCampana->nombre === 'email'):  ?>
+							    <li><?php echo CHtml::link('<i class="fa fa-copy fa-fw"></i> Duplicar', Yii::app()->createUrl('campana/duplicar/', array('id'=>$campana->id_cam)));  ?></li>   
+							    <li class="divider"></li>
+								<?php if(!$campana->estado): ?>	
+									<li><?php echo CHtml::link('<i class="fa fa-rocket fa-lg"></i> Enviar', Yii::app()->createUrl('campana/enviar/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?></li>
+							   	<?php else: ?>
+							    <li><?php echo CHtml::link('<i class="fa fa-users fa-lg"></i> A quienes se envió', Yii::app()->createUrl('campana/usuarioscampana/', array('id_cam'=>$campana->id_cam)), array('data-idcam'=>$campana->id_cam, 'class'=>'usuarios_campana', 'data-toggle'=>'tooltip', 'title'=>"A quienes se envió"));  ?></li>
+							   	<?php endif; ?>
+							<?php endif; ?>
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<?php endforeach; ?>

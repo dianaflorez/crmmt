@@ -146,7 +146,7 @@ class CampanaController extends Controller
 						
 						Yii::app()->utilmailchimp->enviarCampana($model, $correos);
 						$model->estado = true;
-
+						$model->fecenvio = new CDbExpression('CURRENT_TIMESTAMP');
 						//$this->eliminarSegmentoMailChimp($id_segmento);
 						$this->registrarUsuariosCampanaEnviada($id_cam, $id_publico);
 

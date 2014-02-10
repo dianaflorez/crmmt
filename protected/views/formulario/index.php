@@ -20,8 +20,9 @@
 	<table id='publico_objetivo' class="table table-condensed table-hover">
 		<thead>
 			<th>Título</th>
-			<th>Han respondido</th>
-			<th></th>
+			<th class="col-md-1">Han respondido</th>
+			<!-- <th></th> -->
+			<th class="col-md-1"></th>
 		</thead>
 		<tbody>
 			<?php foreach ($formularios as $formulario): ?>
@@ -30,14 +31,25 @@
 				<td><?php $numUsuRespondieron = count($formulario->usuariosRespondidaFormulario()); ?> 
 					<?php echo $numUsuRespondieron; ?></td>
 				<td>
-					<p class="text-center">						
-					   	<?php if($numUsuRespondieron === 0) echo CHtml::link('<i class="fa fa-edit fa-lg"></i>', Yii::app()->createUrl('formulario/update/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?>
-						<?php if($numUsuRespondieron === 0) echo CHtml::link('<i class="fa fa-plus-circle fa-lg"></i>', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Agregar pregunta"));  ?>
-						<?php /*if($numUsuRespondieron === 0)*/ //echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?>
-						<?php if($numUsuRespondieron === 0) echo CHtml::link('<i class="fa fa-rocket fa-lg"></i>', Yii::app()->createUrl('formulario/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?>
-						<?php echo CHtml::link('<i class="fa fa-book fa-lg"></i>', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?>
-						<?php echo CHtml::link('<i class="fa fa-ban fa-lg"></i>', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?>
-					</p>
+					<div class="btn-group">
+						<?php //echo CHtml::link('<i class="fa fa-gear fa-fw"></i>', '', array('class'=>"btn btn-primary dropdown-toggle", 'data-toggle'=>"dropdown")); ?>
+						<!-- <a class="btn btn-primary" href="#"><i class="fa fa-user fa-fw"></i> User</a> -->
+						<a class="btn btn-primary dropdown-toggle" data-toggle="dropdown" href="#">
+						   <span class="fa fa-caret-down"></span>
+						</a>
+						<ul class="dropdown-menu">
+						  	<?php if($numUsuRespondieron === 0): ?>
+							    <li><?php echo CHtml::link('<i class="fa fa-edit fa-fw"></i> Editar', Yii::app()->createUrl('formulario/update/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?></li>
+							    <li><?php echo CHtml::link('<i class="fa fa-plus-circle fa-fw"></i> Agregar pregunta', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Agregar pregunta"));  ?></li>   
+							    <li class="divider"></li>
+								<li><?php echo CHtml::link('<i class="fa fa-rocket fa-fw"></i> Enviar encuesta', Yii::app()->createUrl('formulario/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?></li>
+						    <?php endif; ?>
+						    <li><?php echo CHtml::link('<i class="fa fa-book fa-fw"></i> Reporte de resultados', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?></li>
+						   	<li class="divider"></li>
+						  	<li><?php echo CHtml::link('<i class="fa fa-ban fa-fw"></i> Desactivar encuesta', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?></li>
+						  	<!-- <li><?php //echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?></li> -->
+						</ul>
+					</div>
 				</td>
 			</tr>
 			<?php endforeach; ?>

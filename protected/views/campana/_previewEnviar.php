@@ -115,7 +115,7 @@
 							</div>
 							<div class="col-sm-4 col-md-4">
 								<div class="form-group">
-									<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary form-control', 'id'=> 'enviarPrueba'));  ?>
+									<?php echo CHtml::button('Enviar Prueba', array('class'=>'btn btn-primary form-control', 'id'=> 'enviar_prueba'));  ?>
 								</div>
 							</div>
 						</fieldset>
@@ -143,9 +143,20 @@
 
 	<div class="row">
 		<div class="col-md-6">
+			<div id="alerta_enviar" class="alert form-group" style="display: none;">
+				<p class="text-center">
+					<i id="icono_loader" class="fa fa-spinner fa-spin fa-2x fa-fw "></i>
+					<span id="mensaje">Enviando...</span>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
 			<div class="col-md-8">
 				<div class="form-group">
-					<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-warning btn-block')); ?> 
+					<?php echo CHtml::submitButton('Enviar', array('id'=>'submit_enviar', 'class'=>'btn btn-warning btn-block')); ?> 
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -161,13 +172,14 @@
 </div><!-- form -->
 
 <script type="text/javascript">
-	
+	var bandera = false; // Evita que la alerta se active si aún no ha terminado el proceso completo.(multiples click a la vez)
 	$(document).on('ready', inicio);
 
 	function inicio(){
-		$('#enviarPrueba').on('click', enviarPrueba);
+		$('#enviar_prueba').on('click', enviarPrueba);
 		$('#correo_prueba').on('click', restablecer);
 		$('#mostrar_preview').on('click', mostrar);
+		$('#submit_enviar').on('click', mostrarAlerta);
 	}
 
 	function restablecer(e){
@@ -182,29 +194,84 @@
 		console.log(id_cam);
 		console.log(correo_prueba);
 
-		if(esEmail(correo_prueba)){
-			var peticion = $.ajax({
-				url: "<?php echo Yii::app()->createUrl('campana/enviarPrueba'); ?>",
-				type: "POST",
-				data: 
-				{ 
-					id : id_cam,
-					correoPrueba: correo_prueba,
-				},
-				dataType: 'html'
-			});
-			 
-			peticion.done(function( msg ) {
-				console.log('exito '+msg);
-			});
-			 
-			peticion.fail(function( jqXHR, textStatus ) {
-				console.log('fallo '+textStatus);
-			});
-		}else{
-			$('#correo_prueba').parent().toggleClass('has-error');
+		if(esEmail(correo_prueba)){			
+			if(!bandera){
+				mostrarAlerta();
+				var peticion = $.ajax({
+					url: "<?php echo Yii::app()->createUrl('campana/enviarPrueba'); ?>",
+					type: "POST",
+					data: 
+					{ 
+						id : id_cam,
+						correoPrueba: correo_prueba,
+					},
+					dataType: 'html'
+				});
+				 
+				peticion.done(function( msg ) {
+					console.log('exito '+msg);
+					mostrarResultado(true);
+				});
+				 
+				peticion.fail(function( jqXHR, textStatus ) {
+					console.log('fallo '+textStatus);
+					mostrarResultado(false);
+				});
+			}else{
+				$('#correo_prueba').parent().toggleClass('has-error');
+			}
 		}
-	
+	}
+
+	function mostrarResultado(exito){
+		detenerIcono();
+		if(exito){
+			cambiarIcono('fa-spinner', 'fa-check');
+			$('#alerta_enviar').addClass('alert-success');
+			$('#mensaje').text('¡Enviada!');
+		}else{
+			cambiarIcono('fa-spinner', 'fa-times');
+			$('#alerta_enviar').addClass('alert-danger');
+			$('#mensaje').text('No se pudo enviar. Inténtelo más tarde.');
+		}
+
+		setTimeout(ocultarAlerta, 3000);
+	}
+
+	function mostrarAlerta()
+	{
+		if(!bandera){
+			$('#alerta_enviar').slideDown();
+			bandera = true;
+		}
+	}
+
+	function ocultarAlerta()
+	{
+		var alerta = $('#alerta_enviar');
+		alerta.slideUp(500, function(){
+			var icono = $('#icono_loader');
+			alerta.removeClass('alert-success');
+			alerta.removeClass('alert-danger');
+			icono.removeClass('fa-check');
+			icono.removeClass('fa-times');
+			icono.addClass('fa-spinner');
+			icono.addClass('fa-spin');
+			$('#mensaje').text('Enviando...');
+			bandera = false;
+		});
+
+	}
+
+	function detenerIcono(){
+		var icono = $('#icono_loader');
+		icono.removeClass('fa-spin');
+	}
+
+	function cambiarIcono(quitar, poner){
+		var icono = $('#icono_loader');
+		icono.removeClass(quitar);
+		icono.addClass(poner);
 	}
 
 	function esEmail(email) {

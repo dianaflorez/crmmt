@@ -55,7 +55,7 @@ class Respuesta extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			//'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
-			'idUsur' => array(self::BELONGS_TO, 'General', 'id_usur'),
+			'usuario' => array(self::BELONGS_TO, 'General', 'id_usur'),
 			'idFp' => array(self::BELONGS_TO, 'Crmforpre', 'id_fp'),
 			'opcion' => array(self::BELONGS_TO, 'OpcionPregunta', 'id_op'),
 		);

@@ -92,9 +92,18 @@
 				
 			<?php if($pregunta->tipo->nombre === 'abierta'): ?>
 				<ul class="list-group">
-					<?php $respuestasAbiertas = array_map(function ($obj) { return $obj->txtres; }, $pregunta->formularioPregunta->respuestas); ?> 
-					<?php foreach ($respuestasAbiertas as $texto): ?>
-						<li class="list-group-item"><?php echo $texto; ?></li>
+					<?php 
+						if (!function_exists('devolverTxtRespuesta'))
+						{
+							function devolverTxtRespuesta($obj)
+							{
+								return $obj->txtres;
+							};
+						}
+
+						$respuestasAbiertas = array_map('devolverTxtRespuesta', $pregunta->formularioPregunta->respuestas); ?> 
+					<?php foreach ($pregunta->formularioPregunta->respuestas as $respuesta): ?>
+						<li class="list-group-item"><?php echo $respuesta->txtres ? $respuesta->txtres : 'No respondió'; ?> <div class="pull-right"><?php echo ucfirst(strtolower($respuesta->usuario->nombre1)).' ('.$respuesta->usuario->usuarioWeb->login.')'; ?></div></li>
 					<?php endforeach; ?>
 				</ul>
 			<?php else: ?>
