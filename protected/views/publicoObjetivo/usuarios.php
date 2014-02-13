@@ -48,7 +48,7 @@
 		console.log('inicio activar'+id_po+' '+id_usupo);
 	
 		var peticion = $.ajax({
-			url: "<?php echo Yii::app()->createUrl('usuariopublicoObjetivo/delete'); ?>",
+			url: "<?php echo Yii::app()->createUrl('usuarioPublicoObjetivo/delete'); ?>",
 			type: "POST",
 			data: 
 			{ 

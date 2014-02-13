@@ -19,7 +19,9 @@
 <div class="table-responsive">
 	<table id='publico_objetivo' class="table table-condensed table-hover">
 		<thead>
+			<th class="col-md-1">Activa</th>
 			<th>Título</th>
+			<th class="col-md-1">No. de preguntas</th>
 			<th class="col-md-1">Han respondido</th>
 			<!-- <th></th> -->
 			<th class="col-md-1"></th>
@@ -27,9 +29,18 @@
 		<tbody>
 			<?php foreach ($formularios as $formulario): ?>
 			<tr class="<?php //if(!$formulario->estado) echo 'info'; ?>">
+				<td  style="text-align: center; vertical-align: middle;">
+					<?php  if(!$formulario->estado): ?>
+						<i class="fa fa-ban fa-lg"></i>
+					<?php else: ?>
+						<i class="fa fa-check-circle fa-lg"></i>
+					<?php endif; ?>
+				</td>
 				<td><?php  echo $formulario->titulo; ?></td>
-				<td><?php $numUsuRespondieron = count($formulario->usuariosRespondidaFormulario()); ?> 
-					<?php echo $numUsuRespondieron; ?></td>
+				<?php $numPreguntas = count($formulario->preguntas); ?>
+				<td><?php echo $numPreguntas; ?></td>
+				<?php $numUsuRespondieron = count($formulario->usuariosRespondidaFormulario()); ?> 
+				<td><?php echo $numUsuRespondieron; ?></td>
 				<td>
 					<div class="btn-group">
 						<?php //echo CHtml::link('<i class="fa fa-gear fa-fw"></i>', '', array('class'=>"btn btn-primary dropdown-toggle", 'data-toggle'=>"dropdown")); ?>
@@ -38,15 +49,19 @@
 						   <span class="fa fa-caret-down"></span>
 						</a>
 						<ul class="dropdown-menu">
-						  	<?php if($numUsuRespondieron === 0): ?>
+						  	<?php if($numUsuRespondieron === 0 && $formulario->estado): ?>
 							    <li><?php echo CHtml::link('<i class="fa fa-edit fa-fw"></i> Editar', Yii::app()->createUrl('formulario/update/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Editar"));  ?></li>
 							    <li><?php echo CHtml::link('<i class="fa fa-plus-circle fa-fw"></i> Agregar pregunta', Yii::app()->createUrl('pregunta/create/', array('id_for'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Agregar pregunta"));  ?></li>   
 							    <li class="divider"></li>
-								<li><?php echo CHtml::link('<i class="fa fa-rocket fa-fw"></i> Enviar encuesta', Yii::app()->createUrl('formulario/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?></li>
+							    <?php if($numPreguntas > 0 && $formulario->estado): ?>
+									<li><?php echo CHtml::link('<i class="fa fa-rocket fa-fw"></i> Enviar encuesta', Yii::app()->createUrl('formulario/enviar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Revisar y enviar"));  ?></li>
+						    	<?php endif; ?>	
 						    <?php endif; ?>
 						    <li><?php echo CHtml::link('<i class="fa fa-book fa-fw"></i> Reporte de resultados', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?></li>
-						   	<li class="divider"></li>
-						  	<li><?php echo CHtml::link('<i class="fa fa-ban fa-fw"></i> Desactivar encuesta', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?></li>
+						   	<?php if($formulario->estado): ?>
+							   	<li class="divider"></li>
+							  	<li><?php echo CHtml::link('<i class="fa fa-ban fa-fw"></i> Desactivar encuesta', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?></li>
+						  	<?php endif; ?>
 						  	<!-- <li><?php //echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?></li> -->
 						</ul>
 					</div>

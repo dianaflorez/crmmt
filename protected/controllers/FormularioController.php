@@ -268,7 +268,7 @@ class FormularioController extends Controller
 				$resultados['id_op']      = $opcion->id_op;
 				$resultados['txtop']      = $opcion->txtop;
 				$resultados['cantidad']   = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
-				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' ? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
+				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' && $numeroRespuestas > 0? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
 				array_push($respuestas, $resultados);
 			}
 			
@@ -403,6 +403,10 @@ class FormularioController extends Controller
 		$errorPublicoObjetivo = null;
 		$contenidoOriginal    = null; // Graba el contenido de la campaña sin el vínculo de la encuesta. Si hay una excepción puede ser restaurado para ser mostrado en la forma.
 
+		if(count($model->preguntas) <= 0){
+			throw new CHttpException(300, 'La encuesta no tiene preguntas.');
+		}
+
 		if(isset($_POST['Campana']))
 		{
 			try
@@ -423,6 +427,7 @@ class FormularioController extends Controller
 							$campana->personalizada = true;
 							$campana->contenido     = $campana->contenido.' Puedes responder '.CHtml::link('aquí', $url);
 							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);
+							$this->redirect(array('index'));
 						}
 						else
 						{
