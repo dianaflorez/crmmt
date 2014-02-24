@@ -82,7 +82,7 @@ class Campana extends CActiveRecord
 		// NOTE: you may need to adjust the relation name and the related
 		// class name for the relations automatically generated below.
 		return array(
-			'crmcampanausus' => array(self::HAS_MANY, 'Crmcampanausu', 'id_cam'),
+			'usuarios' => array(self::HAS_MANY, 'CampanaUsuario', 'id_cam'),
 			'idUsu' => array(self::BELONGS_TO, 'General', 'id_usu'),
 			'tipoCampana' => array(self::BELONGS_TO, 'TipoCam', 'id_tc'),
 		);
@@ -160,5 +160,11 @@ class Campana extends CActiveRecord
 	public static function model($className=__CLASS__)
 	{
 		return parent::model($className);
+	}
+
+	public function beforeDelete(){
+	    foreach($this->usuarios as $usuarios)
+	        $usuarios->delete();
+	    return parent::beforeDelete();
 	}
 }

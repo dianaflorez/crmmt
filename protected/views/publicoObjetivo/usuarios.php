@@ -57,7 +57,7 @@
 		});
 		 
 		peticion.done(function( msg ) {
-			fila.slideUp('slow');
+			fila.fadeOut('slow');
 		});
 		 
 		peticion.fail(function( jqXHR, textStatus ) {

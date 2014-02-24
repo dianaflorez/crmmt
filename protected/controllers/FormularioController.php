@@ -28,7 +28,7 @@ class FormularioController extends Controller
 	{
 		return array(
 			array('allow',
-				'actions'    => array('encuesta', 'exito'),
+				'actions'    => array('encuesta'),
 				'users'      => array('*'),
 			),
 			array('deny',// allow authenticated user to perform 'view' actions
@@ -387,16 +387,6 @@ class FormularioController extends Controller
 		return array_unique(array_map('devolverId', $respuestasEncuesta));
 	}
 
-
-	/**
-	 *	 Muestra un mensaje de éxito cuando se diligencia una encuesta(prueba).
-	 **/
-	public function actionExito()
-	{
-		$this->layout = 'column1';
-		$this->render('exito', array());	
-			
-	}
 
 	/**
 	 * 	Genera una vista previa no editable de la encuesta.

@@ -94,16 +94,6 @@
 				<?php $respuestas = $pregunta->formularioPregunta->respuestas; ?>
 				<?php if(count($respuestas) > 0): ?>
 					<ul class="list-group">
-						<?php 
-							// if (!function_exists('devolverTxtRespuesta'))
-							// {
-							// 	function devolverTxtRespuesta($obj)
-							// 	{
-							// 		return $obj->txtres;
-							// 	};
-							// }
-
-							//$respuestasAbiertas = array_map('devolverTxtRespuesta', $pregunta->formularioPregunta->respuestas); ?> 
 						<?php foreach ($respuestas as $respuesta): ?>
 							<li class="list-group-item"><?php echo $respuesta->txtres ? $respuesta->txtres : 'No respondió'; ?> 
 								<div class="pull-right">
@@ -147,7 +137,7 @@
 				var etiquetas = $.map( pregunta.respuestas, function( n ) {
 				    return n.txtop+' ('+n.cantidad+')'+' '+n.porcentaje+'%';
 				});
-				console.log(valores);
+				//console.log(valores);
 				if(valores.length > 0){
 					var entorno = Raphael('grafico_'+pregunta.id_pre, 350, 200);
 					entorno.piechart(
@@ -171,7 +161,7 @@
 				var etiquetas = $.map(pregunta.respuestas, function( n ) {
 				    return n.txtop+' ('+n.cantidad+')';
 				});
-				console.log(valores);
+				//console.log(valores);
 				if(valores.length > 0){
 					var entorno = Raphael('grafico_'+pregunta.id_pre, 300, 200),
 	                    fin = function () {
@@ -193,7 +183,7 @@
 	                    },
 	                    txtattr = { font: "12px sans-serif" };
 	                
-	                entorno.text(160, 10, "Single Series Chart").attr(txtattr);
+	                //entorno.text(160, 10, "Single Series Chart").attr(txtattr);
 	                entorno.barchart(10, 10, 300, 220, [valores]).hover(fin, fout).label([etiquetas]);
 	            }
 	            else{

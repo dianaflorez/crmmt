@@ -1,1 +1,0 @@
-<i class="fa fa-smile-o fa-5x">¡Gracias por tu tiempo!</i>

@@ -37,13 +37,13 @@ class PublicoObjetivoController extends Controller
 			),
 
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
-				'actions'=>array('index', 'create','update', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos', 'admin', 'view', 'create', 'update'),
+				'actions'=>array('index', 'create','update', 'delete', 'usuarios', 'agregarUsuarios', 'agregar', 'departamentos', 'admin', 'view'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 			),
-			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete'),
-				'users'=>array('admin'),
-			),
+			// array('allow', // allow admin user to perform 'admin' and 'delete' actions
+			// 	'actions'=>array('admin','delete'),
+			// 	'users'=>array('admin'),
+			// ),
 			array('deny',  // deny all users
 				'users'=>array('*'),
 			),
@@ -139,7 +139,7 @@ class PublicoObjetivoController extends Controller
 	}
 
 	
-
+	/*
 	public function actionAgregarUsuariosBackup($id)
 	{
 		$model = $this->loadModel($id);
@@ -288,7 +288,7 @@ class PublicoObjetivoController extends Controller
 			//'apellidos' => $apellidosCadena
 		));
 	}
-
+	*/
 	public function actionAgregarUsuarios($id)
 	{
 		$model = $this->loadModel($id);
@@ -381,11 +381,13 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionDelete($id)
 	{
+		$transaccion =  Yii::app()->db->beginTransaction();
 		$this->loadModel($id)->delete();
+		$transaccion->commit();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		// if(!isset($_GET['ajax']))
+		// 	$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**
@@ -393,14 +395,7 @@ class PublicoObjetivoController extends Controller
 	 */
 	public function actionIndex()
 	{
-		// $dataProvider=new CActiveDataProvider('PublicoObjetivo');
-		// $this->render('index',array(
-		// 	'dataProvider'=>$dataProvider,
-		// ));
-
 		$publicos = PublicoObjetivo::model()->findAll();
-
-		//var_dump(PublicoObjetivo::model()->getAttributes());
 		$this->render('index',array(
 			'publicos' => $publicos
 		));
