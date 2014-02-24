@@ -191,8 +191,6 @@
 		console.log('click');
 		id_cam = $('#Campana_id_cam').val();
 		correo_prueba = $('#correo_prueba').val();
-		console.log(id_cam);
-		console.log(correo_prueba);
 
 		if(esEmail(correo_prueba)){			
 			if(!bandera){

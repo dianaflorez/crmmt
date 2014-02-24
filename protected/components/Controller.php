@@ -20,4 +20,18 @@ class Controller extends CController
 	 * for more details on how to specify this property.
 	 */
 	public $breadcrumbs=array();
+
+	protected function redirigir($titulo, $mensaje, $tipo, $url, $layout, $icono = 'fa-exclamation-triangle')
+	{
+		Yii::app()->user->setState('titulo', $titulo);
+		Yii::app()->user->setState('mensaje', $mensaje);
+		Yii::app()->user->setState('tipo', $tipo);
+		Yii::app()->user->setState('url', $url);
+		Yii::app()->user->setState('layout', $layout);
+		
+		
+		//Yii::app()->user->setState('redireccion', $redireccion);
+		Yii::app()->user->setState('icono', $icono);
+		$this->redirect(array('site/mensaje'));
+	}
 }

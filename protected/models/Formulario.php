@@ -126,7 +126,7 @@ class Formulario extends CActiveRecord
 	}
 
 	/**
-	 *	 Devuelve un array con loss IDs de los usuarios que han respondido la encuesta.
+	 *	 Devuelve un array con los IDs de los usuarios que han respondido la encuesta.
 	 **/
 	public function usuariosRespondidaFormulario()
 	{

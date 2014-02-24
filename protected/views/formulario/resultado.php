@@ -91,21 +91,32 @@
 			</div>
 				
 			<?php if($pregunta->tipo->nombre === 'abierta'): ?>
-				<ul class="list-group">
-					<?php 
-						if (!function_exists('devolverTxtRespuesta'))
-						{
-							function devolverTxtRespuesta($obj)
-							{
-								return $obj->txtres;
-							};
-						}
+				<?php $respuestas = $pregunta->formularioPregunta->respuestas; ?>
+				<?php if(count($respuestas) > 0): ?>
+					<ul class="list-group">
+						<?php 
+							// if (!function_exists('devolverTxtRespuesta'))
+							// {
+							// 	function devolverTxtRespuesta($obj)
+							// 	{
+							// 		return $obj->txtres;
+							// 	};
+							// }
 
-						$respuestasAbiertas = array_map('devolverTxtRespuesta', $pregunta->formularioPregunta->respuestas); ?> 
-					<?php foreach ($pregunta->formularioPregunta->respuestas as $respuesta): ?>
-						<li class="list-group-item"><?php echo $respuesta->txtres ? $respuesta->txtres : 'No respondió'; ?> <div class="pull-right"><?php echo ucfirst(strtolower($respuesta->usuario->nombre1)).' ('.$respuesta->usuario->usuarioWeb->login.')'; ?></div></li>
-					<?php endforeach; ?>
-				</ul>
+							//$respuestasAbiertas = array_map('devolverTxtRespuesta', $pregunta->formularioPregunta->respuestas); ?> 
+						<?php foreach ($respuestas as $respuesta): ?>
+							<li class="list-group-item"><?php echo $respuesta->txtres ? $respuesta->txtres : 'No respondió'; ?> 
+								<div class="pull-right">
+									<?php echo ucfirst(strtolower($respuesta->usuario->nombre1)).' ('.$respuesta->usuario->usuarioWeb->login.')'; ?>
+								</div>
+							</li>
+						<?php endforeach; ?>
+					</ul>
+				<?php else: ?>
+					<div class="panel-body">
+						<p>No hay respuestas.</p>
+					</div>
+				<?php endif; ?>
 			<?php else: ?>
 				<div class="panel-body">
 					<div id="grafico_<?php echo $pregunta->id_pre; ?>"></div>
@@ -130,55 +141,64 @@
 		$.each( datos, function( key, pregunta ) {
 			if(pregunta.tipo === 'unica'){
 				var valores = $.map( pregunta.respuestas, function( n ) {
-			    	return n.porcentaje;
+			    	if(n.porcentaje != 0)
+			    		return n.porcentaje;
 				});
 				var etiquetas = $.map( pregunta.respuestas, function( n ) {
 				    return n.txtop+' ('+n.cantidad+')'+' '+n.porcentaje+'%';
 				});
 				console.log(valores);
-
-				var entorno = Raphael('grafico_'+pregunta.id_pre, 350, 200);
-				entorno.piechart(
-					100, // centro x de la gráfica.
-				   	100, // centro y de la gráfica.
-				   	90,  // radio
-				    valores, // Vector de valores
-				    {
-				    	legend: etiquetas
-				    }
-			  	);
+				if(valores.length > 0){
+					var entorno = Raphael('grafico_'+pregunta.id_pre, 350, 200);
+					entorno.piechart(
+						100, // centro x de la gráfica.
+					   	100, // centro y de la gráfica.
+					   	90,  // radio
+					    valores, // Vector de valores
+					    {
+					    	legend: etiquetas
+					    }
+				  	);
+				}else{
+	            	$('#grafico_'+pregunta.id_pre).append('<p>No hay respuestas</p>');
+	            } 
 			}else if(pregunta.tipo === 'multiple'){
 
 				var valores = $.map(pregunta.respuestas, function( n ) {
-		    		return n.cantidad;
+		    		if(n.cantidad != 0)
+		    			return parseInt(n.cantidad);
 				});
 				var etiquetas = $.map(pregunta.respuestas, function( n ) {
 				    return n.txtop+' ('+n.cantidad+')';
 				});
 				console.log(valores);
-
-				var entorno = Raphael('grafico_'+pregunta.id_pre, 300, 200),
-                    fin = function () {
-                        this.flag = entorno.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
-                    },
-                    fout = function () {
-                        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-                    },
-                    fin2 = function () {
-                        var y = [], res = [];
-                        for (var i = this.bars.length; i--;) {
-                            y.push(this.bars[i].y);
-                            res.push(this.bars[i].value || "0");
-                        }
-                        this.flag = entorno.popup(this.bars[0].x, Math.min.apply(Math, y), res.join(", ")).insertBefore(this);
-                    },
-                    fout2 = function () {
-                        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
-                    },
-                    txtattr = { font: "12px sans-serif" };
-                
-                //r.text(160, 10, "Single Series Chart").attr(txtattr);
-                entorno.barchart(10, 10, 300, 220, [valores]).hover(fin, fout).label([etiquetas]);  
+				if(valores.length > 0){
+					var entorno = Raphael('grafico_'+pregunta.id_pre, 300, 200),
+	                    fin = function () {
+	                        this.flag = entorno.popup(this.bar.x, this.bar.y, this.bar.value || "0").insertBefore(this);
+	                    },
+	                    fout = function () {
+	                        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+	                    },
+	                    fin2 = function () {
+	                        var y = [], res = [];
+	                        for (var i = this.bars.length; i--;) {
+	                            y.push(this.bars[i].y);
+	                            res.push(this.bars[i].value || "0");
+	                        }
+	                        this.flag = entorno.popup(this.bars[0].x, Math.min.apply(Math, y), res.join(", ")).insertBefore(this);
+	                    },
+	                    fout2 = function () {
+	                        this.flag.animate({opacity: 0}, 300, function () {this.remove();});
+	                    },
+	                    txtattr = { font: "12px sans-serif" };
+	                
+	                entorno.text(160, 10, "Single Series Chart").attr(txtattr);
+	                entorno.barchart(10, 10, 300, 220, [valores]).hover(fin, fout).label([etiquetas]);
+	            }
+	            else{
+	            	$('#grafico_'+pregunta.id_pre).append('<p>No hay respuestas</p>');
+	            } 
 			}
 		});		
 	}

@@ -26,7 +26,7 @@
 				</div>
 		  	</div>
 		  	<div id="preview_encuesta" class="panel-body" style='display:none;'>
-		  		<?php $this->renderPartial('_encuesta', array('model'=>$model, 'activa'=>$activa)); ?>
+		  		<?php $this->renderPartial('_encuesta', array('model'=>$model, 'activa'=>$activa, 'error'=> null)); ?>
 		  	</div>
 		</div>
 	</div>
@@ -100,9 +100,20 @@
 
 	<div class="row">
 		<div class="col-md-6">
+			<div id="alerta_enviar" class="alert form-group" style="display: none;">
+				<p class="text-center">
+					<i id="icono_loader" class="fa fa-spinner fa-spin fa-2x fa-fw "></i>
+					<span id="mensaje">Enviando...</span>
+				</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="col-md-6">
 			<div class="col-md-8">
 				<div class="form-group">
-					<?php echo CHtml::submitButton('Enviar', array('class'=>'btn btn-warning btn-block')); ?> 
+					<?php echo CHtml::submitButton('Enviar', array('id'=>'submit_enviar', 'class'=>'btn btn-warning btn-block')); ?> 
 				</div>
 			</div>
 			<div class="col-md-4">
@@ -115,12 +126,14 @@
 <?php $this->endWidget(); ?>
 
 <script type="text/javascript">
+	var bandera = false; // Evita que la alerta se active si aún no ha terminado el proceso completo.(multiples click a la vez)
 	
 	$(document).on('ready', inicio);
 
 	function inicio(){
 		$('#Campana_contenido').jqte();
 		$('#mostrar_preview').on('click', mostrar);
+		$('#submit_enviar').on('click', mostrarAlerta);
 	}
 
 	function mostrar(e){
@@ -128,6 +141,14 @@
 		icono.toggleClass('fa-arrow-down');
 		icono.toggleClass('fa-arrow-up');
 		$('#preview_encuesta').slideToggle();
+	}
+
+	function mostrarAlerta()
+	{
+		if(!bandera){
+			$('#alerta_enviar').slideDown();
+			bandera = true;
+		}
 	}
 
 </script>

@@ -37,7 +37,6 @@
 
 	function clicUsuario(e){
 		e.preventDefault();
-		//console.log('al menos');
 		var fila = $(e.target).parent().closest('tr');
 		var id_po = fila.data('idpo');
 		var id_usupo = fila.attr('id');
@@ -45,8 +44,7 @@
 	}
 
 	function activarUsuario(fila, id_po, id_usupo){
-		console.log('inicio activar'+id_po+' '+id_usupo);
-	
+		//console.log('inicio activar'+id_po+' '+id_usupo);	
 		var peticion = $.ajax({
 			url: "<?php echo Yii::app()->createUrl('usuarioPublicoObjetivo/delete'); ?>",
 			type: "POST",
@@ -70,8 +68,5 @@
 			};
 			setTimeout(quitarFila, 1500);
 		});
-
-		
-		
 	}
 </script>

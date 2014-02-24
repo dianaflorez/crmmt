@@ -70,6 +70,7 @@
 
 							  	endif;
 							endif;	?>
+						<?php echo CHtml::link('<i class="fa fa-trash-o fa-lg"></i>', Yii::app()->createUrl('campana/delete/', array('id'=>$campana->id_cam)), array('data-toggle'=>'tooltip', 'title'=>"Eliminar", 'class'=>'eliminar'));  ?>	
 					</p>
 				</td>
 			</tr>
@@ -106,6 +107,47 @@
 
 	function inicio(){
 		$('.usuarios_campana').on('click', consultarUsuarios);
+		$('.eliminar').on('click', clicUsuario);
+	}
+
+	function eliminar(e){
+		var respuesta = confirm("¿Está seguro? No puede deshacerse.");
+		if (respuesta)
+		    return true;
+		else
+		   	return false;
+	}
+
+	function clicUsuario(e){
+		e.preventDefault();	
+		var respuesta = confirm("¿Está seguro? No puede deshacerse.");
+		if (respuesta){
+			var target = $(e.target);
+		   	var fila = target.parent().closest('tr');
+		  	var link = target.closest('a');
+		   	var url = $(link).attr("href");
+		   	eliminarCampana(fila, url);
+		}
+	}
+
+	function eliminarCampana(fila, url){
+		var peticion = $.ajax({
+			url: url,
+			type: "POST",
+			dataType: 'html'
+		});
+		 
+		peticion.done(function( msg ) {
+			fila.slideUp('slow');
+		});
+		 
+		peticion.fail(function( jqXHR, textStatus ) {
+			fila.addClass('warning');
+			var quitarFila = function (){
+				fila.removeClass('warning');
+			};
+			setTimeout(quitarFila, 1500);
+		});
 	}
 
 	function consultarUsuarios(e){
@@ -121,7 +163,6 @@
 		});
 		 
 		peticion.done(function( msg ) {
-			//$('#grilla_usuarios').empty();
 			$('#grilla_usuarios').html(msg);
 			$('#usuariosModal').modal();
 		});

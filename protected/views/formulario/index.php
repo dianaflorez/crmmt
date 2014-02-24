@@ -60,9 +60,9 @@
 						    <li><?php echo CHtml::link('<i class="fa fa-book fa-fw"></i> Reporte de resultados', Yii::app()->createUrl('formulario/resultado/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Reporte resultados"));  ?></li>
 						   	<?php if($formulario->estado): ?>
 							   	<li class="divider"></li>
-							  	<li><?php echo CHtml::link('<i class="fa fa-ban fa-fw"></i> Desactivar encuesta', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar"));  ?></li>
+							  	<li><?php echo CHtml::link('<i class="fa fa-ban fa-fw"></i> Desactivar encuesta', Yii::app()->createUrl('formulario/desactivar/', array('id'=>$formulario->id_for)), array('data-toggle'=>'tooltip', 'title'=>"Desactivar", 'class'=>'desactivar'));  ?></li>
 						  	<?php endif; ?>
-						  	<!-- <li><?php //echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?></li> -->
+						  	<li><?php echo CHtml::link('<i class="fa fa-plus fa-lg"></i>', Yii::app()->createUrl('formulario/encuesta/', array('id'=>$formulario->id_for, 'username'=> 'john')), array('data-toggle'=>'tooltip', 'title'=>"Ver encuesta"));  ?></li>
 						</ul>
 					</div>
 				</td>
@@ -71,4 +71,18 @@
 		</tbody>
 	</table>
 </div>
+<script>
+	$(document).on('ready', inicio);
 
+	function inicio(){
+		$('.desactivar').on('click', desactivar);
+	}
+
+	function desactivar(e){
+		var respuesta = confirm("¿Está seguro? No puede deshacerse.");
+		if (respuesta)
+		    return true;
+		else
+		   	return false;
+	}
+</script>

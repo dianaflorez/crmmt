@@ -89,23 +89,27 @@ class PreguntaController extends Controller
 		$opciones = array();
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
+		
+		$encuesta = Formulario::model()->findByPK($this->id_for);
+		if(!$encuesta->estado)
+		{
+			$mensaje = 'No puedes agregar preguntas a una encuesta que ya ha sido desactivada.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+			$this->redirect(array('site/mensaje'));
+		}
 
-		// $id_fp  = $model->formularioPregunta->id_fp;
-		// $conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
-		
 		$criterio = new CDbCriteria;
-		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';
-		
-		//$criterio->distinct = true;
+		$criterio->join ='JOIN crmforpre ON t.id_fp = crmforpre.id_fp';		
 		$criterio->addCondition('id_for=:id_for');
 		$criterio->params += array(':id_for' => $this->id_for);
 
 		$conteo = Respuesta::model()->count($criterio);
+		
 		if($conteo > 0)
 		{
-			$returnUri = Yii::app()->request->urlReferrer;
-			Yii::app()->clientScript->registerMetaTag("5;url={$returnUri}", null, 'refresh');
-			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
+			$mensaje = 'No puedes editar una encuesta que ya ha sido respondida.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+			$this->redirect(array('site/mensaje'));
 		}
 
 
@@ -198,17 +202,6 @@ class PreguntaController extends Controller
 		));
 	}
 
-	// public function actionOpciones($id)
-	// {
-	// 	$id_fp  = $model->formularioPregunta->id_fp;
-	// 	$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
-		
-	// 	if($conteo > 0)
-	// 	{
-	// 		throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
-	// 	}	
-	// }
-
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -219,14 +212,25 @@ class PreguntaController extends Controller
 		$model  = $this->loadModel($id);
 		$error  = null;
 		$opciones = $model->opciones; // Guarda las opciones de la pregunta, si hay errores de post mantiene guardadas las opciones nuevas entre cada petición POST.
-		
+			
+		$encuesta = Formulario::model()->findByPK($model->formularioPregunta->id_for);
+		if(!$encuesta->estado)
+		{
+			$mensaje = 'No puedes editar una pregunta de una encuesta que ya ha sido desactivada.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+			$this->redirect(array('site/mensaje'));
+		}
+
 		$id_fp  = $model->formularioPregunta->id_fp;
 		$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
 		
 		if($conteo > 0)
 		{
-			throw new CHttpException(302,'No puede editar un formulario que ya ha sido respondido.');
+			$mensaje = 'No puedes editar una pregunta de una encuesta que ya ha sido respondida.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+			$this->redirect(array('site/mensaje'));
 		}
+
 
 		try
 		{

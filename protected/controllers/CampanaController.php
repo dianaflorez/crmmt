@@ -118,11 +118,21 @@ class CampanaController extends Controller
 		$model = $this->loadModel($id);
 		// if($model->estado)
 		// 	$this->redirect(array('index'));
+		if($model->estado){
+			$mensaje = 'Esta campaña ya fue enviada. Puede duplicarla y enviarla nuevamente.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('campana/'), 'column2');
+		}
+
+		if($model->tipoCampana->nombre != 'email'){
+			$mensaje = 'Solo campañas de tipo email pueden ser enviadas.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('campana/'), 'column2');
+		}
+
 
 		$error                = null;
 		$errorPublicoObjetivo = null;
 		$publicos             = PublicoObjetivo::model()->findAll();
-		       
+
 		if(isset($_POST['Campana']))
 		{
 			// Uncomment the following line if AJAX validation is needed
@@ -133,9 +143,6 @@ class CampanaController extends Controller
 				$id_cam = isset($_POST['Campana']['id_cam']) ? $_POST['Campana']['id_cam'] : null;
 				$model  = $this->loadModel($id_cam);
 
-				//$correosDesuscripcion = $this->obtenerCorreosDesuscripcion($_POST['Campana']['PublicoObjetivo']);
-				//$this->desuscribirListaMailChimp($correosDesuscripcion);
-			   
 				if(isset($_POST['Campana']['PublicoObjetivo']) && $_POST['Campana']['PublicoObjetivo'])
 				{
 					$id_publico = (int) $_POST['Campana']['PublicoObjetivo'];
@@ -147,12 +154,12 @@ class CampanaController extends Controller
 						Yii::app()->utilmailchimp->enviarCampana($model, $correos);
 						$model->estado = true;
 						$model->fecenvio = new CDbExpression('CURRENT_TIMESTAMP');
-						//$this->eliminarSegmentoMailChimp($id_segmento);
 						$this->registrarUsuariosCampanaEnviada($id_cam, $id_publico);
 
 						if($model->save())
 						{
-							$this->redirect(array('index'));
+							$mensaje = 'Felicitaciones, su campaña ha sido enviada correctamente. En unos minutos los correos empezarán a llegar a sus clientes.';
+							$this->redirigir('¡Campaña enviada!', $mensaje, 'success', Yii::app()->createUrl('campana/'), 'column2', 'fa-rocket');
 						}
 						else
 						{
@@ -198,7 +205,6 @@ class CampanaController extends Controller
 			{	
 				try
 				{
-
 					$validador = new CEmailValidator;
 					if(!$validador->validateValue($correoPrueba))
 						throw new Exception("Error Processing Request");
@@ -326,8 +332,9 @@ class CampanaController extends Controller
 			));
 		}
 		else
-		{
-			$this->redirect(array('index'));
+		{			
+			$mensaje = 'Esta campaña ya fue enviada. Puede duplicarla y enviarla nuevamente.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('campana/'), 'column2');
 		}
 	}
 
@@ -338,11 +345,12 @@ class CampanaController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
-
+		//$this->loadModel($id)->delete();
+		throw new Exception("Error Processing Request", 1);
+		
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
 		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('index'));
 	}
 
 	/**

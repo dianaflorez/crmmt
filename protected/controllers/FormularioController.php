@@ -36,7 +36,7 @@ class FormularioController extends Controller
 				'users'      => array('@'),
 			),
 			array('allow',
-				'actions'    => array('update','admin','delete','view','index', 'create', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta', 'desactivar'),
+				'actions'    => array('update','admin','delete','view','index', 'create', 'enviar', 'resultado', 'resultadojson', 'usuariosencuesta', 'desactivar', 'mensaje'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 				// or
 				// 'roles'   => array('Admin'),
@@ -46,6 +46,17 @@ class FormularioController extends Controller
 			),
 		);
 	}
+
+
+	// protected function redirigir($titulo, $mensaje, $tipo, $url, $layout)
+	// {
+	// 	Yii::app()->user->setState('titulo', $titulo);
+	// 	Yii::app()->user->setState('mensaje', $mensaje);
+	// 	Yii::app()->user->setState('tipo', $tipo);
+	// 	Yii::app()->user->setState('url', $url);
+	// 	Yii::app()->user->setState('layout', $layout);
+	// 	$this->redirect(array('site/mensaje'));
+	// }
 
 	/**
 	 * Displays a particular model.
@@ -83,6 +94,7 @@ class FormularioController extends Controller
 		));
 	}
 
+
 	/**
 	 * Updates a particular model.
 	 * If update is successful, the browser will be redirected to the 'view' page.
@@ -95,8 +107,11 @@ class FormularioController extends Controller
 		// Uncomment the following line if AJAX validation is needed
 		// $this->performAjaxValidation($model);
 
-		if(count($model->usuariosRespondidaFormulario()))
-			$this->redirect(array('index'));
+		if(count($model->usuariosRespondidaFormulario()) > 0 || !$model->estado)
+		{
+			$mensaje = 'No puedes editar una encuesta que ya ha sido respondida o desactivada.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+		}
 
 		if(isset($_POST['Formulario']))
 		{
@@ -116,45 +131,35 @@ class FormularioController extends Controller
 	 * Genera la encuesta para ser diligenciada por el usuario.
 	 * 
 	*/
-	//public function actionEncuesta($id, $id_usur)
 	public function actionEncuesta($id, $username)
 	{
 		$model = $this->loadModel($id);
 		$error = null;
-		// if($model){
-		// 	var_dump('Total preguntas '.count($model->preguntas));
-		// 	foreach ($model->preguntas as $pregunta) {
-		// 		var_dump($pregunta->txtpre);
-		// 		var_dump($pregunta->id_tpr);
-		// 		var_dump('Total opciones '.count($pregunta->opciones));
-		// 		foreach ($pregunta->opciones as $opcion) {
-		// 			var_dump($opcion->txtop);
-		// 		}
-		// 	}
-		// }
-
-		//$usuario = General::model()->findByPk($id_usur);
+		
 		$usuario = Usuweb::model()->findByAttributes(array('login'=>$username));
 		if(!$usuario)
 			throw new CHttpException(404, "Opps el usuario no existe.");
 
 		if($this->encuestaRespondida($id, $usuario->id_usuario) || !$model->estado)
-			$this->redirect(array('exito'));
-		
+		{	
+			$mensaje = 'Tus respuestas nos ayudan a ofrecerte un mejor servicio. Gracias por confiar en nosotros.';
+			$this->redirigir('¡Gracias!', $mensaje, 'success', 'http://www.almacenesmt.com', 'column1', 'fa-smile-o');
+		}
+
 		if(isset($_POST['Pregunta']))
 		{
 			// Validar número de respuestas que llegan por POST debe ser
 			// igual al número de preguntas que tiene la encuesta.
 			$preguntas = $model->preguntas;
 			
-			if(count($preguntas) === count($_POST['Pregunta']))
-			{
+			// if(count($preguntas) === count($_POST['Pregunta']))
+			// {
 				$transaccion = $model->dbConnection->beginTransaction();
 				try
 				{
 					foreach ($preguntas as $pregunta) 
 					{
-						$opcion_post = $_POST['Pregunta'][$pregunta->id_pre];
+						$opcion_post = isset($_POST['Pregunta'][$pregunta->id_pre]) ? $_POST['Pregunta'][$pregunta->id_pre] : null;
 						
 						if(isset($opcion_post))
 						{
@@ -197,25 +202,27 @@ class FormularioController extends Controller
 						
 					}
 					$transaccion->commit(); // Si todo salio bien, procedemos a almacenar.
-					$this->redirect(array('exito'));
+					$mensaje = 'Tus respuestas nos ayudan a ofrecerte un mejor servicio. Gracias por confiar en nosotros.';
+					$this->redirigir('¡Gracias!', $mensaje, 'success', 'http://www.almacenesmt.com', 'column1', 'fa-smile-o');
 				}
 				catch(Exception $e)
 				{
 					$transaccion->rollback(); // Si alguna de las transacciones falla deshacemos todo.
 					$error = $e->getMessage();
 				}
-			}
-			else
-			{
-				throw new Exception('No existe respuesta para una de las preguntas.');
-			}
+			// }
+			// else
+			// {
+			// 	throw new CHttpException(400,'No existe respuesta para una de las preguntas.');
+			// }
 			
 		}
 		$this->layout = 'column1';
 		
 		$this->render('_encuesta', array(
 			'model'  => $model,
-			'activa' => true
+			'activa' => true,
+			'error' => $error
 		));	
 	}
 
@@ -268,7 +275,7 @@ class FormularioController extends Controller
 				$resultados['id_op']      = $opcion->id_op;
 				$resultados['txtop']      = $opcion->txtop;
 				$resultados['cantidad']   = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
-				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' && $numeroRespuestas > 0? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
+				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' && $numeroRespuestas > 0 ? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
 				array_push($respuestas, $resultados);
 			}
 			
@@ -403,8 +410,14 @@ class FormularioController extends Controller
 		$errorPublicoObjetivo = null;
 		$contenidoOriginal    = null; // Graba el contenido de la campaña sin el vínculo de la encuesta. Si hay una excepción puede ser restaurado para ser mostrado en la forma.
 
+		if(!$model->estado){
+			$mensaje = 'Esta encuesta ya ha sido desactivada. No se puede agregarle preguntas.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('formulario/'), 'column2');
+		}
+
 		if(count($model->preguntas) <= 0){
-			throw new CHttpException(300, 'La encuesta no tiene preguntas.');
+			$mensaje = 'No has agregado ninguna pregunta a la encuesta.';
+			$this->redirigir('Oops.', $mensaje, 'danger', Yii::app()->createUrl('pregunta/create', array('id_for'=>$id)), 'column2');
 		}
 
 		if(isset($_POST['Campana']))
@@ -427,7 +440,9 @@ class FormularioController extends Controller
 							$campana->personalizada = true;
 							$campana->contenido     = $campana->contenido.' Puedes responder '.CHtml::link('aquí', $url);
 							Yii::app()->utilmailchimp->enviarCampana($campana, $correos);
-							$this->redirect(array('index'));
+
+							$mensaje = 'Felicitaciones, su encuesta ha sido enviada correctamente. En unos minutos los correos empezarán a llegar a sus clientes.';
+							$this->redirigir('¡Encuesta enviada!', $mensaje, 'success', Yii::app()->createUrl('formulario/'), 'column2', 'fa-rocket');
 						}
 						else
 						{
@@ -483,16 +498,11 @@ class FormularioController extends Controller
 	 */
 	public function actionIndex()
 	{
-		// $dataProvider=new CActiveDataProvider('Formulario');
-		// $this->render('index',array(
-		// 	'dataProvider'=>$dataProvider,
-		// ));
 		$criterio         = new CDbCriteria();
 		$criterio->order  = 'feccre DESC';
 
 		$formularios = Formulario::model()->findAll($criterio);
 		$this->render('index',array(
-			//'dataProvider'=>$dataProvider,
 			'formularios' => $formularios
 		));
 	}

@@ -11,6 +11,17 @@
 	// See class documentation of CActiveForm for details on this.
 	'enableAjaxValidation'=>false,
 )); ?>
+	
+	<?php if($error): ?>
+		<div class="row">
+			<div class="form-group">
+				<p class="text-danger">
+					<?php echo $error; ?>
+				</p>
+			</div>
+		</div>
+	<?php endif; ?>
+	
 	<?php foreach ($model->preguntas as $pregunta): ?>
 		<div class="row">
 			<div class="col-md-12">

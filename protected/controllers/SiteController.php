@@ -109,4 +109,21 @@ class SiteController extends Controller
 		Yii::app()->user->logout();
 		$this->redirect(Yii::app()->homeUrl);
 	}
+
+
+	public function actionMensaje()
+	{
+		
+		$this->layout = Yii::app()->user->getState('layout');
+		$url = Yii::app()->user->getState('url');
+
+		
+		$this->render('/layouts/mensaje', array(
+			'titulo' => Yii::app()->user->getState('titulo'),
+			'mensaje' => Yii::app()->user->getState('mensaje'),
+			'tipo' => Yii::app()->user->getState('tipo'),
+			'url' => $url,
+			'icono' => Yii::app()->user->getState('icono'),
+		));
+	}
 }
