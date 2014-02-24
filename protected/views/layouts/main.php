@@ -21,3 +21,8 @@
 	  	<?php echo $content; ?>
 	</body>
 </html>
+<script>
+$(document).ready(function() {
+  $('#principal').css('min-height', $(window).innerHeight() - 100);
+});
+</script>

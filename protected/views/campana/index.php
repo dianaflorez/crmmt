@@ -22,7 +22,7 @@
 			<!-- <th>Fecha de envio</th> -->
 			<th class="col-md-1">Tipo</th>
 			<!-- <th class="col-md-1"></th> -->
-			<th class="col-md-1"></th>
+			<th class="col-md-2"></th>
 		</thead>
 		<tbody>
 			<?php foreach ($campanas as $campana): ?>
