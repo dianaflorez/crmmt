@@ -44,14 +44,6 @@ $('#publico_objetivo').tooltip();
 		$('.eliminar').on('click', clicUsuario);
 	}
 
-	function eliminar(e){
-		var respuesta = confirm("¿Está seguro? No puede deshacerse.");
-		if (respuesta)
-		    return true;
-		else
-		   	return false;
-	}
-
 	function clicUsuario(e){
 		e.preventDefault();	
 		var respuesta = confirm("¿Está seguro? No puede deshacerse.");
@@ -60,11 +52,11 @@ $('#publico_objetivo').tooltip();
 		   	var fila = target.parent().closest('tr');
 		  	var link = target.closest('a');
 		   	var url = $(link).attr("href");
-		   	eliminarCampana(fila, url);
+		   	eliminar(fila, url);
 		}
 	}
 
-	function eliminarCampana(fila, url){
+	function eliminar(fila, url){
 		var peticion = $.ajax({
 			url: url,
 			type: "POST",

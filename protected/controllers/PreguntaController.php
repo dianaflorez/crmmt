@@ -231,7 +231,6 @@ class PreguntaController extends Controller
 			$this->redirect(array('site/mensaje'));
 		}
 
-
 		try
 		{
 			if(isset($_POST['Pregunta']))
@@ -328,11 +327,28 @@ class PreguntaController extends Controller
 	 */
 	public function actionDelete($id)
 	{
-		$this->loadModel($id)->delete();
+		$model = $this->loadModel($id);
+		$encuesta = Formulario::model()->findByPK($model->formularioPregunta->id_for);
+		if(!$encuesta->estado)
+		{
+			throw new CHttpException(400, 'No se puede eliminar una pregunta de una encuesta desactivada');
+		}
+
+		$id_fp  = $model->formularioPregunta->id_fp;
+		$conteo = Respuesta::model()->count('id_fp=:id_fp', array('id_fp'=>$id_fp));
+		
+		if($conteo > 0)
+		{
+			throw new CHttpException(400, 'No puedes eliminar una pregunta de una encuesta que ya ha sido respondida.');
+		}
+
+		$transaccion =  Yii::app()->db->beginTransaction();
+		$model->delete();
+		$transaccion->commit();
 
 		// if AJAX request (triggered by deletion via admin grid view), we should not redirect the browser
-		if(!isset($_GET['ajax']))
-			$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
+		// if(!isset($_GET['ajax']))
+		// 	$this->redirect(isset($_POST['returnUrl']) ? $_POST['returnUrl'] : array('admin'));
 	}
 
 	/**

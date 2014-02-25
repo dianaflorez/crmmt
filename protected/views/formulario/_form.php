@@ -57,6 +57,17 @@
 
 		<div class="row">
 			<div class="col-md-6">
+			<?php if(count($model->preguntas) > 0): ?>
+				<div class="page-header">
+					<h3>Preguntas <small>Encuesta</small></h3>
+				</div>
+				<?php $this->renderPartial('_editarPreguntas', array('model'=>$model, 'activa'=>false)); ?>
+			<?php endif; ?>
+			</div>
+		</div>
+
+		<div class="row">
+			<div class="col-md-6">
 				<div class="col-md-8">
 					<div class="form-group">
 						<?php echo CHtml::submitButton($model->isNewRecord ? 'Crear' : 'Guardar', array('class'=>'btn btn-primary btn-block')); ?> 

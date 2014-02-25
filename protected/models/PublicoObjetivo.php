@@ -125,8 +125,8 @@ class PublicoObjetivo extends CActiveRecord
 	}
 
 	public function beforeDelete(){
-	    foreach($this->usuarios as $usuarios)
-	        $usuarios->delete();
+	    foreach($this->usuarios as $usuario)
+	        $usuario->delete();
 	    return parent::beforeDelete();
 	}
 }

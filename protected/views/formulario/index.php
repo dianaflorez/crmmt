@@ -20,7 +20,7 @@
 	<table id='publico_objetivo' class="table table-condensed table-hover">
 		<thead>
 			<th class="col-md-1">Activa</th>
-			<th>Título</th>
+			<th class="col-md-1">Título</th>
 			<th class="col-md-1">No. de preguntas</th>
 			<th class="col-md-1">Han respondido</th>
 			<!-- <th></th> -->

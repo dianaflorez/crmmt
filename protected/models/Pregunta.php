@@ -136,4 +136,11 @@ class Pregunta extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	public function beforeDelete(){
+		$this->formularioPregunta->delete();
+	    foreach($this->opciones as $opcion)
+	        $opcion->delete();
+	    return parent::beforeDelete();
+	}
 }
