@@ -155,11 +155,10 @@
 			}else if(pregunta.tipo === 'multiple'){
 
 				var valores = $.map(pregunta.respuestas, function( n ) {
-		    		if(n.cantidad != 0)
 		    			return parseInt(n.cantidad);
 				});
 				var etiquetas = $.map(pregunta.respuestas, function( n ) {
-				    return n.txtop+' ('+n.cantidad+')';
+				    	return n.txtop+' ('+n.cantidad+')';
 				});
 				//console.log(valores);
 				if(valores.length > 0){
