@@ -369,6 +369,7 @@ class General extends CActiveRecord
 			$criteria->together = true;
 		}
 
+		$criteria->addCondition("correos.direccion IS NOT NULL");
 
 		$sort = new CSort;
 		$sort->attributes = array(

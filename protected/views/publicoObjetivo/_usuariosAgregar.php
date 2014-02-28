@@ -7,6 +7,11 @@
 		'htmlOptions'   => array('class' => 'table-responsive'),
 		'rowHtmlOptionsExpression' => 'array("id" => $data->id, "class" => $data->presentepo('.$id_po.') ? "info" : "")',
 		'columns'       => array(
+			 array(
+	        	'header' => 'Agregar',
+	        	'value'  => '$data->disponible && !$data->presentepo('.$id_po.') ? CHtml::link("<i class=\"fa fa-plus\"></i>", null ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar")) : "" ',
+	        	'type'   => 'raw'
+	        ),
 			array(
 				'id'             => 'usuarios',
 				'class'          => 'CCheckBoxColumn',
@@ -58,12 +63,7 @@
 	        	'htmlOptions'       => array('class'=>'hidden-xs'),
 	        	'filterHtmlOptions' => array('class'=>'hidden-xs'),
 	        	'value'             => '$data->estadocivilformateado' ,
-	        ),
-	        array(
-	        	'header' => 'Agregar',
-	        	'value'  => '$data->disponible && !$data->presentepo('.$id_po.') ? CHtml::link("<i class=\"fa fa-plus\"></i>", null ,array("class"=>"btn btn-primary activacion", "id"=>"btn_".$data->id, "data-toggle"=>"tooltip", "title"=>"Activar")) : "" ',
-	        	'type'   => 'raw'
-	        ),
+	        )
 	        // array(
 	        // 	'header' => 'Pertenece',
 	        // 	'value' => '$data->presentepo('.$id_po.') ? "Sí" : "No"'
