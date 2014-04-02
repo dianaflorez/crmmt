@@ -180,7 +180,11 @@ var app = app ||
 
 		agregarOpcion: function (e) {
 			e.preventDefault();
-			this.collection.add(new app.Modules.Models.Opcion());
+			if(this.collection.length <= 9){
+				this.collection.add(new app.Modules.Models.Opcion());
+			}else{
+				alert('El número máximo de opciones es 10');
+			}
 		},
 
 		cambiarTipo: function(e) {

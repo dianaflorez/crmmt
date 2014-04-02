@@ -47,17 +47,6 @@ class FormularioController extends Controller
 		);
 	}
 
-
-	// protected function redirigir($titulo, $mensaje, $tipo, $url, $layout)
-	// {
-	// 	Yii::app()->user->setState('titulo', $titulo);
-	// 	Yii::app()->user->setState('mensaje', $mensaje);
-	// 	Yii::app()->user->setState('tipo', $tipo);
-	// 	Yii::app()->user->setState('url', $url);
-	// 	Yii::app()->user->setState('layout', $layout);
-	// 	$this->redirect(array('site/mensaje'));
-	// }
-
 	/**
 	 * Displays a particular model.
 	 * @param integer $id the ID of the model to be displayed
@@ -121,8 +110,7 @@ class FormularioController extends Controller
 		}
 
 		$this->render('update',array(
-			'model'  => $model,
-			//'activa' => false
+			'model'  => $model
 		));
 	}
 
@@ -259,6 +247,7 @@ class FormularioController extends Controller
 		$preguntas = $model->preguntas;
 		//var_dump($model->respuestas);
 		//header('Content-type: application/json');
+		$opciones = array();
 		$objeto = array();
 		foreach ($preguntas as $pregunta) {
 			$temporal             = array();
@@ -270,14 +259,20 @@ class FormularioController extends Controller
 			$resultados = array();
 			
 			$numeroRespuestas = count($pregunta->formularioPregunta->respuestas);
+			$con = 1;
 			foreach ($pregunta->opciones as $opcion)
 			{
-				$resultados['id_op']      = $opcion->id_op;
+				$cantidad = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
+				$resultados[$opcion->id_op] = $cantidad;
+				$resultados['numero']     = $con;
 				$resultados['txtop']      = $opcion->txtop;
-				$resultados['cantidad']   = Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
+				$resultados['cantidad']   = $cantidad;//Respuesta::model()->count('id_op=:id_op', array(':id_op' => $opcion->id_op));
 				$resultados['porcentaje'] = $temporal['tipo'] === 'unica' && $numeroRespuestas > 0 ? round((100 * $resultados['cantidad']) / $numeroRespuestas, 2) : null;
 				array_push($respuestas, $resultados);
+				$con++;
 			}
+			$opciones[$pregunta->id_pre] = $resultados;
+			//array_push($opciones[$pregunta->id_pre], $resultados);
 			
 			$temporal['respuestas'] = $temporal['tipo'] === 'abierta' ? null : $respuestas;
 			array_push($objeto, $temporal);
@@ -291,7 +286,8 @@ class FormularioController extends Controller
 			'preguntas'     => $preguntas,
 			'datosReportes' => $objeto,
 			'usuariosId'    => $usuariosId,
-			'usuarios'      => new General
+			'usuarios'      => new General,
+			'opciones' => $opciones
 		));	
 	}
 

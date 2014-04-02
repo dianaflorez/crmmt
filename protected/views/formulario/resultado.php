@@ -111,6 +111,21 @@
 				<div class="panel-body">
 					<div id="grafico_<?php echo $pregunta->id_pre; ?>"></div>
 				</div>
+				<?php if($pregunta->tipo->nombre === 'multiple'): ?>
+				<ul class="list-group">
+					<?php $con = 1; ?>
+					<?php foreach ($pregunta->opciones as $opcion): ?>
+						<li class="list-group-item">
+							<?php echo $opcion->txtop; ?>
+							<div class="pull-right">
+								<?php echo $con.' ( '.$opciones[$pregunta->id_pre][$opcion->id_op].' respuestas ).'; ?>
+
+							</div>
+						</li>
+						<?php $con++; ?>
+					<?php endforeach; ?>
+				</ul>
+				<?php endif; ?>
 			<?php endif; ?>
 		</div>
 	<?php endforeach; ?>
@@ -155,10 +170,10 @@
 			}else if(pregunta.tipo === 'multiple'){
 
 				var valores = $.map(pregunta.respuestas, function( n ) {
-		    			return parseInt(n.cantidad);
+		    			return parseInt(1);
 				});
 				var etiquetas = $.map(pregunta.respuestas, function( n ) {
-				    	return n.txtop+' ('+n.cantidad+')';
+				    	return n.numero;//n.txtop+' ('+n.cantidad+')';
 				});
 				//console.log(valores);
 				if(valores.length > 0){

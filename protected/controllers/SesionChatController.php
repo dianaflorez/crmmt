@@ -28,7 +28,7 @@ class SesionChatController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'chat', 'asignarsala', 'create', 'guardarmensaje'),
+				'actions'=>array('index','view', 'chat', 'asignarsala', 'create', 'guardarmensaje', 'admin', 'responder', 'terminarsesion'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -36,7 +36,7 @@ class SesionChatController extends Controller
 				'users'=>array('@'),
 			),
 			array('allow', // allow admin user to perform 'admin' and 'delete' actions
-				'actions'=>array('admin','delete', 'responder', 'terminarsesion'),
+				'actions'=>array('admin','delete'),
 				'expression' => 'Yii::app()->user->checkAccess("CRMAdminEncargado")',
 			),
 			array('deny',  // deny all users
@@ -258,6 +258,9 @@ class SesionChatController extends Controller
 			{
 				throw new CHttpException(500, 'Error.');
 			}
+			// else{
+			// 	$this->redirect(array('admin'));
+			// }
 		// }		
 	}
 
