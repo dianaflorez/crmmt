@@ -28,7 +28,7 @@ class SesionChatController extends Controller
 	{
 		return array(
 			array('allow',  // allow all users to perform 'index' and 'view' actions
-				'actions'=>array('index','view', 'chat', 'asignarsala', 'create', 'guardarmensaje', 'admin', 'responder', 'terminarsesion'),
+				'actions'=>array('index','view', 'chat', 'asignarsala', 'create', 'guardarmensaje', 'admin', 'responder', 'terminarsesion', 'activa'),
 				'users'=>array('*'),
 			),
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
@@ -91,8 +91,7 @@ class SesionChatController extends Controller
 		}
 
 		if(isset($_POST['SesionChat']))
-		{	
-			
+		{				
 			if(!$id_sesion){
 				$model->id = null;
 				$model->attributes=$_POST['SesionChat'];
@@ -243,6 +242,21 @@ class SesionChatController extends Controller
 		{
 			throw new CHttpException(500, 'Error.');
 		}	
+	}
+
+	public function actionActiva($id)
+	{	
+		//if(isset($_POST['peticion']) && $_POST['peticion']==='sesion-chat-form'){
+			$model = $this->loadModel($id);
+			
+
+			if($model->terminada)
+			{
+				$this->renderPartial('_form',array(
+						'model'=>$model,
+					));
+			}
+		//}	
 	}
 
 	/**

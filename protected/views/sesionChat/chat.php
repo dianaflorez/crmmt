@@ -1,6 +1,6 @@
 <script type='text/javascript'>
     var sesion = <?php echo  CJSON::encode($model).';'; ?>
-
+    var intervalId;
     function guardarMensaje(username, mensaje){
         var peticion = $.ajax({
                 url: "<?php echo Yii::app()->createUrl('sesionchat/guardarMensaje'); ?>",
@@ -20,6 +20,27 @@
         });
     }
 
+    function activa(e){
+        var datos = $("#sesion-chat-form").serializeArray();
+        var peticion = $.ajax({
+                url: "<?php echo Yii::app()->createUrl('sesionchat/activa'); ?>",
+                type: 'GET',
+                data: {id: sesion.id}
+        });
+               
+        peticion.done(function( msg ) {
+            if(msg){
+                $('#firechat-contenedor').empty();
+                $('#firechat-contenedor').html(msg);
+                clearInterval(intervalId);
+            }
+        });
+           
+        peticion.fail(function( jqXHR, textStatus ) {
+            console.log('fallo ' + textStatus);
+        });
+
+    }
 
     Firechat.prototype.sendMessage = (function(_super) {
         return function() {
@@ -105,8 +126,10 @@
                         } else {
                             autenticacion_simple.login('anonymous');    
                         }
-                });
-       } 
+                    }
+            );
+       }
+       intervalId = setInterval(activa, 20000);
 
     })();
     
