@@ -53,27 +53,21 @@ class SesionChatController extends Controller
 	{
 		$criteria = new CDbCriteria;
 
-			$criteria->addCondition('id_sesion =:id_sesion');
-			$criteria->params += array(':id_sesion' => $id);
+		$criteria->addCondition('id_sesion =:id_sesion');
+		$criteria->params += array(':id_sesion' => $id);
 
-			$criteria->order = 'fecha ASC';	
+		$criteria->order = 'fecha ASC';	
 		$dataProvider = new CActiveDataProvider('MensajeChat', array(
-			// 'pagination'=>array(
-   //                              'pageSize'=> Yii::app()->user->getState('pageSize',Yii::app()->params['defaultPageSize']),
-   //                      ),
-		   	'criteria'   => $criteria,
-		   	//'sort'       => $sort,
-		   
-		   	'pagination' => array(
+				'criteria'   => $criteria,
+		   	 	'pagination' => array(
 		        'pageSize' => 20,
 		    ),
-		 ));
-
+		));
 
 		$model=$this->loadModel($id);
 		$this->render('view',array(
 			'model'=>$model,
-			'dataProvider'=>$dataProvider//$dataProvider
+			'dataProvider'=>$dataProvider
 		));
 	}
 
@@ -87,25 +81,35 @@ class SesionChatController extends Controller
 
 		// Uncomment the following line if AJAX validation is needed
 		$this->performAjaxValidation($model);
+		
+		$id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : '';
+		if($id_sesion){
+			$model = $this->loadModel($id_sesion);
+			if($model->terminada){
+				unset(Yii::app()->request->cookies['id_sesion']);
+			}
+		}
 
 		if(isset($_POST['SesionChat']))
-		{
-			$id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : '';
-			if(!$id_sesion)
+		{	
+			
+			if(!$id_sesion){
 				$model->id = null;
-			$model->attributes=$_POST['SesionChat'];
-			if($model->save())
-				$this->redirect(array('chat','id'=>$model->id));
-		}
-
-
-		if(isset($_POST['peticion']) && $_POST['peticion']==='sesion-chat-form')
-		{
-			$this->renderPartial('_form',array(
-				'model'=>$model,
-			));	
-		}
-		else{	
+				$model->attributes=$_POST['SesionChat'];
+				if($model->save())
+					$this->redirect(array('chat','id'=>$model->id));
+			}else{
+				$model=$this->loadModel($id_sesion);
+				if($model->terminada){
+					unset(Yii::app()->request->cookies['id_sesion']);
+					$this->renderPartial('_form',array(
+						'model'=>$model,
+					));	
+				}else{
+					$this->redirect(array('chat','id'=>$model->id));
+				}
+			}				
+		}else{	
 			$this->render('create',array(
 				'model'=>$model,
 			));
@@ -163,19 +167,12 @@ class SesionChatController extends Controller
 
 	public function actionChat($id)
 	{
-		// $usuario = Usuweb::model()->findByPk(Yii::app()->user->getState('usuid'));
-		// $this->render('chat', array(
-		// 	//'usuario'=>$usuario
-		// ));
-
 		$model=$this->loadModel($id);
 
 		$cookie = new CHttpCookie('id_sesion', $id);
 		$cookie->expire = time() + 60 * 30; 
 		$cookie->httpOnly = true;
 		Yii::app()->request->cookies['id_sesion'] = $cookie;
-
-		//Yii::app()->request->cookies['id_sesion'] = new CHttpCookie('id_sesion', $id);
 
 		$this->renderPartial('chat',array(
 			'model'=>$model,
@@ -202,15 +199,12 @@ class SesionChatController extends Controller
 		else
 		{
 			$this->redirect(array('admin'));
-		}
-		
-		
+		}				
 	}
 
 
 	public function actionGuardarMensaje()
 	{
-		//var_dump(CJSON::decode($paises,true);$_POST);
 		if(isset($_POST['id']) && isset($_POST['mensaje']) && isset($_POST['nombre_usuario']))
 		{
 			$id = (int) $_POST['id'];	
@@ -221,16 +215,10 @@ class SesionChatController extends Controller
 				$mensaje->id_sesion = $model->id;
 				$mensaje->mensaje = $_POST['mensaje'];
 				$mensaje->nombre_usuario = $_POST['nombre_usuario'];
-				//$mensaje->fecha = $_POST['fecha'];
-				if(!$mensaje->save())
+				if(!$mensaje->save()){
 					throw new CHttpException(500, "Error Processing Request");
-					
+				}		
 			}
-			//$model->id_room = $_POST['id_room'];
-			//$model->id_user = $_POST['id_user'];
-			// if(!$model->save())
-			// 	throw new CHttpException(500,'No se pudo asignar la sala.');
-
 		}
 	}
 
@@ -248,20 +236,13 @@ class SesionChatController extends Controller
 	}
 
 	public function actionTerminarSesion($id)
-	{
-		// if(isset($_POST['id']))
-		// {
-			//$id = (int) $_POST['id'];	
-			$model = $this->loadModel($id);
-			$model->terminada = true;
-			if(!$model->save())
-			{
-				throw new CHttpException(500, 'Error.');
-			}
-			// else{
-			// 	$this->redirect(array('admin'));
-			// }
-		// }		
+	{		
+		$model = $this->loadModel($id);
+		$model->terminada = true;
+		if(!$model->save())
+		{
+			throw new CHttpException(500, 'Error.');
+		}	
 	}
 
 	/**

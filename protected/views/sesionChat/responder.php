@@ -1,44 +1,9 @@
-
-<?php //Yii::app()->clientScript->scriptMap['jquery.js'] = false; ?>
 <script src="https://cdn.firebase.com/v0/firebase.js"></script>
 <script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
-<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-<!-- Download from https://github.com/firebase/Firechat -->
 <link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
 <script src="/crmmt/lib/firechat/firechat-default.js"></script>
-<style>
-   /* #firechat-wrapper {
-      height: 475px;
-      max-width: 325px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      margin: 50px auto;
-      text-align: center;
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      border-radius: 4px;
-      -webkit-box-shadow: 0 5px 25px #666;
-      -moz-box-shadow: 0 5px 25px #666;
-      box-shadow: 0 5px 25px #666;
-    }*/
-</style>
 
-
-<!--
-  Example: Anonymous Authentication
-
-  This example uses Firebase Simple Login to create 'anonymous' usuario sessions in Firebase,
-  meaning that usuario credentials are not required, though a usuario has a valid Firebase
-  authentication token and security rules still apply.
-
-  Requirements: in order to use this example with your own Firebase, you'll need to do the following:
-    1. Apply the security rules at https://github.com/firebase/firechat/blob/master/rules.json
-    2. Enable the 'Anonymous' authentication provider in Forge
-    3. Update the URL below to reference your Firebase
-    4. Update the room id for auto-entry with a public room you have created
- -->
- <div class="col-md-6">
+<div class="col-md-6">
     <div class="row">
         <strong>Usuario del chat: </strong><div class="pull-right"><?php echo $model->nombre_usuario ?></div>
     </div>
@@ -64,20 +29,17 @@
                 url: "<?php echo Yii::app()->createUrl('sesionchat/guardarMensaje'); ?>",
                 type: 'POST',
                 data: { 
-                  id: sesion.id,
-                  nombre_usuario: username,
-                  mensaje: mensaje,
-                  //fecha: 
+                    id: sesion.id,
+                    nombre_usuario: username,
+                    mensaje: mensaje
                 },
                 dataType: 'html'
         });
                
         peticion.done(function( msg ) {
-            //console.log('exito '+msg);
         });
            
         peticion.fail(function( jqXHR, textStatus ) {
-            //console.log('fallo '+textStatus);
         });
     }
 
@@ -93,12 +55,10 @@
             });
                    
             peticion.done(function( msg ) {
-                //console.log('exito '+msg);
                 window.location.replace('<?php echo Yii::app()->createUrl("sesionchat/admin"); ?>');
             });
                
             peticion.fail(function( jqXHR, textStatus ) {
-                //console.log('fallo '+textStatus);
             });
         }
     }
@@ -139,7 +99,6 @@
 
 
     function removerDatos(e){
-        console.log('clic');
         if(sesion.id_room){
             var conexion_firebase = new Firebase(url_firebase);
             var firebase          = new Firechat(conexion_firebase);
@@ -159,8 +118,7 @@
                     usu_firebase.remove();
 
                 });
-            terminarSesion();
-    
+            terminarSesion();    
         }
     }
 

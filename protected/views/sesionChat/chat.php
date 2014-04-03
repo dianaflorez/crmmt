@@ -1,52 +1,5 @@
-
-  <?php //Yii::app()->clientScript->scriptMap['jquery.js'] = false; ?>
-  <!--<script src="https://cdn.firebase.com/v0/firebase.js"></script>
-  <script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script> -->
-  <!-- <script src="//ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script> -->
-  <!-- Download from https://github.com/firebase/Firechat -->
-  <!--<link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
-  <script src="/crmmt/lib/firechat/firechat-default.js"></script> -->
-  <style>
-    /*#firechat-contenedor {
-      height: 475px;
-      max-width: 325px;
-      padding: 10px;
-      border: 1px solid #ccc;
-      background-color: #fff;
-      margin: 50px auto;
-      text-align: center;
-      -webkit-border-radius: 4px;
-      -moz-border-radius: 4px;
-      border-radius: 4px;
-      -webkit-box-shadow: 0 5px 25px #666;
-      -moz-box-shadow: 0 5px 25px #666;
-      box-shadow: 0 5px 25px #666;
-    }*/
-  </style>
-
-
-<!-- Yii::app()->createUrl('sesionchat/salir') -->
-<!-- <i class=\"fa fa-times\"></i> -->
-<!-- <div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-8 col-md-4">
-    <div class="cabecera">
-        <p>Chat<i id="desplegar" class="fa fa-plus-square white pull-right"></i></p>
-    </div>
-    <div id="firechat-contenedor" ></div>
-</div> -->
-
 <script type='text/javascript'>
     var sesion = <?php echo  CJSON::encode($model).';'; ?>
-
-    // $('#desplegar').on('click', desplegar);
-    // $('.cabecera').on('click', desplegar);
-
-    // function desplegar(e){
-    //     console.log('ops');
-    //     $('#firechat-contenedor').slideToggle('fast');
-    //     var icono = $('#desplegar');
-    //     icono.toggleClass('fa-plus-square');
-    //     icono.toggleClass('fa-minus-square');
-    // }
 
     function guardarMensaje(username, mensaje){
         var peticion = $.ajax({
@@ -61,19 +14,15 @@
         });
                
         peticion.done(function( msg ) {
-            //console.log('exito '+msg);
         });
            
         peticion.fail(function( jqXHR, textStatus ) {
-            //console.log('fallo '+textStatus);
         });
     }
 
 
     Firechat.prototype.sendMessage = (function(_super) {
         return function() {
-          //  console.log(this);
-          //  console.log(arguments);
             guardarMensaje(this._userName, arguments[1]);
             return _super.apply(this, arguments);
         };
