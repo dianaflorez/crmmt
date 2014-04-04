@@ -51,23 +51,9 @@ class SesionChatController extends Controller
 	 */
 	public function actionView($id)
 	{
-		$criteria = new CDbCriteria;
-
-		$criteria->addCondition('id_sesion =:id_sesion');
-		$criteria->params += array(':id_sesion' => $id);
-
-		$criteria->order = 'fecha ASC';	
-		$dataProvider = new CActiveDataProvider('MensajeChat', array(
-				'criteria'   => $criteria,
-		   	 	'pagination' => array(
-		        'pageSize' => 20,
-		    ),
-		));
-
 		$model=$this->loadModel($id);
 		$this->render('view',array(
-			'model'=>$model,
-			'dataProvider'=>$dataProvider
+			'model'=>$model
 		));
 	}
 
@@ -87,13 +73,14 @@ class SesionChatController extends Controller
 			$model = $this->loadModel($id_sesion);
 			if($model->terminada){
 				unset(Yii::app()->request->cookies['id_sesion']);
+				$id_sesion = '';
 			}
 		}
 
 		if(isset($_POST['SesionChat']))
 		{				
 			if(!$id_sesion){
-				$model->id = null;
+				$model=new SesionChat;
 				$model->attributes=$_POST['SesionChat'];
 				if($model->save())
 					$this->redirect(array('chat','id'=>$model->id));

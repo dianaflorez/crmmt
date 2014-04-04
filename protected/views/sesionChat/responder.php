@@ -2,6 +2,7 @@
 <script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
 <link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
 <script src="/crmmt/lib/firechat/firechat-default.js"></script>
+<script src="/crmmt/lib/jquery.cookie.js"></script>
 
 <div class="col-md-6">
     <div class="row">
@@ -23,6 +24,10 @@
 <script type='text/javascript'>
     var sesion = <?php echo  CJSON::encode($model).';'; ?>
     var url_firebase = 'https://chatejemplo.firebaseio.com';
+
+    function borrarCookie( name ) {
+        $.cookie(name, null, { path: '/' });
+    }
 
     function guardarMensaje(username, mensaje){
         var peticion = $.ajax({
@@ -72,7 +77,7 @@
         };
     })(Firechat.prototype.sendMessage);
 
-    
+    borrarCookie('firebaseSessionKey');
     var conexion_firebase = new Firebase(url_firebase);
     var chat_ui           = new FirechatUI(conexion_firebase, document.getElementById("firechat-responder"));
     
@@ -80,7 +85,7 @@
         function(err, usuario) {
             if (usuario) {
                 //chat_ui._chat.userIsModerator();
-                chat_ui.setUser(usuario.id, "<?php echo $nombre; ?>");
+                chat_ui.setUser(usuario.id, "<?php echo 'AlmacenesMT ('.$nombre.')'; ?>");
                 setTimeout(function() {
                     chat_ui._chat.enterRoom(sesion.id_room);
                 }, 1000);

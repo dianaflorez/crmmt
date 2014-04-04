@@ -32,12 +32,23 @@ class SesionChat extends CActiveRecord
 			array('correo', 'required', 'message' => 'Ingrese un correo por favor.'),
 			array('usuario_atendio', 'numerical', 'integerOnly'=>true),
 			array('nombre_usuario, id_room, id_user', 'length', 'max'=>30),
-			array('contestada, terminada', 'safe'),
+			array('contestada, terminada, fecha_creacion', 'safe'),
 			array('correo', 'email', 'message' => 'Revise que su dirección sea correcta.'),
 			// The following rule is used by search().
 			// @todo Please remove those attributes that should not be searched.
-			array('id, nombre_usuario, contestada, id_room, id_user, terminada, correo, usuario_atendio', 'safe', 'on'=>'search'),
+			array('id, nombre_usuario, contestada, id_room, id_user, terminada, correo, usuario_atendio, fecha_creacion', 'safe', 'on'=>'search'),
 		);
+	}
+
+	/**
+	 * Asigna la fecha de creación o actualización automáticamente antes de grabar el modelo.
+	 **/
+
+	public function beforeSave() {
+	    if ($this->isNewRecord)
+	        $this->fecha_creacion = new CDbExpression('CURRENT_TIMESTAMP');
+	 
+	    return parent::beforeSave();
 	}
 
 	/**
@@ -66,7 +77,8 @@ class SesionChat extends CActiveRecord
 			'id_user' => 'Id User',
 			'terminada' => 'Terminada',
 			'correo' => 'Correo',
-			'usuario_atendio' => 'Usuario Atendio'
+			'usuario_atendio' => 'Usuario Atendio',
+			'fecha_creacion' => 'Creada el'
 		);
 	}
 
@@ -96,6 +108,8 @@ class SesionChat extends CActiveRecord
 		$criteria->compare('terminada',$this->terminada);
 		$criteria->compare('correo',$this->correo,true);
 		$criteria->compare('usuario_atendio',$this->usuario_atendio);
+		$criteria->compare('fecha_creacion',$this->fecha_creacion,true);
+		$criteria->order = 'fecha_creacion DESC';
 
 		return new CActiveDataProvider($this, array(
 			'criteria'=>$criteria,
