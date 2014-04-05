@@ -12,6 +12,7 @@
  */
 class SesionChat extends CActiveRecord
 {
+	private  static $dbchat = null;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -60,7 +61,7 @@ class SesionChat extends CActiveRecord
 		// class name for the relations automatically generated below.
 		return array(
 			'mensajes' => array(self::HAS_MANY, 'MensajeChat', 'id_sesion'),
-			'usuarioAtendio' => array(self::BELONGS_TO, 'General', 'usuario_atendio'),
+			//'usuarioAtendio' => array(self::BELONGS_TO, 'General', 'usuario_atendio'),
 		);
 	}
 
@@ -126,4 +127,28 @@ class SesionChat extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	// Retorna la conexión a la base de datos de chat.
+	public function getAdvertDbConnection()
+    {
+        if (self::$dbchat !== null)
+            return self::$dbchat;
+        else
+        {
+            self::$dbchat = Yii::app()->dbchat;
+            if (self::$dbchat instanceof CDbConnection)
+            {
+                self::$dbchat->setActive(true);
+                return self::$dbchat;
+            }
+            else
+                throw new CDbException(Yii::t('yii','Active Record requires a "db" CDbConnection application component.'));
+        }
+    }
+
+    // Sobrescribe el método de conexión de la clase.
+    public function getDbConnection()
+    {
+        return self::getAdvertDbConnection();
+    }
 }

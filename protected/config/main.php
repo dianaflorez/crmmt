@@ -79,6 +79,14 @@ return array(
 			'password' => '123456',
 			'charset' => 'utf8',
 		),
+        'dbchat' => array(
+           'connectionString' => 'pgsql:host=localhost;port=5432;dbname=chat',
+			'emulatePrepare' => true,
+			'username' => 'prueba',
+			'password' => '123456',
+			'charset' => 'utf8',
+            'class'            => 'CDbConnection'          // DO NOT FORGET THIS!
+        ),
 		'authManager'=>array(
 	        'class'=>'CDbAuthManager',
 	        'connectionID'=>'db',

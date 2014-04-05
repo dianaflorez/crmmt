@@ -12,6 +12,7 @@
  */
 class MensajeChat extends CActiveRecord
 {
+	private static $dbchat = null;
 	/**
 	 * @return string the associated database table name
 	 */
@@ -61,7 +62,6 @@ class MensajeChat extends CActiveRecord
 			'fecha' => 'Fecha',
 		);
 	}
-
 
 	/**
 	 * Asigna la fecha de creación o actualización automáticamente antes de grabar el modelo.
@@ -113,4 +113,28 @@ class MensajeChat extends CActiveRecord
 	{
 		return parent::model($className);
 	}
+
+	// Retorna la conexión a la base de datos de chat.
+	public function getAdvertDbConnection()
+    {
+        if (self::$dbchat !== null)
+            return self::$dbchat;
+        else
+        {
+            self::$dbchat = Yii::app()->dbchat;
+            if (self::$dbchat instanceof CDbConnection)
+            {
+                self::$dbchat->setActive(true);
+                return self::$dbchat;
+            }
+            else
+                throw new CDbException(Yii::t('yii','Active Record requires a "db" CDbConnection application component.'));
+        }
+    }
+
+    // Sobrescribe el método de conexión de la clase.
+    public function getDbConnection()
+    {
+        return self::getAdvertDbConnection();
+    }
 }
