@@ -1,7 +1,12 @@
-<script src="https://cdn.firebase.com/v0/firebase.js"></script>
-<script src="https://cdn.firebase.com/v0/firebase-simple-login.js"></script>
-<link rel="stylesheet" href="/crmmt/lib/firechat/firechat-default.css" />
-<script src="/crmmt/lib/firechat/firechat-default.js"></script> 
+<?php  
+    $baseUrl = Yii::app()->baseUrl; 
+    $cs = Yii::app()->getClientScript();
+    $cs->registerCssFile($baseUrl.'/lib/firechat/firechat-default.css');
+    $cs->registerScriptFile('https://cdn.firebase.com/v0/firebase.js');
+    $cs->registerScriptFile('https://cdn.firebase.com/v0/firebase-simple-login.js');
+    $cs->registerScriptFile($baseUrl.'/lib/firechat/firechat-default.js');
+    $cs->registerScriptFile($baseUrl.'/lib/jquery.cookie.js');
+?>
 
 <?php $id_sesion = Yii::app()->request->cookies->contains('id_sesion') ? Yii::app()->request->cookies['id_sesion']->value : ''; ?>
 <div id="chat" class="col-xs-offset-1 col-xs-11 col-sm-offset-2 col-sm-6 col-md-4">
